@@ -1,0 +1,124 @@
+from pricing import probability
+
+
+def display_event(event):
+    print(event["event_name"])
+    print(event["category"], "-", event["class"], "-", event["type"])
+    print()
+
+    for market in event["markets"]:
+        if market["displayed"]:
+            display_market(market)
+
+
+def display_market(market):
+    print(
+    "Market:",
+    market["name"],
+    market["status"]
+)
+
+    book_percentage = 0
+
+    for selection in market["selections"]:
+        if selection["displayed"] == False:
+            continue
+        
+        top = selection["price"][0]
+        bottom = selection["price"][1]
+
+        prob = probability(top, bottom)
+
+        if selection["active"]:
+            book_percentage = book_percentage + prob
+
+        status = "ACTIVE"
+
+        if selection["active"] == False:
+                status = "SUSPENDED"
+
+        print(
+            selection["name"],
+            str(top)+"/"+str(bottom),
+            round(prob,2),
+            "%",
+            status,
+            selection["result"]
+        )
+
+    print("Book Percentage:", round(book_percentage, 2), "%")
+    print()
+
+def display_platform(platform):
+    print("JAMES TRADING PLATFORM")
+    print("======================")
+    print()
+
+def display_event_names(platform):
+
+    print()
+
+    for event in platform:
+
+        print(event["event_name"])
+
+def display_market_names(event):
+
+    print()
+
+    for market in event["markets"]:
+
+        print(market["name"])
+
+def display_selection_names(event, market_name):
+
+    for market in event["markets"]:
+
+        if market["name"] == market_name:
+
+            print()
+
+            for selection in market["selections"]:
+
+                print(selection["name"])
+
+def choose_event(platform):
+
+    print()
+
+    for index, event in enumerate(platform, start=1):
+        print(index, event["event_name"])
+
+    print()
+
+    choice = int(input("Event number: "))
+
+    return platform[choice - 1]
+
+def choose_market(event):
+
+    print()
+
+    for index, market in enumerate(event["markets"], start=1):
+
+        print(index, market["name"])
+
+    print()
+
+    choice = int(input("Market number: "))
+
+    return event["markets"][choice - 1]
+
+def choose_selection(market):
+
+    print()
+
+    for index, selection in enumerate(market["selections"], start=1):
+
+        print(index, selection["name"])
+
+    print()
+
+    choice = int(input("Selection number: "))
+
+    return market["selections"][choice - 1]
