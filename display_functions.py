@@ -54,6 +54,9 @@ def display_platform(platform):
     print("======================")
     print()
 
+    for event in platform:
+        display_event(event)
+
 def display_event_names(platform):
 
     print()

@@ -1,0 +1,133 @@
+[
+    {
+        "category": "SPECIALS",
+        "class": "TV Specials",
+        "type": "Strictly Come Dancing",
+        "event_name": "Strictly Come Dancing 2026",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Outright",
+                "status": "Active",
+                "displayed": true,
+                "selections": [
+                    {
+                        "name": "Dani Dyer",
+                        "price": [
+                            4,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "name": "Delta Goodrem",
+                        "price": [
+                            5,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "name": "Lacey Turner",
+                        "price": [
+                            7,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            },
+            {
+                "name": "Top 3 Finish",
+                "status": "Active",
+                "displayed": true,
+                "selections": [
+                    {
+                        "name": "Dani Dyer",
+                        "price": [
+                            1,
+                            2
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "name": "Delta Goodrem",
+                        "price": [
+                            4,
+                            5
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "name": "Lacey Turner",
+                        "price": [
+                            6,
+                            4
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category": "SPECIALS",
+        "class": "Music Specials",
+        "type": "Eurovision",
+        "event_name": "Eurovision 2027",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Winner",
+                "status": "Active",
+                "displayed": true,
+                "selections": [
+                    {
+                        "name": "Sweden",
+                        "price": [
+                            2,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "name": "Italy",
+                        "price": [
+                            6,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "name": "Ukraine",
+                        "price": [
+                            8,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    }
+]

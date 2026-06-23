@@ -29,58 +29,61 @@ from platform_functions import (
 )
 from templates import create_outright_market
 from menu import show_menu
+from save_load import save_platform, load_platform
 
-platform = []
+platform = load_platform()
 
-event = create_event(
+if platform == []:
+
+    event = create_event(
     "SPECIALS",
     "TV Specials",
     "Strictly Come Dancing",
     "Strictly Come Dancing 2026"
-)
+    )
 
-outright_market = create_market(event, "Outright")
+    outright_market = create_market(event, "Outright")
 
-top3_market = create_market(event, "Top 3 Finish")
+    top3_market = create_market(event, "Top 3 Finish")
 
-add_selection(outright_market, "Dani Dyer", (4, 1))
-add_selection(outright_market, "Delta Goodrem", (5, 1))
-add_selection(outright_market, "Lacey Turner", (7, 1))
+    add_selection(outright_market, "Dani Dyer", (4, 1))
+    add_selection(outright_market, "Delta Goodrem", (5, 1))
+    add_selection(outright_market, "Lacey Turner", (7, 1))
 
-add_selection(top3_market, "Dani Dyer", (1, 2))
-add_selection(top3_market, "Delta Goodrem", (4, 5))
-add_selection(top3_market, "Lacey Turner", (6, 4))
+    add_selection(top3_market, "Dani Dyer", (1, 2))
+    add_selection(top3_market, "Delta Goodrem", (4, 5))
+    add_selection(top3_market, "Lacey Turner", (6, 4))
 
-platform.append(event)
+    platform.append(event)
 
-eurovision = create_event(
+    eurovision = create_event(
     "SPECIALS",
     "Music Specials",
     "Eurovision",
     "Eurovision 2027"
-)
+    )
 
-runners = [
+    runners = [
     ("Sweden", (4,1)),
     ("Italy", (6,1)),
     ("Ukraine", (8,1))
-]
+    ]
 
-eurovision_winner = create_outright_market(
+    eurovision_winner = create_outright_market(
     eurovision,
     "Winner",
     runners
-)
+    )
 
-platform.append(eurovision)
+    platform.append(eurovision)
 
-change_platform_price(
+    change_platform_price(
     platform,
     "Eurovision 2027",
     "Winner",
     "Sweden",
     (3,1)
-)
+    )
 
 # suspend_platform_selection(
 #     platform,
@@ -116,6 +119,7 @@ while running:
     choice = show_menu()
 
     if choice == "1":
+        
         display_platform(platform)
 
     elif choice == "2":
@@ -143,6 +147,7 @@ while running:
             selection_name,
             (top, bottom)
         )
+        save_platform(platform)
 
         display_platform(platform)
 
