@@ -116,4 +116,24 @@ def void_platform_market(platform,
 
             print("Market voided.")
     else:
-        print("Event not found.")                   
+        print("Event not found.")   
+
+def suspend_platform_market(
+        platform,
+        event_name,
+        market_name):           
+    event = find_event(platform, event_name)
+
+    if event:
+
+        for market in event["markets"]:
+
+            if market["name"] == market_name:
+
+                market["status"] = "SUSPENDED"
+
+                for selection in market["selections"]:
+
+                    selection["active"] = False
+
+                print("Market suspended.")    

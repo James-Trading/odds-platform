@@ -15,16 +15,13 @@ from market_functions import hide_selection
 from search_functions import find_event
 from platform_functions import change_platform_price
 from platform_functions import change_platform_price, suspend_platform_selection
-from platform_functions import (
-    change_platform_price,
-    suspend_platform_selection,
-    suspend_platform_event
-)
+
 from platform_functions import (
     change_platform_price,
     suspend_platform_selection,
     suspend_platform_event,
     settle_platform_market,
+    suspend_platform_market,
     void_platform_market
 )
 from templates import create_outright_market
@@ -220,5 +217,21 @@ while running:
         display_platform(platform)
 
     elif choice == "7":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        suspend_platform_market(
+        platform,
+        event["event_name"],
+        market["name"]
+        )
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "8":
         print("Goodbye")
         running = False

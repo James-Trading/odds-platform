@@ -82,4 +82,12 @@ def show_market(event, market_name):
     market = find_market(event, market_name)
 
     if market:
-        market["displayed"] = True                       
+        market["displayed"] = True 
+
+def suspend_market(market):
+
+    market["status"] = "SUSPENDED"
+
+    for selection in market["selections"]:
+
+        selection["active"] = False                      

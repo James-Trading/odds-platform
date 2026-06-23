@@ -93,7 +93,7 @@
         "markets": [
             {
                 "name": "Winner",
-                "status": "Active",
+                "status": "SUSPENDED",
                 "displayed": true,
                 "selections": [
                     {
@@ -112,7 +112,7 @@
                             6,
                             1
                         ],
-                        "active": true,
+                        "active": false,
                         "displayed": true,
                         "result": ""
                     },
@@ -122,7 +122,7 @@
                             8,
                             1
                         ],
-                        "active": true,
+                        "active": false,
                         "displayed": true,
                         "result": ""
                     }
