@@ -11,6 +11,7 @@ from display_functions import (
     choose_selection
 )
 from market_functions import suspend_market, open_market
+from market_functions import unsuspend_market
 from market_functions import hide_selection
 from search_functions import find_event
 from platform_functions import change_platform_price
@@ -22,7 +23,10 @@ from platform_functions import (
     suspend_platform_event,
     settle_platform_market,
     suspend_platform_market,
-    void_platform_market
+    void_platform_market,
+    unsuspend_platform_selection,
+    unsuspend_platform_market,
+    unsuspend_platform_event
 )
 from templates import create_outright_market
 from menu import show_menu
@@ -233,5 +237,55 @@ while running:
         display_platform(platform)
 
     elif choice == "8":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        selection = choose_selection(market)
+
+        unsuspend_platform_selection(
+        platform,
+        event["event_name"],
+        market["name"],
+        selection["name"]
+        )
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "9":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        unsuspend_platform_market(
+        platform,
+        event["event_name"],
+        market["name"]
+        )
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "10":
+
+        event = choose_event(platform)
+
+        unsuspend_platform_event(
+        platform,
+        event["event_name"]
+        )
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "11":
+
         print("Goodbye")
+
         running = False

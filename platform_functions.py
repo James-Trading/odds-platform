@@ -1,4 +1,5 @@
 from search_functions import find_event, find_selection
+from market_functions import suspend_market, unsuspend_market
 
 
 def change_platform_price(platform,
@@ -130,10 +131,63 @@ def suspend_platform_market(
 
             if market["name"] == market_name:
 
-                market["status"] = "SUSPENDED"
+                suspend_market(market)
 
-                for selection in market["selections"]:
+                print("Market suspended.")   
 
-                    selection["active"] = False
+def unsuspend_platform_market(
+        platform,
+        event_name,
+        market_name):
 
-                print("Market suspended.")    
+    event = find_event(platform, event_name)
+
+    if event:
+
+        for market in event["markets"]:
+
+            if market["name"] == market_name:
+
+                unsuspend_market(market)
+
+                print("Market unsuspended.")
+
+def unsuspend_platform_selection(
+        platform,
+        event_name,
+        market_name,
+        selection_name):
+    
+    event = find_event(platform, event_name)
+
+    if event:
+
+        selection = find_selection(
+        event,
+        market_name,
+        selection_name
+        )
+
+    if selection:
+
+        selection["active"] = True
+
+        print("Selection unsuspended.")
+
+def unsuspend_platform_event(
+        platform,
+        event_name):
+
+    event = find_event(platform, event_name)
+
+    if event:
+
+        for market in event["markets"]:
+
+            market["status"] = "Active"
+
+            for selection in market["selections"]:
+
+                selection["active"] = True
+
+        print("Event unsuspended.")

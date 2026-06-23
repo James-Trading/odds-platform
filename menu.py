@@ -10,7 +10,10 @@ def show_menu():
     print("5 Settle Market")
     print("6 Void Market")
     print("7 Suspend Market")
-    print("8 Exit")
+    print("8 Unsuspend Selection")
+    print("9 Unsuspend Market")
+    print("10 Unsuspend Event")
+    print("11 Exit")
     print()
 
     choice = input("Choice: ")

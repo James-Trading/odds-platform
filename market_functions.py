@@ -90,4 +90,12 @@ def suspend_market(market):
 
     for selection in market["selections"]:
 
-        selection["active"] = False                      
+        selection["active"] = False
+
+def unsuspend_market(market):
+
+    market["status"] = "Active"
+
+    for selection in market["selections"]:
+
+        selection["active"] = True                      
