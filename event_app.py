@@ -168,6 +168,8 @@ while running:
         selection_name
         )
 
+        save_platform(platform)
+
         display_platform(platform)
 
     elif choice == "4":
@@ -179,6 +181,8 @@ while running:
         platform,
         event["event_name"]
         )
+
+        save_platform(platform)
 
         display_platform(platform)
 
@@ -197,6 +201,7 @@ while running:
         winner["name"]
         )
 
+        save_platform(platform)
         display_platform(platform)
 
     elif choice == "6":
@@ -211,6 +216,7 @@ while running:
         market["name"]
         )
 
+        save_platform(platform)
         display_platform(platform)
 
     elif choice == "7":
