@@ -240,45 +240,5 @@
                 "selections": []
             }
         ]
-    },
-    {
-        "category": "SPECIALS",
-        "class": "TV Specials",
-        "type": "Strictly Come Dancing",
-        "event_name": "Strictly Come Dancing 2027",
-        "status": "Active",
-        "displayed": true,
-        "markets": [
-            {
-                "name": "Outright",
-                "status": "SUSPENDED",
-                "displayed": true,
-                "selections": []
-            },
-            {
-                "name": "Top 3 Finish",
-                "status": "SUSPENDED",
-                "displayed": true,
-                "selections": []
-            },
-            {
-                "name": "Top Male",
-                "status": "SUSPENDED",
-                "displayed": true,
-                "selections": []
-            },
-            {
-                "name": "Top Female",
-                "status": "SUSPENDED",
-                "displayed": true,
-                "selections": []
-            },
-            {
-                "name": "Next Elimination",
-                "status": "SUSPENDED",
-                "displayed": true,
-                "selections": []
-            }
-        ]
     }
 ]

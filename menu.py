@@ -19,7 +19,10 @@ def show_menu():
     print("14 Create Selection")
     print("15 Create Template Event")
     print("16 View Audit Log")
-    print("17 Exit")
+    print("17 Delete Selection")
+    print("18 Delete Market")
+    print("19 Delete Event")
+    print("20 Exit")
     print()
 
     choice = input("Choice: ")

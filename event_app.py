@@ -39,6 +39,7 @@ from platform_functions import (
 from templates import create_outright_market
 from menu import show_menu
 from save_load import save_platform, load_platform
+from delete_functions import delete_selection, delete_market, delete_event
 
 platform = load_platform()
 
@@ -364,6 +365,70 @@ while running:
         display_audit_log()
 
     elif choice == "17":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        selection = choose_selection(market)
+
+        confirm = input("Are you sure? Y/N: ")
+
+        if confirm.upper() == "Y":
+
+            delete_selection(
+                market,
+                selection["name"]
+            )
+
+            add_audit_log(
+            f'{selection["name"]} deleted from {event["event_name"]} / {market["name"]}'
+            )
+
+            save_platform(platform)
+
+            display_platform(platform)
+
+    elif choice == "18":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        confirm = input("Are you sure? Y/N: ")
+
+        if confirm.upper() == "Y":
+
+            delete_market(event, market["name"])
+
+            add_audit_log(
+            f'{market["name"]} deleted from {event["event_name"]}'
+            )
+
+            save_platform(platform)
+
+            display_platform(platform)
+
+
+    elif choice == "19":
+
+        event = choose_event(platform)
+
+        confirm = input("Are you sure? Y/N: ")
+
+        if confirm.upper() == "Y":
+
+            delete_event(platform, event["event_name"])
+
+            add_audit_log(
+                f'{event["event_name"]} deleted'
+            )
+
+            save_platform(platform)
+
+            display_platform(platform)
+
+    elif choice == "20":
 
         print("Goodbye")
 
