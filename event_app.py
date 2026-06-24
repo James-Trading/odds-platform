@@ -10,6 +10,12 @@ from display_functions import (
     choose_market,
     choose_selection
 )
+from search_display_functions import search_platform
+from event_creation_functions import (
+    create_platform_event,
+    create_platform_market,
+    create_platform_selection
+)
 from market_functions import suspend_market, open_market
 from market_functions import unsuspend_market
 from market_functions import hide_selection
@@ -285,6 +291,39 @@ while running:
         display_platform(platform)
 
     elif choice == "11":
+
+        search_term = input("Search: ")
+
+        search_platform(
+        platform,
+        search_term
+        )
+
+    elif choice == "12":
+
+        create_platform_event(platform)
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "13":
+
+        create_platform_market(platform)
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "14":
+
+        create_platform_selection(platform)
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "15":
 
         print("Goodbye")
 

@@ -13,7 +13,11 @@ def show_menu():
     print("8 Unsuspend Selection")
     print("9 Unsuspend Market")
     print("10 Unsuspend Event")
-    print("11 Exit")
+    print("11 Search")
+    print("12 Create Event")
+    print("13 Create Market")
+    print("14 Create Selection")
+    print("15 Exit")
     print()
 
     choice = input("Choice: ")

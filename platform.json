@@ -129,5 +129,48 @@
                 ]
             }
         ]
+    },
+    {
+        "category": "Specials",
+        "class": "Music Specials",
+        "type": "Eurovision",
+        "event_name": "Eurovision 2028",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Outright",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            }
+        ]
+    },
+    {
+        "category": "Politics",
+        "class": "US Politics",
+        "type": "US Election 2028",
+        "event_name": "US Election 2028",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Winning Party",
+                "status": "Active",
+                "displayed": true,
+                "selections": [
+                    {
+                        "name": "Republicans",
+                        "price": [
+                            6,
+                            4
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
     }
 ]
