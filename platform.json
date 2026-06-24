@@ -99,7 +99,7 @@
                     {
                         "name": "Sweden",
                         "price": [
-                            2,
+                            3,
                             1
                         ],
                         "active": false,
@@ -170,6 +170,114 @@
                         "result": ""
                     }
                 ]
+            }
+        ]
+    },
+    {
+        "category": "SPECIALS",
+        "class": "Music Specials",
+        "type": "Eurovision",
+        "event_name": "Eurovision 2028",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Winner",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top 3",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top 5",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            }
+        ]
+    },
+    {
+        "category": "SPECIALS",
+        "class": "TV Specials",
+        "type": "Strictly Come Dancing",
+        "event_name": "Strictly 2027",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Outright",
+                "status": "VOID",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top 3 Finish",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top Male",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top Female",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Bottom 2 Finish",
+                "status": "Active",
+                "displayed": true,
+                "selections": []
+            }
+        ]
+    },
+    {
+        "category": "SPECIALS",
+        "class": "TV Specials",
+        "type": "Strictly Come Dancing",
+        "event_name": "Strictly Come Dancing 2027",
+        "status": "Active",
+        "displayed": true,
+        "markets": [
+            {
+                "name": "Outright",
+                "status": "SUSPENDED",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top 3 Finish",
+                "status": "SUSPENDED",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top Male",
+                "status": "SUSPENDED",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Top Female",
+                "status": "SUSPENDED",
+                "displayed": true,
+                "selections": []
+            },
+            {
+                "name": "Next Elimination",
+                "status": "SUSPENDED",
+                "displayed": true,
+                "selections": []
             }
         ]
     }

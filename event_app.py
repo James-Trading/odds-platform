@@ -1,4 +1,5 @@
 from event_functions import create_event, create_market, add_selection
+from audit_functions import add_audit_log, display_audit_log
 from pricing import probability
 from market_functions import change_event_price
 from display_functions import (
@@ -14,7 +15,8 @@ from search_display_functions import search_platform
 from event_creation_functions import (
     create_platform_event,
     create_platform_market,
-    create_platform_selection
+    create_platform_selection,
+    create_template_event
 )
 from market_functions import suspend_market, open_market
 from market_functions import unsuspend_market
@@ -153,7 +155,10 @@ while running:
             market_name,
             selection_name,
             (top, bottom)
-        )
+            )
+        add_audit_log(
+            f'{selection["name"]} in {event["event_name"]} / {market["name"]} changed to {top}/{bottom}'
+)   
         save_platform(platform)
 
         display_platform(platform)
@@ -189,6 +194,10 @@ while running:
         event["event_name"]
         )
 
+        add_audit_log(
+            f'{event["event_name"]} suspended'
+        )
+
         save_platform(platform)
 
         display_platform(platform)
@@ -208,6 +217,10 @@ while running:
         winner["name"]
         )
 
+        add_audit_log(
+            f'{market["name"]} settled - Winner: {winner["name"]}'
+        )
+
         save_platform(platform)
         display_platform(platform)
 
@@ -221,6 +234,10 @@ while running:
         platform,
         event["event_name"],
         market["name"]
+        )
+
+        add_audit_log(
+            f'{market["name"]} voided'
         )
 
         save_platform(platform)
@@ -238,6 +255,9 @@ while running:
         market["name"]
         )
 
+        add_audit_log(
+            f'{market["name"]} suspended in {event["event_name"]}'
+        )
         save_platform(platform)
 
         display_platform(platform)
@@ -255,6 +275,10 @@ while running:
         event["event_name"],
         market["name"],
         selection["name"]
+        )
+
+        add_audit_log(
+            f'{market["name"]} unsuspended in {event["event_name"]}'
         )
 
         save_platform(platform)
@@ -284,6 +308,10 @@ while running:
         unsuspend_platform_event(
         platform,
         event["event_name"]
+        )
+
+        add_audit_log(
+            f'{event["event_name"]} unsuspended'
         )
 
         save_platform(platform)
@@ -324,6 +352,18 @@ while running:
         display_platform(platform)
 
     elif choice == "15":
+
+        create_template_event(platform)
+
+        save_platform(platform)
+
+        display_platform(platform)
+
+    elif choice == "16":
+
+        display_audit_log()
+
+    elif choice == "17":
 
         print("Goodbye")
 

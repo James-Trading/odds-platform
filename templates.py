@@ -1,4 +1,20 @@
-from event_functions import create_market, add_selection
+from event_functions import create_event, create_market, add_selection
+
+
+def create_eurovision_template(event_name):
+
+    event = create_event(
+        "SPECIALS",
+        "Music Specials",
+        "Eurovision",
+        event_name
+    )
+
+    create_market(event, "Winner")
+    create_market(event, "Top 3")
+    create_market(event, "Top 5")
+
+    return event
 
 
 def create_outright_market(event,
@@ -19,3 +35,20 @@ def create_outright_market(event,
         )
 
     return market
+
+def create_strictly_template(event_name):
+
+    event = create_event(
+        "SPECIALS",
+        "TV Specials",
+        "Strictly Come Dancing",
+        event_name
+    )
+
+    create_market(event, "Outright")
+    create_market(event, "Top 3 Finish")
+    create_market(event, "Top Male")
+    create_market(event, "Top Female")
+    create_market(event, "Next Elimination")
+
+    return event

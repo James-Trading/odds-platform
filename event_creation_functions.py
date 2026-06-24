@@ -1,4 +1,31 @@
 from event_functions import create_event
+from templates import create_eurovision_template, create_strictly_template
+
+def create_template_event(platform):
+
+    print()
+    print("1 Eurovision")
+    print("2 Strictly")
+
+    choice = input("Template: ")
+
+    event_name = input("Event Name: ")
+
+    if choice == "1":
+
+        event = create_eurovision_template(event_name)
+
+        platform.append(event)
+
+        print("Template event created.")
+
+    elif choice == "2":
+
+        event = create_strictly_template(event_name)
+
+        platform.append(event)
+
+        print("Template event created.")
 
 
 def create_platform_event(platform):
