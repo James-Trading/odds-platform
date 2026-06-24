@@ -1,7 +1,7 @@
 from event_functions import create_event, create_market, add_selection
 from audit_functions import add_audit_log, display_audit_log
 from pricing import probability
-from market_functions import change_event_price
+from pricing_actions import handle_price_change
 from display_functions import (
     display_platform,
     display_event_names,
@@ -18,12 +18,37 @@ from event_creation_functions import (
     create_platform_selection,
     create_template_event
 )
-from market_functions import suspend_market, open_market
-from market_functions import unsuspend_market
-from market_functions import hide_selection
+from market_functions import (
+    change_event_price,
+    suspend_market,
+    open_market,
+    unsuspend_market,
+    hide_selection
+)
+
 from search_functions import find_event
-from platform_functions import change_platform_price
-from platform_functions import change_platform_price, suspend_platform_selection
+
+from actions.creation_actions import (
+    handle_create_event,
+    handle_create_market,
+    handle_create_selection,
+    handle_create_template_event
+)
+
+from actions.deletion_actions import (
+    handle_delete_selection,
+    handle_delete_market,
+    handle_delete_event
+)
+
+from actions.suspension_actions import (
+    handle_suspend_selection,
+    handle_suspend_event,
+    handle_suspend_market,
+    handle_unsuspend_selection,
+    handle_unsuspend_market,
+    handle_unsuspend_event
+)
 
 from platform_functions import (
     change_platform_price,
@@ -134,74 +159,13 @@ while running:
 
     elif choice == "2":
 
-        event = choose_event(platform)
-  
-        event_name = event["event_name"]
-
-        if event:
-
-            market = choose_market(event)
-
-            market_name = market["name"]
-            selection = choose_selection(market)
-
-            selection_name = selection["name"]
-
-            top = int(input("Numerator: "))
-            bottom = int(input("Denominator: "))
-
-            change_platform_price(
-            platform,
-            event_name,
-            market_name,
-            selection_name,
-            (top, bottom)
-            )
-        add_audit_log(
-            f'{selection["name"]} in {event["event_name"]} / {market["name"]} changed to {top}/{bottom}'
-)   
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_price_change(platform)
 
     elif choice == "3":
-
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        selection = choose_selection(market)
-
-        selection_name = selection["name"]
-
-        suspend_platform_selection(
-        platform,
-        event["event_name"],
-        market["name"],
-        selection_name
-        )
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_suspend_selection(platform)
 
     elif choice == "4":
-
-
-        event = choose_event(platform)
-
-        suspend_platform_event(
-        platform,
-        event["event_name"]
-        )
-
-        add_audit_log(
-            f'{event["event_name"]} suspended'
-        )
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_suspend_event(platform)
 
     elif choice == "5":
 
@@ -245,79 +209,16 @@ while running:
         display_platform(platform)
 
     elif choice == "7":
-
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        suspend_platform_market(
-        platform,
-        event["event_name"],
-        market["name"]
-        )
-
-        add_audit_log(
-            f'{market["name"]} suspended in {event["event_name"]}'
-        )
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_suspend_market(platform)
 
     elif choice == "8":
-
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        selection = choose_selection(market)
-
-        unsuspend_platform_selection(
-        platform,
-        event["event_name"],
-        market["name"],
-        selection["name"]
-        )
-
-        add_audit_log(
-            f'{market["name"]} unsuspended in {event["event_name"]}'
-        )
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_unsuspend_selection(platform)
 
     elif choice == "9":
-
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        unsuspend_platform_market(
-        platform,
-        event["event_name"],
-        market["name"]
-        )
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_unsuspend_market(platform)
 
     elif choice == "10":
-
-        event = choose_event(platform)
-
-        unsuspend_platform_event(
-        platform,
-        event["event_name"]
-        )
-
-        add_audit_log(
-            f'{event["event_name"]} unsuspended'
-        )
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_unsuspend_event(platform)
 
     elif choice == "11":
 
@@ -330,35 +231,20 @@ while running:
 
     elif choice == "12":
 
-        create_platform_event(platform)
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_create_event(platform)
 
     elif choice == "13":
 
-        create_platform_market(platform)
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_create_market(platform)
 
     elif choice == "14":
 
-        create_platform_selection(platform)
-
-        save_platform(platform)
-
-        display_platform(platform)
+        handle_create_selection(platform)
 
     elif choice == "15":
 
-        create_template_event(platform)
+        handle_create_template_event(platform)
 
-        save_platform(platform)
-
-        display_platform(platform)
 
     elif choice == "16":
 
@@ -366,67 +252,15 @@ while running:
 
     elif choice == "17":
 
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        selection = choose_selection(market)
-
-        confirm = input("Are you sure? Y/N: ")
-
-        if confirm.upper() == "Y":
-
-            delete_selection(
-                market,
-                selection["name"]
-            )
-
-            add_audit_log(
-            f'{selection["name"]} deleted from {event["event_name"]} / {market["name"]}'
-            )
-
-            save_platform(platform)
-
-            display_platform(platform)
+        handle_delete_selection(platform)
 
     elif choice == "18":
 
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        confirm = input("Are you sure? Y/N: ")
-
-        if confirm.upper() == "Y":
-
-            delete_market(event, market["name"])
-
-            add_audit_log(
-            f'{market["name"]} deleted from {event["event_name"]}'
-            )
-
-            save_platform(platform)
-
-            display_platform(platform)
-
+        handle_delete_market(platform)
 
     elif choice == "19":
 
-        event = choose_event(platform)
-
-        confirm = input("Are you sure? Y/N: ")
-
-        if confirm.upper() == "Y":
-
-            delete_event(platform, event["event_name"])
-
-            add_audit_log(
-                f'{event["event_name"]} deleted'
-            )
-
-            save_platform(platform)
-
-            display_platform(platform)
+        handle_delete_event(platform)
 
     elif choice == "20":
 

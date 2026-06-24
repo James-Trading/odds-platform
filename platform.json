@@ -15,7 +15,7 @@
                     {
                         "name": "Dani Dyer",
                         "price": [
-                            4,
+                            10,
                             1
                         ],
                         "active": true,
@@ -143,33 +143,6 @@
                 "status": "Active",
                 "displayed": true,
                 "selections": []
-            }
-        ]
-    },
-    {
-        "category": "Politics",
-        "class": "US Politics",
-        "type": "US Election 2028",
-        "event_name": "US Election 2028",
-        "status": "Active",
-        "displayed": true,
-        "markets": [
-            {
-                "name": "Winning Party",
-                "status": "Active",
-                "displayed": true,
-                "selections": [
-                    {
-                        "name": "Republicans",
-                        "price": [
-                            6,
-                            4
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    }
-                ]
             }
         ]
     },
