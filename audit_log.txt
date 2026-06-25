@@ -15,3 +15,11 @@
 25/06/2026 20:39:06 - Client created: William
 25/06/2026 20:43:08 - William booked Strictly Come Dancing 2026
 25/06/2026 21:09:25 - William unbooked Strictly Come Dancing 2026
+25/06/2026 21:20:17 - William booked Strictly Come Dancing 2026
+25/06/2026 21:23:56 - James booked Strictly Come Dancing 2026
+25/06/2026 21:24:22 - Strictly Come Dancing 2026 published
+25/06/2026 21:35:33 - James booked Im a Celeb 2026
+25/06/2026 21:35:36 - Im a Celeb 2026 published
+25/06/2026 21:37:04 - William booked Eurovision 2027
+25/06/2026 21:37:09 - Eurovision 2027 published
+25/06/2026 21:39:54 - Strictly Come Dancing 2026 published

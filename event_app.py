@@ -75,6 +75,7 @@ from actions.client_actions import (
     handle_view_client,
     handle_unbook_event
 )
+from actions.publish_actions import handle_publish_event
 
 from submenus import show_main_menu
 
@@ -307,6 +308,13 @@ while running:
         handle_unbook_event(clients)
 
     elif choice == "26":
+
+        handle_publish_event(
+            clients,
+            platform
+        )
+
+    elif choice == "27":
 
         print("Goodbye")
 

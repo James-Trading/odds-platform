@@ -3,13 +3,20 @@
         "name": "James",
         "contact": "jd",
         "email": "jdd",
-        "status": "Active"
+        "status": "Active",
+        "booked_events": [
+            "Strictly Come Dancing 2026",
+            "Im a Celeb 2026"
+        ]
     },
     {
         "name": "William",
         "contact": "James",
         "email": "@hills",
         "status": "Active",
-        "booked_events": []
+        "booked_events": [
+            "Strictly Come Dancing 2026",
+            "Eurovision 2027"
+        ]
     }
 ]
