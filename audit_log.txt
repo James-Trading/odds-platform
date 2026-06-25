@@ -10,3 +10,8 @@
 24/06/2026 22:52:10 - US Election 2028 deleted
 24/06/2026 23:02:38 - Outright suspended in Strictly Come Dancing 2026
 24/06/2026 23:02:55 - Outright unsuspended in Strictly Come Dancing 2026
+25/06/2026 16:05:29 - Client created: James
+25/06/2026 20:27:19 - Dani Dyer suspended in Strictly Come Dancing 2026 / Outright
+25/06/2026 20:39:06 - Client created: William
+25/06/2026 20:43:08 - William booked Strictly Come Dancing 2026
+25/06/2026 21:09:25 - William unbooked Strictly Come Dancing 2026

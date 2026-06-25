@@ -1,0 +1,15 @@
+[
+    {
+        "name": "James",
+        "contact": "jd",
+        "email": "jdd",
+        "status": "Active"
+    },
+    {
+        "name": "William",
+        "contact": "James",
+        "email": "@hills",
+        "status": "Active",
+        "booked_events": []
+    }
+]

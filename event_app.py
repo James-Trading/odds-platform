@@ -4,6 +4,7 @@ from pricing import probability
 from pricing_actions import handle_price_change
 from display_functions import (
     display_platform,
+    display_event,
     display_event_names,
     display_market_names,
     display_selection_names,
@@ -65,6 +66,19 @@ from templates import create_outright_market
 from menu import show_menu
 from save_load import save_platform, load_platform
 from delete_functions import delete_selection, delete_market, delete_event
+
+from client_save_load import load_clients
+from actions.client_actions import (
+    handle_add_client,
+    handle_view_clients,
+    handle_book_event,
+    handle_view_client,
+    handle_unbook_event
+)
+
+from submenus import show_main_menu
+
+clients = load_clients()
 
 platform = load_platform()
 
@@ -263,6 +277,36 @@ while running:
         handle_delete_event(platform)
 
     elif choice == "20":
+
+        handle_add_client(clients)
+
+
+    elif choice == "21":
+
+        handle_view_clients(clients)
+
+    elif choice == "22":
+
+        event = choose_event(platform)
+
+        display_event(event)
+
+    elif choice == "23":
+
+        handle_book_event(
+            clients,
+            platform
+        )
+
+    elif choice == "24":
+
+        handle_view_client(clients)
+
+    elif choice == "25":
+
+        handle_unbook_event(clients)
+
+    elif choice == "26":
 
         print("Goodbye")
 

@@ -18,7 +18,7 @@
                             10,
                             1
                         ],
-                        "active": true,
+                        "active": false,
                         "displayed": true,
                         "result": ""
                     },
@@ -213,5 +213,14 @@
                 "selections": []
             }
         ]
+    },
+    {
+        "category": "Specials",
+        "class": "TV Specials",
+        "type": "Im a Celeb",
+        "event_name": "Im a Celeb 2026",
+        "status": "Active",
+        "displayed": true,
+        "markets": []
     }
 ]
