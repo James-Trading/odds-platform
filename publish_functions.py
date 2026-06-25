@@ -26,6 +26,26 @@ def publish_event(
             print(f"  Selections: {selection_count}")
             print()
 
+            for market in event["markets"]:
+
+                print(" ", market["name"])
+                print(" ", "-" * len(market["name"]))
+
+                for selection in market["selections"]:
+
+                    if selection["displayed"]:
+
+                        top = selection["price"][0]
+                        bottom = selection["price"][1]
+
+                        print(
+                            " ",
+                            selection["name"],
+                            str(top) + "/" + str(bottom)
+                        )
+
+            print()
+
             published = published + 1
 
     print(f"Published to {published} client(s).")

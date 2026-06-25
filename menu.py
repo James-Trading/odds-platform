@@ -29,7 +29,8 @@ def show_menu():
     print("24 View Client")
     print("25 Unbook Event For Client")
     print("26 Publish Event")
-    print("27 Exit")
+    print("27 Export Event")
+    print("28 Exit")
     print()
 
     choice = input("Choice: ")

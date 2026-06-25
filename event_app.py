@@ -77,6 +77,8 @@ from actions.client_actions import (
 )
 from actions.publish_actions import handle_publish_event
 
+from actions.export_actions import handle_export_event
+
 from submenus import show_main_menu
 
 clients = load_clients()
@@ -315,6 +317,10 @@ while running:
         )
 
     elif choice == "27":
+
+        handle_export_event(platform)
+
+    elif choice == "28":
 
         print("Goodbye")
 

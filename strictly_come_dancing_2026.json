@@ -1,0 +1,84 @@
+{
+    "category": "SPECIALS",
+    "class": "TV Specials",
+    "type": "Strictly Come Dancing",
+    "event_name": "Strictly Come Dancing 2026",
+    "status": "Active",
+    "displayed": true,
+    "markets": [
+        {
+            "name": "Outright",
+            "status": "Active",
+            "displayed": true,
+            "selections": [
+                {
+                    "name": "Dani Dyer",
+                    "price": [
+                        10,
+                        1
+                    ],
+                    "active": false,
+                    "displayed": true,
+                    "result": ""
+                },
+                {
+                    "name": "Delta Goodrem",
+                    "price": [
+                        5,
+                        1
+                    ],
+                    "active": true,
+                    "displayed": true,
+                    "result": ""
+                },
+                {
+                    "name": "Lacey Turner",
+                    "price": [
+                        7,
+                        1
+                    ],
+                    "active": true,
+                    "displayed": true,
+                    "result": ""
+                }
+            ]
+        },
+        {
+            "name": "Top 3 Finish",
+            "status": "Active",
+            "displayed": true,
+            "selections": [
+                {
+                    "name": "Dani Dyer",
+                    "price": [
+                        1,
+                        2
+                    ],
+                    "active": true,
+                    "displayed": true,
+                    "result": ""
+                },
+                {
+                    "name": "Delta Goodrem",
+                    "price": [
+                        4,
+                        5
+                    ],
+                    "active": true,
+                    "displayed": true,
+                    "result": ""
+                },
+                {
+                    "name": "Lacey Turner",
+                    "price": [
+                        6,
+                        4
+                    ],
+                    "active": true,
+                    "displayed": true,
+                    "result": ""
+                }
+            ]
+        }
+    ]
+}
