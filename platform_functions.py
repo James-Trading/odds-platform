@@ -20,7 +20,7 @@ def change_platform_price(platform,
 
         if selection:
 
-            selection["price"] = new_price
+            selection["pending_price"] = new_price
         
             print("Price updated.")
 

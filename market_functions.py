@@ -1,7 +1,7 @@
 def change_price(market, selection_name, new_price):
     for selection in market:
         if selection["name"] == selection_name:
-            selection["price"] = new_price
+            selection["pending_price"] = new_price
 
 
 def suspend_runner(market, selection_name):

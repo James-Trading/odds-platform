@@ -43,6 +43,7 @@ def publish_event(
                             selection["name"],
                             str(top) + "/" + str(bottom)
                         )
+            market["published"] = True            
 
             print()
 

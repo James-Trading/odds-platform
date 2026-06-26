@@ -79,11 +79,18 @@ from actions.publish_actions import handle_publish_event
 
 from actions.export_actions import handle_export_event
 
+from actions.pending_actions import handle_save_pending_changes
+
+from scheduler_functions import check_event_schedule
+
 from submenus import show_main_menu
 
 clients = load_clients()
 
 platform = load_platform()
+
+check_event_schedule(platform)
+save_platform(platform)
 
 if platform == []:
 
@@ -321,6 +328,10 @@ while running:
         handle_export_event(platform)
 
     elif choice == "28":
+
+        handle_save_pending_changes(platform)
+
+    elif choice == "29":
 
         print("Goodbye")
 

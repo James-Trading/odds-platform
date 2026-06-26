@@ -12,11 +12,17 @@ def display_event(event):
 
 
 def display_market(market):
+    published_status = "NOT PUBLISHED"
+
+    if market["published"]:
+        published_status = "PUBLISHED"
+
     print(
-    "Market:",
-    market["name"],
-    market["status"]
-)
+        "Market:",
+        market["name"],
+        market["status"],
+        published_status
+    )
 
     book_percentage = 0
 
@@ -37,9 +43,22 @@ def display_market(market):
         if selection["active"] == False:
                 status = "SUSPENDED"
 
+        price_display = str(top) + "/" + str(bottom)
+
+        if selection["pending_price"] is not None:
+
+            pending_top = selection["pending_price"][0]
+            pending_bottom = selection["pending_price"][1]
+
+            price_display = (
+                str(top) + "/" + str(bottom)
+                + " -> "
+                + str(pending_top) + "/" + str(pending_bottom)
+                + " UNSAVED"
+            )
         print(
             selection["name"],
-            str(top)+"/"+str(bottom),
+            price_display,
             round(prob,2),
             "%",
             status,

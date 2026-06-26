@@ -38,12 +38,36 @@ def create_platform_event(platform):
 
     event_name = input("Event Name: ")
 
+    start_date = input("Start Date (DD/MM/YYYY): ")
+
+    start_time = input("Start Time (HH:MM): ")
+
+    print()
+    print("Suspend Mode")
+    print("============")
+    print("1 AUTO")
+    print("2 MANUAL")
+    print("3 IN_PLAY")
+
+    mode_choice = input("Choice: ")
+
+    suspend_mode = "AUTO"
+
+    if mode_choice == "2":
+        suspend_mode = "MANUAL"
+
+    elif mode_choice == "3":
+        suspend_mode = "IN_PLAY"
+
     event = create_event(
         category,
         event_class,
         event_type,
         event_name
     )
+
+    event["start_time"] = start_date + " " + start_time
+    event["suspend_mode"] = suspend_mode
 
     platform.append(event)
 

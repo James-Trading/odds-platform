@@ -15,12 +15,16 @@
                     {
                         "name": "Dani Dyer",
                         "price": [
-                            10,
+                            7,
                             1
                         ],
                         "active": false,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": [
+                            10,
+                            1
+                        ]
                     },
                     {
                         "name": "Delta Goodrem",
@@ -30,7 +34,8 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     },
                     {
                         "name": "Lacey Turner",
@@ -40,9 +45,11 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     }
-                ]
+                ],
+                "published": false
             },
             {
                 "name": "Top 3 Finish",
@@ -57,7 +64,8 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     },
                     {
                         "name": "Delta Goodrem",
@@ -67,7 +75,8 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     },
                     {
                         "name": "Lacey Turner",
@@ -77,11 +86,15 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     }
-                ]
+                ],
+                "published": false
             }
-        ]
+        ],
+        "start_time": "",
+        "suspend_mode": "AUTO"
     },
     {
         "category": "SPECIALS",
@@ -99,12 +112,13 @@
                     {
                         "name": "Sweden",
                         "price": [
-                            3,
+                            5,
                             1
                         ],
                         "active": false,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     },
                     {
                         "name": "Italy",
@@ -114,7 +128,8 @@
                         ],
                         "active": false,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     },
                     {
                         "name": "Ukraine",
@@ -124,11 +139,15 @@
                         ],
                         "active": false,
                         "displayed": true,
-                        "result": ""
+                        "result": "",
+                        "pending_price": null
                     }
-                ]
+                ],
+                "published": false
             }
-        ]
+        ],
+        "start_time": "",
+        "suspend_mode": "AUTO"
     },
     {
         "category": "Specials",
@@ -142,9 +161,12 @@
                 "name": "Outright",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             }
-        ]
+        ],
+        "start_time": "",
+        "suspend_mode": "AUTO"
     },
     {
         "category": "SPECIALS",
@@ -158,21 +180,26 @@
                 "name": "Winner",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             },
             {
                 "name": "Top 3",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             },
             {
                 "name": "Top 5",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             }
-        ]
+        ],
+        "start_time": "",
+        "suspend_mode": "AUTO"
     },
     {
         "category": "SPECIALS",
@@ -186,33 +213,40 @@
                 "name": "Outright",
                 "status": "VOID",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             },
             {
                 "name": "Top 3 Finish",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             },
             {
                 "name": "Top Male",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             },
             {
                 "name": "Top Female",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             },
             {
                 "name": "Bottom 2 Finish",
                 "status": "Active",
                 "displayed": true,
-                "selections": []
+                "selections": [],
+                "published": false
             }
-        ]
+        ],
+        "start_time": "",
+        "suspend_mode": "AUTO"
     },
     {
         "category": "Specials",
@@ -221,6 +255,20 @@
         "event_name": "Im a Celeb 2026",
         "status": "Active",
         "displayed": true,
+        "markets": [],
+        "start_time": "",
+        "suspend_mode": "AUTO"
+    },
+    {
+        "category": "Specials",
+        "class": "TV specials",
+        "type": "Dancing On Ice",
+        "event_name": "Dancing On Ice 2026",
+        "status": "Suspended",
+        "displayed": false,
+        "published": false,
+        "start_time": "25/06/2026 09:00",
+        "suspend_mode": "AUTO",
         "markets": []
     }
 ]
