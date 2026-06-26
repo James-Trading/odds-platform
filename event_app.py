@@ -85,6 +85,8 @@ from scheduler_functions import check_event_schedule
 
 from actions.edit_actions import handle_edit_event
 
+from dashboard_functions import display_dashboard
+
 from submenus import show_main_menu
 
 clients = load_clients()
@@ -93,6 +95,11 @@ platform = load_platform()
 
 check_event_schedule(platform)
 save_platform(platform)
+
+display_dashboard(
+    platform,
+    clients
+)
 
 if platform == []:
 

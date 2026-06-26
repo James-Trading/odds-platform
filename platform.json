@@ -15,16 +15,13 @@
                     {
                         "name": "Dani Dyer",
                         "price": [
-                            7,
+                            10,
                             1
                         ],
                         "active": false,
                         "displayed": true,
                         "result": "",
-                        "pending_price": [
-                            10,
-                            1
-                        ]
+                        "pending_price": null
                     },
                     {
                         "name": "Delta Goodrem",
@@ -90,7 +87,7 @@
                         "pending_price": null
                     }
                 ],
-                "published": false
+                "published": true
             }
         ],
         "start_time": "19/09/2026 18:00",
@@ -143,7 +140,7 @@
                         "pending_price": null
                     }
                 ],
-                "published": false
+                "published": true
             }
         ],
         "start_time": "",
