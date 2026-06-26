@@ -24,9 +24,27 @@ def search_platform(
         platform,
         search_term):
 
+    found = False
+
     for event in platform:
 
+        if search_term.lower() in event["event_name"].lower():
+
+            print()
+            print("EVENT:", event["event_name"])
+            print("CATEGORY:", event["category"], "-", event["class"], "-", event["type"])
+
+            found = True
+
         for market in event["markets"]:
+
+            if search_term.lower() in market["name"].lower():
+
+                print()
+                print("EVENT:", event["event_name"])
+                print("MARKET:", market["name"])
+
+                found = True
 
             for selection in market["selections"]:
 
@@ -37,3 +55,9 @@ def search_platform(
                         market["name"],
                         selection
                     )
+
+                    found = True
+
+    if found == False:
+
+        print("No results found.")

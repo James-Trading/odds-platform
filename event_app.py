@@ -83,6 +83,8 @@ from actions.pending_actions import handle_save_pending_changes
 
 from scheduler_functions import check_event_schedule
 
+from actions.edit_actions import handle_edit_event
+
 from submenus import show_main_menu
 
 clients = load_clients()
@@ -332,6 +334,10 @@ while running:
         handle_save_pending_changes(platform)
 
     elif choice == "29":
+
+        handle_edit_event(platform)
+
+    elif choice == "30":
 
         print("Goodbye")
 

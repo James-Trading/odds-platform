@@ -31,7 +31,8 @@ def show_menu():
     print("26 Publish Event")
     print("27 Export Event")
     print("28 Save Pending Changes")
-    print("29 Exit")
+    print("29 Edit Event")
+    print("30 Exit")
     print()
 
     choice = input("Choice: ")
