@@ -87,6 +87,8 @@ from actions.edit_actions import handle_edit_event
 
 from dashboard_functions import display_dashboard
 
+from history_functions import display_price_history
+
 from submenus import show_main_menu
 
 clients = load_clients()
@@ -345,6 +347,16 @@ while running:
         handle_edit_event(platform)
 
     elif choice == "30":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        selection = choose_selection(market)
+
+        display_price_history(selection)
+
+    elif choice == "31":
 
         print("Goodbye")
 

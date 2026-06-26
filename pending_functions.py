@@ -1,3 +1,4 @@
+from datetime import datetime
 def save_pending_changes(market):
 
     changes = 0
@@ -6,7 +7,17 @@ def save_pending_changes(market):
 
         if selection["pending_price"] is not None:
 
-            selection["price"] = selection["pending_price"]
+            old_price = selection["price"]
+            new_price = selection["pending_price"]
+
+            selection["price_history"].append(
+                {
+                    "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "price": new_price
+                }
+            )
+
+            selection["price"] = new_price
 
             selection["pending_price"] = None
 

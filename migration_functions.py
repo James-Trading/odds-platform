@@ -23,3 +23,17 @@ def add_pending_price_to_existing_selections(platform):
                     selection["pending_price"] = None
 
     print("Pending price migration complete.")
+
+def add_price_history_to_existing_selections(platform):
+
+    for event in platform:
+
+        for market in event["markets"]:
+
+            for selection in market["selections"]:
+
+                if "price_history" not in selection:
+
+                    selection["price_history"] = []
+
+    print("Price history migration complete.")

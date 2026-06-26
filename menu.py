@@ -32,7 +32,8 @@ def show_menu():
     print("27 Export Event")
     print("28 Save Pending Changes")
     print("29 Edit Event")
-    print("30 Exit")
+    print("30 View Price History")
+    print("31 Exit")
     print()
 
     choice = input("Choice: ")

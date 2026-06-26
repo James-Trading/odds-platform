@@ -21,7 +21,8 @@
                         "active": false,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     },
                     {
                         "name": "Delta Goodrem",
@@ -32,18 +33,59 @@
                         "active": true,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     },
                     {
                         "name": "Lacey Turner",
                         "price": [
-                            7,
+                            3,
                             1
                         ],
                         "active": true,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-26 23:51:27",
+                                "old_price": [
+                                    20,
+                                    1
+                                ],
+                                "new_price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "James Dobson",
+                        "price": [
+                            4,
+                            6
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-27 00:17:17",
+                                "price": [
+                                    1,
+                                    1
+                                ]
+                            },
+                            {
+                                "created": "2026-06-27 00:17:53",
+                                "price": [
+                                    4,
+                                    6
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
                     }
                 ],
                 "published": false
@@ -62,7 +104,8 @@
                         "active": true,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     },
                     {
                         "name": "Delta Goodrem",
@@ -73,7 +116,8 @@
                         "active": true,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     },
                     {
                         "name": "Lacey Turner",
@@ -84,7 +128,8 @@
                         "active": true,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     }
                 ],
                 "published": true
@@ -115,7 +160,8 @@
                         "active": false,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     },
                     {
                         "name": "Italy",
@@ -126,7 +172,8 @@
                         "active": false,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     },
                     {
                         "name": "Ukraine",
@@ -137,7 +184,8 @@
                         "active": false,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null
+                        "pending_price": null,
+                        "price_history": []
                     }
                 ],
                 "published": true

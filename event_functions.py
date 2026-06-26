@@ -1,3 +1,4 @@
+from datetime import datetime
 def create_event(category, event_class, event_type, event_name):
     return {
         "category": category,
@@ -33,6 +34,12 @@ def add_selection(market, selection_name, price):
             "name": selection_name,
             "price": price,
             "pending_price": None,
+            "price_history": [
+                {
+                    "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "price": price
+                }
+            ],
             "active": True,
             "displayed": True,
             "result": ""
