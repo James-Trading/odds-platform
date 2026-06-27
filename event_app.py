@@ -1,7 +1,7 @@
 from event_functions import create_event, create_market, add_selection
 from audit_functions import add_audit_log, display_audit_log
 from pricing import probability
-from pricing_actions import handle_price_change
+from actions.pricing_actions import handle_price_change, handle_multiple_price_changes
 from display_functions import (
     display_platform,
     display_event,
@@ -79,7 +79,7 @@ from actions.publish_actions import handle_publish_event
 
 from actions.export_actions import handle_export_event
 
-from actions.pending_actions import handle_save_pending_changes
+from actions.pending_actions import handle_save_pending_changes, handle_undo_pending_changes
 
 from scheduler_functions import check_event_schedule
 
@@ -88,6 +88,8 @@ from actions.edit_actions import handle_edit_event
 from dashboard_functions import display_dashboard
 
 from history_functions import display_price_history
+
+from market_workspace import open_market_workspace
 
 from submenus import show_main_menu
 
@@ -357,6 +359,30 @@ while running:
         display_price_history(selection)
 
     elif choice == "31":
+
+        handle_multiple_price_changes(platform)
+
+    elif choice == "32":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        handle_undo_pending_changes(platform)
+
+        save_platform(platform)
+
+    elif choice == "33":
+
+        event = choose_event(platform)
+
+        market = choose_market(event)
+
+        open_market_workspace(market)
+
+        save_platform(platform)
+
+    elif choice == "34":
 
         print("Goodbye")
 

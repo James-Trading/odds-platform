@@ -15,26 +15,56 @@
                     {
                         "name": "Dani Dyer",
                         "price": [
-                            10,
-                            1
-                        ],
-                        "active": false,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": null,
-                        "price_history": []
-                    },
-                    {
-                        "name": "Delta Goodrem",
-                        "price": [
-                            5,
+                            2,
                             1
                         ],
                         "active": true,
                         "displayed": true,
                         "result": "",
                         "pending_price": null,
-                        "price_history": []
+                        "price_history": [
+                            {
+                                "created": "2026-06-27 09:54:41",
+                                "price": [
+                                    20,
+                                    1
+                                ]
+                            },
+                            {
+                                "created": "2026-06-27 11:42:40",
+                                "price": [
+                                    3,
+                                    1
+                                ]
+                            },
+                            {
+                                "created": "2026-06-27 17:04:20",
+                                "price": [
+                                    2,
+                                    1
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Delta Goodrem",
+                        "price": [
+                            8,
+                            1
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": "",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-27 11:42:40",
+                                "price": [
+                                    8,
+                                    1
+                                ]
+                            }
+                        ]
                     },
                     {
                         "name": "Lacey Turner",

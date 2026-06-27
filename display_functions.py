@@ -33,7 +33,16 @@ def display_market(market):
         top = selection["price"][0]
         bottom = selection["price"][1]
 
-        prob = probability(top, bottom)
+        calculation_price = selection["price"]
+
+        if selection["pending_price"] is not None:
+
+            calculation_price = selection["pending_price"]
+
+        prob = probability(
+            calculation_price[0],
+            calculation_price[1]
+        )
 
         if selection["active"]:
             book_percentage = book_percentage + prob

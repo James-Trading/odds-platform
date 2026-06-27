@@ -33,7 +33,10 @@ def show_menu():
     print("28 Save Pending Changes")
     print("29 Edit Event")
     print("30 View Price History")
-    print("31 Exit")
+    print("31 Edit Multiple Prices")
+    print("32 Undo Pending Changes")
+    print("33 Open Market Workspace")
+    print("34 Exit")
     print()
 
     choice = input("Choice: ")

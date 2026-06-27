@@ -24,3 +24,18 @@ def save_pending_changes(market):
             changes += 1
 
     print(f"{changes} pending change(s) saved.")
+
+def undo_pending_changes(market):
+
+    undone = 0
+
+    for selection in market["selections"]:
+
+        if selection["pending_price"] is not None:
+
+            selection["pending_price"] = None
+
+            undone += 1
+
+    print()
+    print(f"{undone} pending change(s) undone.")
