@@ -194,9 +194,9 @@ while running:
         
         display_platform(platform)
 
-    elif choice == "2":
+    #elif choice == "2":
 
-        handle_price_change(platform)
+        #handle_price_change(platform)
 
     elif choice == "3":
         handle_suspend_selection(platform)
@@ -340,37 +340,37 @@ while running:
 
         handle_export_event(platform)
 
-    elif choice == "28":
+    #elif choice == "28":
 
-        handle_save_pending_changes(platform)
+        #handle_save_pending_changes(platform)
 
     elif choice == "29":
 
         handle_edit_event(platform)
 
-    elif choice == "30":
+    #elif choice == "30":
 
-        event = choose_event(platform)
+        #event = choose_event(platform)
 
-        market = choose_market(event)
+        #market = choose_market(event)
 
-        selection = choose_selection(market)
+        #selection = choose_selection(market)
 
-        display_price_history(selection)
+        #display_price_history(selection)
 
     elif choice == "31":
 
         handle_multiple_price_changes(platform)
 
-    elif choice == "32":
+    #elif choice == "32":
 
-        event = choose_event(platform)
+        #event = choose_event(platform)
 
-        market = choose_market(event)
+        #market = choose_market(event)
 
-        handle_undo_pending_changes(platform)
+        #handle_undo_pending_changes(platform)
 
-        save_platform(platform)
+        #save_platform(platform)
 
     elif choice == "33":
 

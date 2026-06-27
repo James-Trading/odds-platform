@@ -11,7 +11,7 @@ def display_event(event):
             display_market(market)
 
 
-def display_market(market):
+def display_market(market, numbered=False):
     published_status = "NOT PUBLISHED"
 
     if market["published"]:
@@ -26,7 +26,7 @@ def display_market(market):
 
     book_percentage = 0
 
-    for selection in market["selections"]:
+    for i, selection in enumerate(market["selections"], start=1):
         if selection["displayed"] == False:
             continue
         
@@ -65,13 +65,17 @@ def display_market(market):
                 + str(pending_top) + "/" + str(pending_bottom)
                 + " UNSAVED"
             )
+        prefix = ""
+
+        if numbered:
+
+            prefix = f"{i}. "
         print(
-            selection["name"],
-            price_display,
-            round(prob,2),
-            "%",
-            status,
-            selection["result"]
+            f"{prefix}{selection['name']} "
+            f"{price_display} "
+            f"{prob:.2f} % "
+            f"{status} "
+            f"{selection['result']}"
         )
 
     print("Book Percentage:", round(book_percentage, 2), "%")

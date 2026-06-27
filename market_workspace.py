@@ -10,7 +10,7 @@ def open_market_workspace(market):
 
     while True:
 
-        display_market(market)
+        display_market(market, numbered=True)
 
         print()
         print("MARKET WORKSPACE")

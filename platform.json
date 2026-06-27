@@ -21,7 +21,10 @@
                         "active": true,
                         "displayed": true,
                         "result": "",
-                        "pending_price": null,
+                        "pending_price": [
+                            3,
+                            1
+                        ],
                         "price_history": [
                             {
                                 "created": "2026-06-27 09:54:41",
