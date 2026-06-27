@@ -93,9 +93,21 @@ from market_workspace import open_market_workspace
 
 from submenus import show_main_menu
 
+from bets.bet_save_load import load_bets
+
+from bets.bet_functions import create_test_bet
+
+from actions.bet_actions import handle_create_bet
+
+from bets.bet_display import display_bets
+
+from bets.liability_functions import calculate_selection_liability
+
 clients = load_clients()
 
 platform = load_platform()
+
+bets = load_bets()
 
 check_event_schedule(platform)
 save_platform(platform)
@@ -378,7 +390,7 @@ while running:
 
         market = choose_market(event)
 
-        open_market_workspace(market)
+        open_market_workspace(event, market, bets)
 
         save_platform(platform)
 
@@ -387,3 +399,35 @@ while running:
         print("Goodbye")
 
         running = False
+
+    elif choice == "35":
+
+        handle_create_bet(
+            bets,
+            clients,
+            platform
+        )
+
+    elif choice == "36":
+
+        display_bets(bets)
+
+        input("\nPress Enter to continue...")
+
+    elif choice == "37":
+
+        liability = calculate_selection_liability(
+            bets,
+            "Strictly Come Dancing 2026",
+            "Winner",
+            "Dani Dyer"
+        )
+
+        print()
+        print(f"Dani Dyer: £{liability:.2f}")
+
+        input("\nPress Enter to continue...")
+
+    elif choice == "98":
+
+        create_test_bet(bets)

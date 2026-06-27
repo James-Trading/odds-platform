@@ -6,7 +6,9 @@ from pending_functions import (
 )
 from actions.pricing_actions import handle_multiple_price_changes, edit_prices_for_market
 
-def open_market_workspace(market):
+from bets.liability_functions import display_market_liability
+
+def open_market_workspace(event, market, bets):
 
     while True:
 
@@ -20,6 +22,7 @@ def open_market_workspace(market):
         print("U Undo Pending")
         print("H Price History")
         print("0 Back")
+        print("L Liability")
 
         choice = input("Choice: ").upper()
 
@@ -54,6 +57,16 @@ def open_market_workspace(market):
                 display_price_history(selection)
 
                 input("\nPress Enter to continue()")
+
+        elif choice == "L":
+
+            display_market_liability(
+                bets,
+                event,
+                market
+            )
+
+            input("\nPress Enter to continue...")
 
         elif choice == "0":
 

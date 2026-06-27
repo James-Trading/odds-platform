@@ -1,0 +1,101 @@
+[
+    {
+        "id": "c015728e-af1f-483d-9043-ed83eecb4ae6",
+        "created": "2026-06-27 21:38:25",
+        "client": "William Hill",
+        "event": "Strictly Come Dancing 2026",
+        "market": "Winner",
+        "selection": "Dani Dyer",
+        "stake": 100,
+        "price": [
+            3,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    },
+    {
+        "id": "a827526c-4066-4429-bb09-4f310475ccf7",
+        "created": "2026-06-27 21:38:26",
+        "client": "William Hill",
+        "event": "Strictly Come Dancing 2026",
+        "market": "Winner",
+        "selection": "Dani Dyer",
+        "stake": 100,
+        "price": [
+            3,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    },
+    {
+        "id": "8cdfa782-3ac5-4210-bb5e-dada9f6c6b16",
+        "created": "2026-06-27 22:03:03",
+        "client": "James",
+        "event": "Strictly Come Dancing 2026",
+        "market": "Outright",
+        "selection": "Dani Dyer",
+        "stake": 200.0,
+        "price": [
+            2,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    },
+    {
+        "id": "e4284f21-d95f-4c9c-9987-7d33646b7d10",
+        "created": "2026-06-27 22:08:00",
+        "client": "William",
+        "event": "Strictly Come Dancing 2026",
+        "market": "Outright",
+        "selection": "Dani Dyer",
+        "stake": 25.0,
+        "price": [
+            2,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    },
+    {
+        "id": "02a66096-b1d1-40b5-a277-fcc534fddaaf",
+        "created": "2026-06-27 22:08:13",
+        "client": "James",
+        "event": "Strictly Come Dancing 2026",
+        "market": "Outright",
+        "selection": "Delta Goodrem",
+        "stake": 30.0,
+        "price": [
+            8,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    },
+    {
+        "id": "acb4ead6-7044-453a-afc9-9a643f402a2e",
+        "created": "2026-06-27 22:41:24",
+        "client": "James",
+        "event_id": "a37e127e-eda6-47e5-b44a-76502e6f92f1",
+        "market_id": "23d230d1-d938-4bbb-bb6a-bf32b8725d7a",
+        "selection_id": "6edfc5fb-87c2-424b-8adf-2ed4d4f153d3",
+        "event": "Big Bro 26",
+        "market": "Outright",
+        "selection": "Tito",
+        "stake": 33.0,
+        "price": [
+            5,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    }
+]
