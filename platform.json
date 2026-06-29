@@ -256,7 +256,7 @@
         "markets": [
             {
                 "name": "Winner",
-                "status": "Active",
+                "status": "Closed",
                 "displayed": true,
                 "selections": [],
                 "published": false
@@ -289,7 +289,7 @@
         "markets": [
             {
                 "name": "Outright",
-                "status": "VOID",
+                "status": "Closed",
                 "displayed": true,
                 "selections": [],
                 "published": false
@@ -395,7 +395,7 @@
             {
                 "id": "23d230d1-d938-4bbb-bb6a-bf32b8725d7a",
                 "name": "Outright",
-                "status": "Active",
+                "status": "Closed",
                 "published": false,
                 "displayed": true,
                 "selections": [
@@ -412,6 +412,138 @@
                                 "created": "2026-06-27 22:30:53",
                                 "price": [
                                     5,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "e38ed6d7-a252-42d7-9366-194a3d280046",
+        "category": "tv",
+        "class": "tv",
+        "type": "tv",
+        "event_name": "The Circle",
+        "status": "Active",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/10/2026 09:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "7378934d-d419-4402-9abc-042075a25d80",
+                "name": "Outright",
+                "status": "Settled",
+                "published": false,
+                "displayed": true,
+                "selections": [
+                    {
+                        "id": "b60c7d02-21ab-4259-8a9b-2890f94aea64",
+                        "name": "Minge",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-29 22:18:30",
+                                "price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "32d8f4dd-75e6-4153-9b6b-c3d65a591bdb",
+        "category": "tv",
+        "class": "tv",
+        "type": "tv",
+        "event_name": "Bake Off",
+        "status": "Active",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/12/2026 21:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "afb35de8-9c9f-4d22-9876-104a6482dd57",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "selections": [
+                    {
+                        "id": "86c6d023-15e2-49fd-a8d1-de201a75c38c",
+                        "name": "Jimmy Q",
+                        "price": [
+                            5,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-29 22:28:48",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "5da07c7f-59e9-48cc-a7d0-0fc4d05b9015",
+        "category": "tv",
+        "class": "tv",
+        "type": "tv",
+        "event_name": "Corrie",
+        "status": "Active",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/12/2026 21:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "1bfbc40c-5359-431b-a198-09c62a64bc8a",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "selections": [
+                    {
+                        "id": "7b37fd4f-14a5-43a4-b7f6-7c15168b1f1e",
+                        "name": "david",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-29 22:37:21",
+                                "price": [
+                                    3,
                                     1
                                 ]
                             }

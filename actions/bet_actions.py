@@ -29,6 +29,15 @@ def handle_create_bet(bets, clients, platform):
 
         return
 
+    if market["published"] == False:
+
+        print()
+        print("Market is not published - bets cannot be accepted.")
+
+        input("\nPress Enter to continue...")
+
+        return
+
     selection = choose_selection(market)
 
     print()

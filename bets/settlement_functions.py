@@ -1,7 +1,10 @@
 from bets.bet_save_load import save_bets
 
+from save_load import save_platform
+
 
 def settle_market(
+    platform,
     bets,
     event,
     market,
@@ -30,5 +33,9 @@ def settle_market(
             bet["status"] = "Closed"
             bet["settled"] = True
             bet["result"] = "Lost"
+
+    market["status"] = "Settled"
+
+    save_platform(platform)
 
     save_bets(bets)

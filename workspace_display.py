@@ -31,6 +31,7 @@ def display_market_workspace(event, market, bets):
     print("MARKET WORKSPACE")
     print("================")
     print(event["event_name"], "-", market["name"])
+    print(f"Status: {market['status']}")
     print()
 
     print(f"{'No':<3}{'Selection':<25}{'Price':<20}{'P/L':>12}")

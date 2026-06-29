@@ -14,6 +14,8 @@ from bets.settlement_functions import settle_market
 
 from actions.market_status_actions import change_market_status
 
+from save_load import save_platform
+
 def open_market_workspace(platform, event, market, bets):
 
     while True:
@@ -27,10 +29,22 @@ def open_market_workspace(platform, event, market, bets):
         print("S Save Pending")
         print("U Undo Pending")
         print("L Liability")
-        print("T Settle Market")
-        print("M Market Status")
+        if market["status"] == "Closed":
+            print("T Settle Market")
         print("H Price History")
         print("0 Back")
+
+        if market["status"] == "Trading":
+
+            print("X Suspend Market")
+
+        elif market["status"] == "Suspended":
+
+            print("R Resume Trading")
+
+        if market["status"] in ["Trading", "Suspended"]:
+
+            print("C Close Market")
 
         choice = input("Choice: ").upper()
 
@@ -78,11 +92,21 @@ def open_market_workspace(platform, event, market, bets):
 
         elif choice == "T":
 
+            if market["status"] != "Closed":
+
+                print()
+                print("Market must be Closed before settlement.")
+
+                input("\nPress Enter to continue...")
+
+                continue
+
             selection_number = int(input("Winning selection: "))
 
             winning_selection = market["selections"][selection_number - 1]["name"]
 
             settle_market(
+                platform,
                 bets,
                 event,
                 market,
@@ -94,12 +118,38 @@ def open_market_workspace(platform, event, market, bets):
 
             input("\nPress Enter to continue...")
 
-        elif choice == "M":
+        elif choice == "X":
 
-            change_market_status(
-                platform,
-                market
-            )
+            market["status"] = "Suspended"
+
+            save_platform(platform)
+
+            print()
+            print("✓ Market suspended.")
+
+            input("\nPress Enter to continue...")
+
+        elif choice == "R":
+
+            market["status"] = "Trading"
+
+            save_platform(platform)
+
+            print()
+            print("✓ Market resumed.")
+
+            input("\nPress Enter to continue...")
+
+        elif choice == "C":
+
+            market["status"] = "Closed"
+
+            save_platform(platform)
+
+            print()
+            print("✓ Market closed.")
+
+            input("\nPress Enter to continue...")
 
         elif choice == "0":
 
