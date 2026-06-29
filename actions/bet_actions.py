@@ -20,6 +20,15 @@ def handle_create_bet(bets, clients, platform):
 
     market = choose_market(event)
 
+    if market["status"] != "Trading":
+
+        print()
+        print(f"Market is {market['status']} - bets cannot be accepted.")
+
+        input("\nPress Enter to continue...")
+
+        return
+
     selection = choose_selection(market)
 
     print()

@@ -9,7 +9,7 @@
         "markets": [
             {
                 "name": "Outright",
-                "status": "Active",
+                "status": "Closed",
                 "displayed": true,
                 "selections": [
                     {
@@ -347,7 +347,38 @@
         "published": false,
         "start_time": "25/06/2026 09:00",
         "suspend_mode": "AUTO",
-        "markets": []
+        "markets": [
+            {
+                "id": "ee3c4e60-2906-406e-8757-db6ca3943cc2",
+                "name": "Outright",
+                "status": "Active",
+                "published": false,
+                "displayed": true,
+                "selections": [
+                    {
+                        "id": "cfb16cca-3282-453a-b003-30a53d152279",
+                        "name": "Test",
+                        "price": [
+                            2,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-06-29 17:40:14",
+                                "price": [
+                                    2,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": "a37e127e-eda6-47e5-b44a-76502e6f92f1",

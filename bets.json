@@ -43,9 +43,9 @@
             2,
             1
         ],
-        "status": "Open",
+        "status": "Settled",
         "settled": false,
-        "result": null
+        "result": "Won"
     },
     {
         "id": "e4284f21-d95f-4c9c-9987-7d33646b7d10",
@@ -59,9 +59,9 @@
             2,
             1
         ],
-        "status": "Open",
+        "status": "Settled",
         "settled": false,
-        "result": null
+        "result": "Won"
     },
     {
         "id": "02a66096-b1d1-40b5-a277-fcc534fddaaf",
@@ -75,9 +75,9 @@
             8,
             1
         ],
-        "status": "Open",
+        "status": "Settled",
         "settled": false,
-        "result": null
+        "result": "Lost"
     },
     {
         "id": "acb4ead6-7044-453a-afc9-9a643f402a2e",
@@ -92,6 +92,63 @@
         "stake": 33.0,
         "price": [
             5,
+            1
+        ],
+        "status": "Settled",
+        "settled": false,
+        "result": "Won"
+    },
+    {
+        "id": "5c411696-8bfe-4191-b786-9f7cf3857089",
+        "created": "2026-06-29 17:42:52",
+        "client": "James",
+        "event_id": "b82bcd2c-5054-48c4-b9de-98855d802a2c",
+        "market_id": "82a7de6e-3902-4cf3-bd92-6839447d4f64",
+        "selection_id": "73cda30e-b8cf-41d6-b272-9771b89e99b4",
+        "event": "Outright Test",
+        "market": "Outright",
+        "selection": "Testy",
+        "stake": 100.0,
+        "price": [
+            2,
+            1
+        ],
+        "status": "Closed",
+        "settled": true,
+        "result": "Won"
+    },
+    {
+        "id": "a57eba4b-7aa4-4a36-95fb-827aeec610db",
+        "created": "2026-06-29 20:49:47",
+        "client": "James",
+        "event_id": "3f77c97a-2277-45ee-8c9f-7146222d2c33",
+        "market_id": "90c40390-b86f-4760-9529-d037e352b183",
+        "selection_id": "dfec10db-4a08-4dc3-bd31-68d5bcacb920",
+        "event": "Test2",
+        "market": "testtoday",
+        "selection": "jimbob",
+        "stake": 100.0,
+        "price": [
+            2,
+            1
+        ],
+        "status": "Open",
+        "settled": false,
+        "result": null
+    },
+    {
+        "id": "04b8c85e-e38e-4992-b581-95c9fe7df280",
+        "created": "2026-06-29 20:51:30",
+        "client": "James",
+        "event_id": "3f77c97a-2277-45ee-8c9f-7146222d2c33",
+        "market_id": "90c40390-b86f-4760-9529-d037e352b183",
+        "selection_id": "dfec10db-4a08-4dc3-bd31-68d5bcacb920",
+        "event": "Test2",
+        "market": "testtoday",
+        "selection": "jimbob",
+        "stake": 100.0,
+        "price": [
+            2,
             1
         ],
         "status": "Open",

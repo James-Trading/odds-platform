@@ -63,3 +63,5 @@
 27/06/2026 15:26:41 - Dani Dyer pending price set to 1/1
 27/06/2026 17:04:10 - Dani Dyer pending price set to 2/1
 27/06/2026 17:23:54 - Dani Dyer pending price set to 3/1
+29/06/2026 20:53:30 - Outright Test deleted
+29/06/2026 20:53:40 - Test2 deleted

@@ -20,7 +20,7 @@ def create_market(event, market_name):
     market = {
         "id": str(uuid.uuid4()),
         "name": market_name,
-        "status": "Active",
+        "status": "Trading",
         "published": False,
         "displayed": True,
         "selections": []
