@@ -81,6 +81,31 @@ def display_market(market, numbered=False):
     print("Book Percentage:", round(book_percentage, 2), "%")
     print()
 
+def calculate_market_percentage(market):
+
+    book_percentage = 0
+
+    for selection in market["selections"]:
+
+        if selection["displayed"] == False:
+            continue
+
+        calculation_price = selection["price"]
+
+        if selection["pending_price"] is not None:
+            calculation_price = selection["pending_price"]
+
+        if selection["active"]:
+
+            prob = probability(
+                calculation_price[0],
+                calculation_price[1]
+            )
+
+            book_percentage += prob
+
+    return book_percentage
+
 def display_platform(platform):
     print("JAMES TRADING PLATFORM")
     print("======================")

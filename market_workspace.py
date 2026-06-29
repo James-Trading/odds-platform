@@ -8,11 +8,13 @@ from actions.pricing_actions import handle_multiple_price_changes, edit_prices_f
 
 from bets.liability_functions import display_market_liability
 
+from workspace_display import display_market_workspace
+
 def open_market_workspace(event, market, bets):
 
     while True:
 
-        display_market(market, numbered=True)
+        display_market_workspace(event, market, bets)
 
         print()
         print("MARKET WORKSPACE")
