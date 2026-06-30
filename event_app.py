@@ -103,6 +103,8 @@ from bets.bet_display import display_bets
 
 from bets.liability_functions import calculate_selection_liability
 
+from ticker.bet_ticker import display_bet_ticker
+
 clients = load_clients()
 
 platform = load_platform()
@@ -427,6 +429,10 @@ while running:
         print(f"Dani Dyer: £{liability:.2f}")
 
         input("\nPress Enter to continue...")
+
+    elif choice == "38":
+
+        display_bet_ticker(bets)
 
     elif choice == "98":
 

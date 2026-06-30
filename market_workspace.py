@@ -16,6 +16,8 @@ from actions.market_status_actions import change_market_status
 
 from save_load import save_platform
 
+from reports.market_reports import display_market_report
+
 def open_market_workspace(platform, event, market, bets):
 
     while True:
@@ -32,6 +34,7 @@ def open_market_workspace(platform, event, market, bets):
         if market["status"] == "Closed":
             print("T Settle Market")
         print("H Price History")
+        print("V Market Report")
         print("0 Back")
 
         if market["status"] == "Trading":
@@ -150,6 +153,14 @@ def open_market_workspace(platform, event, market, bets):
             print("✓ Market closed.")
 
             input("\nPress Enter to continue...")
+
+        elif choice == "V":
+
+            display_market_report(
+                bets,
+                event,
+                market
+            )
 
         elif choice == "0":
 

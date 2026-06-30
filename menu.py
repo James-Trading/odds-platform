@@ -40,6 +40,7 @@ def show_menu():
     print("35 Create Bet")
     print("36 View Bets")
     print("37 Test Liability")
+    print("38 Live Bet Feed")
     print("98 Developer Tools")
     print()
 
