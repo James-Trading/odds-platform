@@ -381,50 +381,6 @@
         ]
     },
     {
-        "id": "a37e127e-eda6-47e5-b44a-76502e6f92f1",
-        "category": "Specials",
-        "class": "TV",
-        "type": "Big Brother",
-        "event_name": "Big Bro 26",
-        "status": "Active",
-        "displayed": true,
-        "published": false,
-        "start_time": "01/09/2026 21:00",
-        "suspend_mode": "AUTO",
-        "markets": [
-            {
-                "id": "23d230d1-d938-4bbb-bb6a-bf32b8725d7a",
-                "name": "Outright",
-                "status": "Closed",
-                "published": false,
-                "displayed": true,
-                "selections": [
-                    {
-                        "id": "6edfc5fb-87c2-424b-8adf-2ed4d4f153d3",
-                        "name": "Tito",
-                        "price": [
-                            5,
-                            1
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-06-27 22:30:53",
-                                "price": [
-                                    5,
-                                    1
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    }
-                ]
-            }
-        ]
-    },
-    {
         "id": "e38ed6d7-a252-42d7-9366-194a3d280046",
         "category": "tv",
         "class": "tv",
@@ -542,6 +498,143 @@
                         "price_history": [
                             {
                                 "created": "2026-06-29 22:37:21",
+                                "price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "c33818c8-2cac-441c-a4d8-668c76b17593",
+        "category": "Tv",
+        "class": "tv",
+        "type": "tv",
+        "event_name": "Big Brother 2026",
+        "status": "Active",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/09/2026 09:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "6d2878dc-eb5d-40be-ba5b-c092097eead4",
+                "name": "Outright",
+                "status": "Active",
+                "published": false,
+                "displayed": true,
+                "selections": [
+                    {
+                        "id": "3f96337c-4096-4506-8e87-d431c95fc5d8",
+                        "name": "Maggie",
+                        "price": [
+                            5,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-01 00:01:11",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "ec9dfedd-bc45-4b72-aebc-1cddd42d315b",
+        "category": "tv",
+        "class": "tv",
+        "type": "tv",
+        "event_name": "Love Island",
+        "status": "Trading",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/08/2026 21:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "cd586958-bc29-4cc0-9d94-d2d3f41a6160",
+                "name": "Outright",
+                "status": "Suspended",
+                "published": true,
+                "displayed": true,
+                "selections": [
+                    {
+                        "id": "e952a235-98fb-44ee-9610-80539da5bca6",
+                        "name": "Aidan",
+                        "price": [
+                            7,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-01 09:12:52",
+                                "price": [
+                                    7,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "1c61db50-8b70-4a25-b192-db11f0cca153",
+        "category": "film",
+        "class": "film",
+        "type": "film",
+        "event_name": "Oscars",
+        "status": "Trading",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/12/2026 20:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "5acfcafb-aaee-4253-a8df-be2d9be52222",
+                "name": "Best picture",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "2b4bd169-adb0-46af-8758-b54a32790862",
+                        "name": "toy story",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-01 21:10:51",
                                 "price": [
                                     3,
                                     1

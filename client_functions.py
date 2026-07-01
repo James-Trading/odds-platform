@@ -13,6 +13,13 @@ def create_client(
 
         "status": "Active",
 
+        "feed": {
+            "enabled": True,
+            "connector": "None",
+            "last_price_update": None,
+            "last_bet_received": None
+        },
+
         "booked_events": []
 
     }

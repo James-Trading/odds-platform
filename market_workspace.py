@@ -18,6 +18,8 @@ from save_load import save_platform
 
 from reports.market_reports import display_market_report
 
+from settings.market_settings import display_market_settings
+
 def open_market_workspace(platform, event, market, bets):
 
     while True:
@@ -35,6 +37,7 @@ def open_market_workspace(platform, event, market, bets):
             print("T Settle Market")
         print("H Price History")
         print("V Market Report")
+        print("K Market Settings")
         print("0 Back")
 
         if market["status"] == "Trading":
@@ -48,6 +51,10 @@ def open_market_workspace(platform, event, market, bets):
         if market["status"] in ["Trading", "Suspended"]:
 
             print("C Close Market")
+
+        if not market["published"]:
+
+            print("P Publish Market")
 
         choice = input("Choice: ").upper()
 
@@ -159,6 +166,23 @@ def open_market_workspace(platform, event, market, bets):
             display_market_report(
                 bets,
                 event,
+                market
+            )
+
+        elif choice == "P":
+
+            market["published"] = True
+
+            save_platform(platform)
+
+            print()
+            print("✓ Market published.")
+
+            input("\nPress Enter to continue...")
+
+        elif choice == "K":
+
+            display_market_settings(
                 market
             )
 

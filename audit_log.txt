@@ -65,3 +65,13 @@
 27/06/2026 17:23:54 - Dani Dyer pending price set to 3/1
 29/06/2026 20:53:30 - Outright Test deleted
 29/06/2026 20:53:40 - Test2 deleted
+01/07/2026 00:00:27 - Big Bro 26 deleted
+01/07/2026 00:01:29 - Big Brother 2026 published
+01/07/2026 00:01:46 - Big Brother 2026 suspended
+01/07/2026 00:02:04 - Big Brother 2026 unsuspended
+01/07/2026 00:02:25 - Big Brother 2026 published
+01/07/2026 00:04:11 - Big Brother 2026 published
+01/07/2026 00:05:45 - Outright suspended in Big Brother 2026
+01/07/2026 00:06:01 - Outright unsuspended in Big Brother 2026
+01/07/2026 00:06:22 - Big Brother 2026 published
+01/07/2026 22:05:26 - Client created: Cath

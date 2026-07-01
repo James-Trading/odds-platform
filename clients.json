@@ -18,5 +18,18 @@
             "Strictly Come Dancing 2026",
             "Eurovision 2027"
         ]
+    },
+    {
+        "name": "Cath",
+        "contact": "@cath",
+        "email": "@cath",
+        "status": "Active",
+        "feed": {
+            "enabled": true,
+            "connector": "None",
+            "last_price_update": null,
+            "last_bet_received": null
+        },
+        "booked_events": []
     }
 ]

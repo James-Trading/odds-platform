@@ -7,6 +7,8 @@ from display_functions import (
 from actions.client_actions import choose_client
 from bets.bet_functions import add_bet
 
+from risk.risk_checks import run_risk_checks
+
 
 def handle_create_bet(bets, clients, platform):
 
@@ -20,19 +22,14 @@ def handle_create_bet(bets, clients, platform):
 
     market = choose_market(event)
 
-    if market["status"] != "Trading":
+    allowed, message = run_risk_checks(
+        market
+    )
+
+    if not allowed:
 
         print()
-        print(f"Market is {market['status']} - bets cannot be accepted.")
-
-        input("\nPress Enter to continue...")
-
-        return
-
-    if market["published"] == False:
-
-        print()
-        print("Market is not published - bets cannot be accepted.")
+        print(message)
 
         input("\nPress Enter to continue...")
 

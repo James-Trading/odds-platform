@@ -7,6 +7,8 @@ from client_save_load import save_clients
 from audit_functions import add_audit_log
 from display_functions import choose_event
 
+from feeds.client_feeds import display_client_feed
+
 
 def handle_add_client(clients):
 
@@ -123,6 +125,18 @@ def handle_view_client(clients):
         for event in client["booked_events"]:
 
             print(f"- {event}")
+    print()
+    print("F Client Feed")
+    print("0 Back")
+
+    choice = input("Choice: ").upper()
+
+    if choice == "F":
+
+        display_client_feed(
+            clients,
+            client
+        )
 
 def handle_unbook_event(clients):
 

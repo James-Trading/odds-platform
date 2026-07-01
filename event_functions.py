@@ -7,7 +7,7 @@ def create_event(category, event_class, event_type, event_name):
         "class": event_class,
         "type": event_type,
         "event_name": event_name,
-        "status": "Active",
+        "status": "Trading",
         "displayed": True,
         "published": False,
         "start_time": "",
@@ -23,6 +23,14 @@ def create_market(event, market_name):
         "status": "Trading",
         "published": False,
         "displayed": True,
+
+        "limits": {
+            "max_win_per_customer": 500,
+            "max_liability": 5000
+        },
+
+        "notes": "",
+
         "selections": []
     }
 
