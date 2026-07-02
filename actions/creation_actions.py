@@ -9,9 +9,12 @@ from save_load import save_platform
 from display_functions import display_platform
 
 
-def handle_create_event(platform):
+def handle_create_event(platform, clients):
 
-    create_platform_event(platform)
+    create_platform_event(
+        platform,
+        clients
+    )
 
     save_platform(platform)
 

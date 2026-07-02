@@ -20,7 +20,8 @@ def create_client(
             "last_bet_received": None
         },
 
-        "booked_events": []
+        "booked_events": [],
+        "subscriptions": []
 
     }
 

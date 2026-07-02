@@ -1,5 +1,6 @@
 from event_functions import create_event
 from templates import create_eurovision_template, create_strictly_template
+from client_save_load import save_clients
 
 def create_template_event(platform):
 
@@ -28,7 +29,7 @@ def create_template_event(platform):
         print("Template event created.")
 
 
-def create_platform_event(platform):
+def create_platform_event(platform, clients):
 
     category = input("Category: ")
 
@@ -70,6 +71,18 @@ def create_platform_event(platform):
     event["suspend_mode"] = suspend_mode
 
     platform.append(event)
+
+    for client in clients:
+
+        if event["category"] in client.get("subscriptions", []):
+
+            if event["event_name"] not in client["booked_events"]:
+
+                client["booked_events"].append(event["event_name"])
+
+                print(f"✓ {client['name']} automatically booked onto {event['event_name']}")
+
+    save_clients(clients)
 
     print("Event created.")
 

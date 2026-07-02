@@ -9,6 +9,7 @@ from display_functions import choose_event
 
 from feeds.client_feeds import display_client_feed
 
+from feeds.client_subscriptions import manage_client_subscriptions
 
 def handle_add_client(clients):
 
@@ -127,6 +128,7 @@ def handle_view_client(clients):
             print(f"- {event}")
     print()
     print("F Client Feed")
+    print("B Feed Subscriptions")
     print("0 Back")
 
     choice = input("Choice: ").upper()
@@ -137,6 +139,10 @@ def handle_view_client(clients):
             clients,
             client
         )
+
+    elif choice == "B":
+
+        manage_client_subscriptions(client)
 
 def handle_unbook_event(clients):
 

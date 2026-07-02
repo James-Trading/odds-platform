@@ -22,6 +22,8 @@ from settings.market_settings import display_market_settings
 
 from feeds.feed_engine import publish_market_prices
 
+from reports.event_subscribers import display_event_subscribers
+
 def open_market_workspace(platform, event, market, bets, clients):
 
     while True:
@@ -40,6 +42,7 @@ def open_market_workspace(platform, event, market, bets, clients):
         print("H Price History")
         print("V Market Report")
         print("K Market Settings")
+        print("Y Event Subscribers")
         print("0 Back")
 
         if market["status"] == "Trading":
@@ -191,6 +194,13 @@ def open_market_workspace(platform, event, market, bets, clients):
 
             display_market_settings(
                 market
+            )
+
+        elif choice == "Y":
+
+            display_event_subscribers(
+                clients,
+                event
             )
 
         elif choice == "0":

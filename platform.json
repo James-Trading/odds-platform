@@ -655,5 +655,18 @@
                 ]
             }
         ]
+    },
+    {
+        "id": "c39f8e2a-a50d-43e4-b084-fe596b168a5d",
+        "category": "Specials",
+        "class": "Tv",
+        "type": "Tv",
+        "event_name": "SubTest",
+        "status": "Trading",
+        "displayed": true,
+        "published": false,
+        "start_time": "09/09/2026 09:00",
+        "suspend_mode": "AUTO",
+        "markets": []
     }
 ]

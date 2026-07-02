@@ -282,7 +282,10 @@ while running:
 
     elif choice == "12":
 
-        handle_create_event(platform)
+        handle_create_event(
+            platform,
+            clients
+        )
 
     elif choice == "13":
 

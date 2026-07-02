@@ -33,5 +33,23 @@
         "booked_events": [
             "Oscars"
         ]
+    },
+    {
+        "name": "Tom",
+        "contact": "09",
+        "email": "@tommy",
+        "status": "Active",
+        "feed": {
+            "enabled": true,
+            "connector": "None",
+            "last_price_update": null,
+            "last_bet_received": null
+        },
+        "booked_events": [
+            "SubTest"
+        ],
+        "subscriptions": [
+            "Specials"
+        ]
     }
 ]

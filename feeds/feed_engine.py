@@ -2,6 +2,8 @@ from logs.feed_log import log_feed_update
 
 from audit_functions import add_audit_log
 
+from connectors.connector_manager import send_price_update
+
 def publish_market_prices(clients, event):
 
     print()
@@ -24,7 +26,14 @@ def publish_market_prices(clients, event):
         if not feed["enabled"]:
             continue
 
-        print(f"✓ {client['name']} updated.")
+        success = send_price_update(
+            client,
+            event
+        )
+
+        if success:
+
+            print(f"✓ {client['name']} updated.")
 
         add_audit_log(
             f"Prices distributed to {client['name']} for {event['event_name']}"
