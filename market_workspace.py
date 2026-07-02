@@ -20,7 +20,9 @@ from reports.market_reports import display_market_report
 
 from settings.market_settings import display_market_settings
 
-def open_market_workspace(platform, event, market, bets):
+from feeds.feed_engine import publish_market_prices
+
+def open_market_workspace(platform, event, market, bets, clients):
 
     while True:
 
@@ -65,6 +67,11 @@ def open_market_workspace(platform, event, market, bets):
         elif choice == "S":
 
                 save_pending_changes(market)
+
+                publish_market_prices(
+                    clients,
+                    event
+                )
 
                 print()
                 print("✓ Pending changes saved.")

@@ -392,7 +392,7 @@ while running:
 
         market = choose_market(event)
 
-        open_market_workspace(platform, event, market, bets)
+        open_market_workspace(platform, event, market, bets, clients)
 
         save_platform(platform)
 

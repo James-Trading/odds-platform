@@ -75,3 +75,6 @@
 01/07/2026 00:06:01 - Outright unsuspended in Big Brother 2026
 01/07/2026 00:06:22 - Big Brother 2026 published
 01/07/2026 22:05:26 - Client created: Cath
+01/07/2026 22:32:55 - toy story pending price set to 5/1
+01/07/2026 22:34:43 - Cath booked Oscars
+01/07/2026 22:35:15 - toy story pending price set to 4/1

@@ -30,6 +30,8 @@
             "last_price_update": null,
             "last_bet_received": null
         },
-        "booked_events": []
+        "booked_events": [
+            "Oscars"
+        ]
     }
 ]
