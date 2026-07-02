@@ -1,5 +1,7 @@
 from logs.feed_log import log_feed_update
 
+from audit_functions import add_audit_log
+
 def publish_market_prices(clients, event):
 
     print()
@@ -23,6 +25,10 @@ def publish_market_prices(clients, event):
             continue
 
         print(f"✓ {client['name']} updated.")
+
+        add_audit_log(
+            f"Prices distributed to {client['name']} for {event['event_name']}"
+        )
 
         log_feed_update(
             client["name"],
