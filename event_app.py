@@ -111,6 +111,8 @@ from imports.csv_import import (
     import_event_markets_from_csv
 )
 
+from imports.import_menu import import_menu
+
 clients = load_clients()
 
 platform = load_platform()
@@ -445,19 +447,10 @@ while running:
 
     elif choice == "39":
 
-        #preview_event_csv("test_import.csv")
-
-        #validate_event_csv("test_import.csv", platform)
-
-        #input("\nPress Enter to continue...")
-
-        import_event_markets_from_csv(
-            "test_import.csv",
+        import_menu(
             platform,
             clients
         )
-
-        input("\nPress Enter to continue...")
 
     elif choice == "98":
 

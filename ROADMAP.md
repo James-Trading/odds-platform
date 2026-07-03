@@ -1,20 +1,22 @@
-# Odds Platform Roadmap
+Version 1
+---------
+✓ Trading engine
+✓ Client management
+✓ Feed engine
+✓ CSV import
+□ Dashboard
+□ Search
+□ GUI
 
-## ✅ Complete
-- Market Workspace
-- Pending Prices
-- Price History
-- Scheduler
+Version 2
+---------
+□ API
+□ Client portal
+□ Authentication
+□ Feed monitoring
 
-## In Progress
-- Bets Engine
-
-## Next
-- Liability
-- Settlement
-- Client Exposure
-
-## Future
-- API
-- Web UI
-- Mobile Companion
+Version 3
+---------
+□ AI pricing
+□ Automated relationships
+□ Live bet feed
