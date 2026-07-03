@@ -41,6 +41,7 @@ def show_menu():
     print("36 View Bets")
     print("37 Test Liability")
     print("38 Live Bet Feed")
+    print("39 Preview CSV Import")
     print("98 Developer Tools")
     print()
 

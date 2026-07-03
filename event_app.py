@@ -105,6 +105,12 @@ from bets.liability_functions import calculate_selection_liability
 
 from ticker.bet_ticker import display_bet_ticker
 
+from imports.csv_import import (
+    preview_event_csv,
+    validate_event_csv,
+    import_event_markets_from_csv
+)
+
 clients = load_clients()
 
 platform = load_platform()
@@ -436,6 +442,22 @@ while running:
     elif choice == "38":
 
         display_bet_ticker(bets)
+
+    elif choice == "39":
+
+        #preview_event_csv("test_import.csv")
+
+        #validate_event_csv("test_import.csv", platform)
+
+        #input("\nPress Enter to continue...")
+
+        import_event_markets_from_csv(
+            "test_import.csv",
+            platform,
+            clients
+        )
+
+        input("\nPress Enter to continue...")
 
     elif choice == "98":
 

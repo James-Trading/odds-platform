@@ -681,5 +681,42 @@
         "start_time": "01/09/2026 21:00",
         "suspend_mode": "AUTO",
         "markets": []
+    },
+    {
+        "id": "b327e7ec-a235-4cfe-88e6-324673847b4d",
+        "category": "Specials",
+        "class": "TV Specials",
+        "type": "Strictly Come Dancing",
+        "event_name": "Strictly Come Dancing 2026",
+        "status": "Trading",
+        "displayed": true,
+        "published": false,
+        "start_time": "",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "name": "Winner",
+                "selections": [
+                    {
+                        "name": "Dani Dyer",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "active": true,
+                        "displayed": true,
+                        "price_history": []
+                    }
+                ],
+                "status": "Trading",
+                "published": false,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": ""
+            }
+        ]
     }
 ]
