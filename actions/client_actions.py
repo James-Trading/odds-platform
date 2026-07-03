@@ -94,7 +94,7 @@ def handle_book_event(clients, platform):
         f'{client["name"]} booked {event["event_name"]}'
     )
 
-def handle_view_client(clients):
+def handle_view_client(platform, clients):
 
     client = choose_client(clients)
 
@@ -142,7 +142,11 @@ def handle_view_client(clients):
 
     elif choice == "B":
 
-        manage_client_subscriptions(client)
+        manage_client_subscriptions(
+            clients,
+            client,
+            platform
+        )
 
 def handle_unbook_event(clients):
 

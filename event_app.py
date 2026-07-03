@@ -340,7 +340,7 @@ while running:
 
     elif choice == "24":
 
-        handle_view_client(clients)
+        handle_view_client(platform, clients)
 
     elif choice == "25":
 

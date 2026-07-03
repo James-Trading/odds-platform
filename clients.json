@@ -49,7 +49,9 @@
             "SubTest"
         ],
         "subscriptions": [
-            "Specials"
+            "Specials",
+            "film",
+            "Sports"
         ]
     }
 ]

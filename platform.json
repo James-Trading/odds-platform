@@ -668,5 +668,18 @@
         "start_time": "09/09/2026 09:00",
         "suspend_mode": "AUTO",
         "markets": []
+    },
+    {
+        "id": "fb046f07-bf5e-4a2d-958b-0915989f6deb",
+        "category": "Sports",
+        "class": "tv",
+        "type": "tv",
+        "event_name": "fa cup",
+        "status": "Trading",
+        "displayed": true,
+        "published": false,
+        "start_time": "01/09/2026 21:00",
+        "suspend_mode": "AUTO",
+        "markets": []
     }
 ]
