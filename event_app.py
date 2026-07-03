@@ -113,6 +113,8 @@ from imports.csv_import import (
 
 from imports.import_menu import import_menu
 
+from reports.event_summary import display_event_summary
+
 clients = load_clients()
 
 platform = load_platform()
@@ -454,4 +456,4 @@ while running:
 
     elif choice == "98":
 
-        create_test_bet(bets)
+        display_event_summary(platform[0])

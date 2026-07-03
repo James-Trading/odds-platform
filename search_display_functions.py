@@ -4,21 +4,27 @@ def display_selection_result(
         selection):
 
     print()
+    print("SELECTION MATCH")
+    print("===============")
 
-    print("EVENT:", event_name)
-    print("MARKET:", market_name)
-    print("SELECTION:", selection["name"])
-    print("PRICE:",
-          selection["price"][0],
-          "/",
-          selection["price"][1])
+    print(f"Event     : {event_name}")
+    print(f"Market    : {market_name}")
+    print(f"Selection : {selection['name']}")
+
+    print(
+        "Price     :",
+        selection["price"][0],
+        "/",
+        selection["price"][1]
+    )
+
     status = "ACTIVE"
 
     if selection["active"] == False:
         status = "SUSPENDED"
 
-    print("STATUS:", status)
-    print("RESULT:", selection["result"])
+    print(f"Status    : {status}")
+    print(f"Result    : {selection.get('result', 'Not settled')}")
 
 def search_platform(
         platform,
@@ -31,8 +37,10 @@ def search_platform(
         if search_term.lower() in event["event_name"].lower():
 
             print()
-            print("EVENT:", event["event_name"])
-            print("CATEGORY:", event["category"], "-", event["class"], "-", event["type"])
+            print("MARKET MATCH")
+            print("============")
+            print(f"Event  : {event['event_name']}")
+            print(f"Market : {market['name']}")
 
             found = True
 
@@ -41,8 +49,10 @@ def search_platform(
             if search_term.lower() in market["name"].lower():
 
                 print()
-                print("EVENT:", event["event_name"])
-                print("MARKET:", market["name"])
+                print("EVENT MATCH")
+                print("===========")
+                print(f"Event    : {event['event_name']}")
+                print(f"Category : {event['category']} - {event['class']} - {event['type']}")
 
                 found = True
 
