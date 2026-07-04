@@ -1,5 +1,6 @@
 import json
 
+from state.app_state import mark_clean
 
 def save_platform(platform):
 
@@ -10,6 +11,8 @@ def save_platform(platform):
             file,
             indent=4
         )
+    
+    mark_clean()
 
 
 def load_platform():

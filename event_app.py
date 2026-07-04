@@ -115,6 +115,12 @@ from imports.import_menu import import_menu
 
 from reports.event_summary import display_event_summary
 
+from workspaces.event_workspace import event_workspace
+
+from workspaces.back_office import back_office
+
+from workspaces.trading_workspace import trading_workspace
+
 clients = load_clients()
 
 platform = load_platform()
@@ -454,6 +460,14 @@ while running:
             clients
         )
 
+    elif choice == "40":
+
+        back_office()
+
+    elif choice == "41":
+
+        trading_workspace()
+
     elif choice == "98":
 
-        display_event_summary(platform[0])
+        event_workspace(platform[0])
