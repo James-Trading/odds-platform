@@ -12,6 +12,8 @@ def create_event(category, event_class, event_type, event_name):
         "published": False,
         "start_time": "",
         "suspend_mode": "AUTO",
+        "status": "draft",
+        "displayed": True,
         "markets": []
     }
 

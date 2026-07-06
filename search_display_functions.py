@@ -40,7 +40,6 @@ def search_platform(
             print("MARKET MATCH")
             print("============")
             print(f"Event  : {event['event_name']}")
-            print(f"Market : {market['name']}")
 
             found = True
 

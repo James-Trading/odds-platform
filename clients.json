@@ -47,7 +47,9 @@
         },
         "booked_events": [
             "SubTest",
-            "Strictly Come Dancing 2026"
+            "Strictly Come Dancing 2026",
+            "google",
+            "googley"
         ],
         "subscriptions": [
             "Specials",

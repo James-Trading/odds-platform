@@ -67,7 +67,7 @@ def choose_client(clients):
 
     for i, client in enumerate(clients, start=1):
 
-        print(f"{i}. {client['name']}")
+        print(f"{i}. {client.get('name', client.get('client_name', 'Unnamed client'))}")
 
     choice = int(input("Client: "))
 

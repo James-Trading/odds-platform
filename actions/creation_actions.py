@@ -18,7 +18,9 @@ def handle_create_event(platform, clients):
 
     save_platform(platform)
 
-    display_platform(platform)
+    #display_platform(platform)
+    print("\nEvent created.")
+    input("\nPress Enter...")
 
 
 def handle_create_market(platform):

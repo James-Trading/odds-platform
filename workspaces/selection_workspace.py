@@ -4,7 +4,7 @@ from price_engine.price_ladder import (
     lengthen_one_tick
 )
 
-from state.app_state import is_dirty
+from state.app_state import is_dirty, mark_dirty
 
 def selection_workspace(event, market, selection):
 
@@ -81,6 +81,38 @@ def selection_workspace(event, market, selection):
 
             print("\nPrice updated.")
             input("\nPress Enter...")
+
+        elif choice == "4":
+
+            selection["active"] = False
+
+            print("\nSelection suspended.")
+            input("\nPress Enter...")
+
+        elif choice == "5":
+
+            selection["active"] = True
+
+            print("\nSelection unsuspended.")
+            input("\nPress Enter...")
+
+        elif choice == "6":
+
+            confirm = input("Set this selection as winner? (y/n): ").lower()
+
+            if confirm == "y":
+
+                for runner in market["selections"]:
+
+                    if runner == selection:
+                        runner["result"] = "winner"
+                    else:
+                        runner["result"] = "loser"
+
+                mark_dirty()
+
+                print("\nMarket settled.")
+                input("\nPress Enter...")
 
         if choice == "0":
             break

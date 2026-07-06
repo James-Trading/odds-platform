@@ -121,6 +121,10 @@ from workspaces.back_office import back_office
 
 from workspaces.trading_workspace import trading_workspace
 
+from workspaces.client_workspace import client_workspace
+
+from workspaces.settings_workspace import settings_workspace
+
 clients = load_clients()
 
 platform = load_platform()
@@ -187,33 +191,6 @@ if platform == []:
     (3,1)
     )
 
-# suspend_platform_selection(
-#     platform,
-#     "Eurovision 2027",
-#     "Winner",
-#     "Italy"
-# )
-
-# suspend_platform_event(
-#     platform,
-#     "Strictly Come Dancing 2026"
-# )
-
-# settle_platform_market(
-#     platform,
-#     "Eurovision 2027",
-#     "Winner",
-#     "Sweden"
-# )
-
-# void_platform_market(
-#     platform,
-#     "Eurovision 2027",
-#     "Winner"
-# )
-
-#display_platform(platform)
-
 running = True
 
 while running:
@@ -221,20 +198,40 @@ while running:
     choice = show_menu()
 
     if choice == "1":
-        
-        display_platform(platform)
+        trading_workspace(
+            platform,
+            clients
+        )
 
-    #elif choice == "2":
-
-        #handle_price_change(platform)
+    elif choice == "2":
+        back_office()
 
     elif choice == "3":
-        handle_suspend_selection(platform)
+        import_menu(platform, clients)
 
     elif choice == "4":
-        handle_suspend_event(platform)
+
+        client_workspace(
+            platform,
+            clients
+        )
 
     elif choice == "5":
+
+        settings_workspace()
+
+    elif choice.lower() == "s":
+
+        save_platform(platform)
+
+        print("\nPlatform saved.")
+        input("\nPress Enter...")
+
+    elif choice == "0":
+        running = False
+
+
+    #elif choice == "5":
 
         event = choose_event(platform)
 
@@ -256,7 +253,7 @@ while running:
         save_platform(platform)
         display_platform(platform)
 
-    elif choice == "6":
+    #elif choice == "6":
 
         event = choose_event(platform)
 
@@ -275,19 +272,8 @@ while running:
         save_platform(platform)
         display_platform(platform)
 
-    elif choice == "7":
-        handle_suspend_market(platform)
 
-    elif choice == "8":
-        handle_unsuspend_selection(platform)
-
-    elif choice == "9":
-        handle_unsuspend_market(platform)
-
-    elif choice == "10":
-        handle_unsuspend_event(platform)
-
-    elif choice == "11":
+    #elif choice == "11":
 
         search_term = input("Search: ")
 
@@ -296,146 +282,47 @@ while running:
         search_term
         )
 
-    elif choice == "12":
-
-        handle_create_event(
-            platform,
-            clients
-        )
-
-    elif choice == "13":
-
-        handle_create_market(platform)
-
-    elif choice == "14":
-
-        handle_create_selection(platform)
-
-    elif choice == "15":
-
-        handle_create_template_event(platform)
-
-
-    elif choice == "16":
+    #elif choice == "16":
 
         display_audit_log()
 
-    elif choice == "17":
 
-        handle_delete_selection(platform)
-
-    elif choice == "18":
-
-        handle_delete_market(platform)
-
-    elif choice == "19":
-
-        handle_delete_event(platform)
-
-    elif choice == "20":
-
-        handle_add_client(clients)
-
-
-    elif choice == "21":
-
-        handle_view_clients(clients)
-
-    elif choice == "22":
+    #elif choice == "22":
 
         event = choose_event(platform)
 
         display_event(event)
 
-    elif choice == "23":
+    #elif choice == "23":
 
         handle_book_event(
             clients,
             platform
         )
 
-    elif choice == "24":
-
-        handle_view_client(platform, clients)
-
-    elif choice == "25":
+    #elif choice == "25":
 
         handle_unbook_event(clients)
 
-    elif choice == "26":
+    #elif choice == "26":
 
         handle_publish_event(
             clients,
             platform
         )
 
-    elif choice == "27":
+    #elif choice == "27":
 
         handle_export_event(platform)
 
-    #elif choice == "28":
 
-        #handle_save_pending_changes(platform)
-
-    elif choice == "29":
-
-        handle_edit_event(platform)
-
-    #elif choice == "30":
-
-        #event = choose_event(platform)
-
-        #market = choose_market(event)
-
-        #selection = choose_selection(market)
-
-        #display_price_history(selection)
-
-    elif choice == "31":
-
-        handle_multiple_price_changes(platform)
-
-    #elif choice == "32":
-
-        #event = choose_event(platform)
-
-        #market = choose_market(event)
-
-        #handle_undo_pending_changes(platform)
-
-        #save_platform(platform)
-
-    elif choice == "33":
-
-        event = choose_event(platform)
-
-        market = choose_market(event)
-
-        open_market_workspace(platform, event, market, bets, clients)
-
-        save_platform(platform)
-
-    elif choice == "34":
-
-        print("Goodbye")
-
-        running = False
-
-    elif choice == "35":
-
-        handle_create_bet(
-            bets,
-            clients,
-            platform
-        )
-
-    elif choice == "36":
+    #elif choice == "36":
 
         display_bets(bets)
 
         input("\nPress Enter to continue...")
 
-    elif choice == "37":
+    #elif choice == "37":
 
         liability = calculate_selection_liability(
             bets,
@@ -449,25 +336,25 @@ while running:
 
         input("\nPress Enter to continue...")
 
-    elif choice == "38":
+    #elif choice == "38":
 
         display_bet_ticker(bets)
 
-    elif choice == "39":
+    #elif choice == "39":
 
         import_menu(
             platform,
             clients
         )
 
-    elif choice == "40":
+    #elif choice == "40":
 
         back_office()
 
-    elif choice == "41":
+    #elif choice == "41":
 
         trading_workspace()
 
-    elif choice == "98":
+    #elif choice == "98":
 
         event_workspace(platform[0])

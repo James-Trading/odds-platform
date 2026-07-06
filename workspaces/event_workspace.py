@@ -2,6 +2,9 @@ from reports.event_summary import display_event_summary
 
 from workspaces.market_workspace import market_workspace
 
+from actions.creation_actions import handle_create_market
+
+from state.app_state import mark_dirty
 
 def event_workspace(event):
 
@@ -15,10 +18,9 @@ def event_workspace(event):
 
         print("1 Event Summary")
         print("2 View Markets")
-        print("3 Rename Event")
-        print("4 Suspend Event")
-        print("5 Unsuspend Event")
-        print("6 Delete Event")
+        print("3 Suspend Event")
+        print("4 Unsuspend Event")
+        print("5 Create Market")
         print("0 Back")
 
         choice = input("\nChoice: ")
@@ -66,6 +68,28 @@ def event_workspace(event):
 
                 print("\nInvalid selection.")
                 input("\nPress Enter...")
+
+        elif choice == "3":
+
+            event["active"] = False
+
+            mark_dirty()
+
+            print("\nEvent suspended.")
+            input("\nPress Enter...")
+
+        elif choice == "4":
+
+            event["active"] = True
+
+            mark_dirty()
+
+            print("\nEvent unsuspended.")
+            input("\nPress Enter...")
+
+        elif choice == "5":
+
+            handle_create_market([event])
 
         elif choice == "0":
 

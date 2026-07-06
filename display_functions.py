@@ -7,7 +7,7 @@ def display_event(event):
     print()
 
     for market in event["markets"]:
-        if market["displayed"]:
+        if market.get["displayed", True]:
             display_market(market)
 
 
