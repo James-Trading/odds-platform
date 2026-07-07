@@ -125,6 +125,8 @@ from workspaces.client_workspace import client_workspace
 
 from workspaces.settings_workspace import settings_workspace
 
+from dashboard.dashboard_summary import display_dashboard
+
 clients = load_clients()
 
 platform = load_platform()
@@ -133,11 +135,6 @@ bets = load_bets()
 
 check_event_schedule(platform)
 save_platform(platform)
-
-display_dashboard(
-    platform,
-    clients
-)
 
 if platform == []:
 
@@ -195,6 +192,8 @@ running = True
 
 while running:
 
+    display_dashboard(platform)
+
     choice = show_menu()
 
     if choice == "1":
@@ -204,7 +203,10 @@ while running:
         )
 
     elif choice == "2":
-        back_office()
+        back_office(
+            platform,
+            clients
+        )
 
     elif choice == "3":
         import_menu(platform, clients)

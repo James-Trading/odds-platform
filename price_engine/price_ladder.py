@@ -66,7 +66,7 @@ def lengthen_one_tick(selection):
 
 def set_price(selection, numerator, denominator):
 
-    old_price = selection["price"].copy()
+    old_price = list(selection["price"])
 
     new_price = [
         numerator,

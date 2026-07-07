@@ -49,12 +49,29 @@
             "SubTest",
             "Strictly Come Dancing 2026",
             "google",
-            "googley"
+            "googley",
+            "Gogglebox 2026"
         ],
         "subscriptions": [
             "Specials",
             "film",
             "Sports"
         ]
+    },
+    {
+        "name": "Tommy D",
+        "contact": "jj",
+        "email": "jj",
+        "status": "Active",
+        "feed": {
+            "enabled": true,
+            "connector": "None",
+            "last_price_update": null,
+            "last_bet_received": null
+        },
+        "booked_events": [
+            "Strictly Come Dancing 2026"
+        ],
+        "subscriptions": []
     }
 ]

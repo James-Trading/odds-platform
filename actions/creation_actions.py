@@ -29,7 +29,9 @@ def handle_create_market(platform):
 
     save_platform(platform)
 
-    display_platform(platform)
+    #display_platform(platform)
+    print("\nMarket created.")
+    input("\nPress Enter...")
 
 
 def handle_create_selection(platform):
@@ -38,7 +40,9 @@ def handle_create_selection(platform):
 
     save_platform(platform)
 
-    display_platform(platform)
+    #display_platform(platform)
+    print("\nSelection created.")
+    input("\nPress Enter...")
 
 
 def handle_create_template_event(platform):

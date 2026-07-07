@@ -1,176 +1,20 @@
 [
     {
-        "category": "SPECIALS",
+        "id": "5fabb52c-1038-457e-987d-8ba11cf05d87",
+        "category": "Specials",
         "class": "TV Specials",
-        "type": "Strictly Come Dancing",
-        "event_name": "Strictly Come Dancing 2026",
-        "status": "Active",
+        "type": "Gogglebox",
+        "event_name": "Gogglebox 2026",
+        "status": "draft",
         "displayed": true,
+        "published": false,
+        "start_time": "09/09/2026 09:00",
+        "suspend_mode": "AUTO",
         "markets": [
             {
+                "id": "c4099523-7590-4579-8cf1-e29aeb129e44",
                 "name": "Outright",
-                "status": "Closed",
-                "displayed": true,
-                "selections": [
-                    {
-                        "name": "Dani Dyer",
-                        "price": [
-                            2,
-                            1
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": [
-                            3,
-                            1
-                        ],
-                        "price_history": [
-                            {
-                                "created": "2026-06-27 09:54:41",
-                                "price": [
-                                    20,
-                                    1
-                                ]
-                            },
-                            {
-                                "created": "2026-06-27 11:42:40",
-                                "price": [
-                                    3,
-                                    1
-                                ]
-                            },
-                            {
-                                "created": "2026-06-27 17:04:20",
-                                "price": [
-                                    2,
-                                    1
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Delta Goodrem",
-                        "price": [
-                            8,
-                            1
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-06-27 11:42:40",
-                                "price": [
-                                    8,
-                                    1
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Lacey Turner",
-                        "price": [
-                            3,
-                            1
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-06-26 23:51:27",
-                                "old_price": [
-                                    20,
-                                    1
-                                ],
-                                "new_price": [
-                                    3,
-                                    1
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "James Dobson",
-                        "price": [
-                            4,
-                            6
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-06-27 00:17:17",
-                                "price": [
-                                    1,
-                                    1
-                                ]
-                            },
-                            {
-                                "created": "2026-06-27 00:17:53",
-                                "price": [
-                                    4,
-                                    6
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    }
-                ],
-                "published": true
-            },
-            {
-                "name": "Top 3 Finish",
-                "status": "Active",
-                "displayed": true,
-                "selections": [
-                    {
-                        "name": "Dani Dyer",
-                        "price": [
-                            1,
-                            2
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": null,
-                        "price_history": []
-                    },
-                    {
-                        "name": "Delta Goodrem",
-                        "price": [
-                            4,
-                            5
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": null,
-                        "price_history": []
-                    },
-                    {
-                        "name": "Lacey Turner",
-                        "price": [
-                            6,
-                            4
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": "",
-                        "pending_price": null,
-                        "price_history": []
-                    }
-                ],
-                "published": true
-            },
-            {
-                "id": "042ce197-7a4b-41fe-9451-338346e06508",
-                "name": "0",
-                "status": "Trading",
+                "status": "SETTLED",
                 "published": false,
                 "displayed": true,
                 "limits": {
@@ -179,9 +23,74 @@
                 },
                 "notes": "",
                 "selections": []
+            },
+            {
+                "id": "79a8a4c5-e6a2-46bd-a12b-89514a92b7db",
+                "name": "Outright",
+                "status": "SETTLED",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "1fde04c8-1c04-46c6-bf4b-7a7a82662ac5",
+                        "name": "Indigo",
+                        "price": [
+                            5,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-07 22:24:44",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": false,
+                        "displayed": true,
+                        "result": "Winner"
+                    },
+                    {
+                        "id": "e0571b9b-763e-49b6-8c6b-75573b766a09",
+                        "name": "Indigo",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-07 22:27:40",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-07 22:31:08",
+                                "old_price": [
+                                    5,
+                                    1
+                                ],
+                                "new_price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": false,
+                        "displayed": true,
+                        "result": "Winner"
+                    }
+                ]
             }
-        ],
-        "start_time": "19/09/2026 18:00",
-        "suspend_mode": "AUTO"
+        ]
     }
 ]

@@ -10,6 +10,8 @@ from filters.event_filters import (
 
 from actions.creation_actions import handle_create_event
 
+from search.global_search import global_search
+
 def trading_workspace(platform, clients):
 
     while True:
@@ -26,6 +28,7 @@ def trading_workspace(platform, clients):
         print("4 Published Events")
         print("5 Suspended Events")
         print("6 Create Event")
+        print("7 Global Search")
         print("0 Back")
 
         choice = input("\nChoice: ")
@@ -59,6 +62,13 @@ def trading_workspace(platform, clients):
         elif choice == "6":
 
             handle_create_event(
+                platform,
+                clients
+            )
+
+        elif choice == "7":
+
+            global_search(
                 platform,
                 clients
             )
