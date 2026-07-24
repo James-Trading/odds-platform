@@ -1,8 +1,10 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from save_load import save_platform, load_platform
 from client_save_load import load_clients
+
+from price_engine.price_ladder import set_price
 
 
 class OddsPlatformGUI:
@@ -475,7 +477,9 @@ class OddsPlatformGUI:
         )
 
         # Add the real selections from the backend
-        for selection in market.get("selections", []):
+        for selection_index, selection in enumerate(
+            market.get("selections", [])
+        ):
             price = selection.get("price", [0, 1])
 
             if isinstance(price, (list, tuple)) and len(price) == 2:
@@ -493,12 +497,126 @@ class OddsPlatformGUI:
             selection_table.insert(
                 "",
                 "end",
+                iid=str(selection_index),
                 values=(
                     selection.get("name", "Unnamed Selection"),
                     price_text,
                     status_text,
                 ),
             )
+        selection_table.bind(
+            "<Double-1>",
+            lambda event_click: self.edit_price_cell(
+                event_click,
+                selection_table,
+                event,
+                market,
+            ),
+        )
+
+    def edit_price_cell(
+        self,
+        event_click,
+        selection_table,
+        event,
+        market,
+    ):
+        row_id = selection_table.identify_row(event_click.y)
+        column_id = selection_table.identify_column(event_click.x)
+
+        # Only allow editing in the Price column.
+        if not row_id or column_id != "#2":
+            return
+
+        cell_box = selection_table.bbox(row_id, column_id)
+
+        if not cell_box:
+            return
+
+        x, y, width, height = cell_box
+
+        current_values = selection_table.item(row_id, "values")
+        current_price = current_values[1]
+
+        price_entry = ttk.Entry(selection_table)
+        price_entry.insert(0, current_price)
+
+        price_entry.place(
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+        )
+
+        price_entry.focus_set()
+        price_entry.select_range(0, tk.END)
+
+        price_entry.bind(
+            "<Return>",
+            lambda _event: self.save_edited_price(
+                price_entry,
+                row_id,
+                event,
+                market,
+            ),
+        )
+
+        price_entry.bind(
+            "<Escape>",
+            lambda _event: price_entry.destroy(),
+        )
+
+        price_entry.bind(
+            "<FocusOut>",
+            lambda _event: price_entry.destroy(),
+        )
+
+    def save_edited_price(
+        self,
+        price_entry,
+        row_id,
+        event,
+        market,
+    ):
+        entered_price = price_entry.get().strip()
+
+        try:
+            price_parts = entered_price.split("/")
+
+            if len(price_parts) != 2:
+                raise ValueError
+
+            numerator = int(price_parts[0])
+            denominator = int(price_parts[1])
+
+            if numerator <= 0 or denominator <= 0:
+                raise ValueError
+
+            selection_index = int(row_id)
+            selection = market["selections"][selection_index]
+
+            set_price(
+                selection,
+                numerator,
+                denominator,
+            )
+
+            save_platform(self.platform)
+
+        except (ValueError, TypeError, KeyError, IndexError):
+            messagebox.showerror(
+                "Invalid price",
+                "Enter fractional odds in a format such as 4/6 or 10/1.",
+            )
+
+            price_entry.focus_set()
+            price_entry.select_range(0, tk.END)
+            return
+
+        price_entry.destroy()
+
+        # Rebuild the screen using the newly saved backend price.
+        self.show_market_screen(event, market)
 
     def create_summary_card(self, parent, heading, value):
 
