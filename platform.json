@@ -92,5 +92,54 @@
                 ]
             }
         ]
+    },
+    {
+        "id": "4c6b9685-b225-4962-83e1-3770b16091ad",
+        "category": "Specials",
+        "class": "TV Specials",
+        "type": "Im a Celeb",
+        "event_name": "Im a Celeb 2027",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "09/09/2027 09:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "5fc71f46-2052-4c84-adea-08fd4e3f5541",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "ac792567-19ee-4238-aab2-d35b39b58106",
+                        "name": "Harvey",
+                        "price": [
+                            5,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-12 22:33:19",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
     }
 ]

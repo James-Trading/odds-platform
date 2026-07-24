@@ -9,6 +9,8 @@ from back_office.reports import (
 
 from back_office.price_history import display_price_history
 
+from back_office.data_validation import display_validation
+
 def reports_menu(platform):
 
     while True:
@@ -55,6 +57,7 @@ def back_office(platform, clients):
         print("4 Feed History")
         print("5 System Health")
         print("6 Migrations")
+        print("7 Validation")
         print("0 Back")
 
         choice = input("\nChoice: ")
@@ -93,6 +96,10 @@ def back_office(platform, clients):
 
             print("\nMigrations coming soon.")
             input("\nPress Enter...")
+
+        elif choice == "7":
+
+            display_validation(platform)
 
         elif choice == "0":
 

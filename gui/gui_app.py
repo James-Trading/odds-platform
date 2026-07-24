@@ -1,0 +1,523 @@
+import tkinter as tk
+from tkinter import ttk
+
+from save_load import save_platform, load_platform
+from client_save_load import load_clients
+
+
+class OddsPlatformGUI:
+
+    def __init__(self, root, platform, clients):
+
+        self.root = root
+        self.platform = platform
+        self.clients = clients
+
+        self.root.title("Odds Platform")
+        self.root.geometry("1200x750")
+        self.root.minsize(950, 600)
+
+        self.build_layout()
+        self.show_dashboard()
+
+    def build_layout(self):
+
+        # Main container
+        self.main_frame = ttk.Frame(self.root)
+        self.main_frame.pack(fill="both", expand=True)
+
+        # Left navigation
+        self.sidebar = ttk.Frame(
+            self.main_frame,
+            width=210,
+            padding=15
+        )
+
+        self.sidebar.pack(
+            side="left",
+            fill="y"
+        )
+
+        self.sidebar.pack_propagate(False)
+
+        title = ttk.Label(
+            self.sidebar,
+            text="ODDS PLATFORM",
+            font=("Arial", 16, "bold")
+        )
+
+        title.pack(
+            pady=(5, 25)
+        )
+
+        ttk.Button(
+            self.sidebar,
+            text="Dashboard",
+            command=self.show_dashboard
+        ).pack(fill="x", pady=4)
+
+        ttk.Button(
+            self.sidebar,
+            text="Trading",
+            command=self.show_trading
+        ).pack(fill="x", pady=4)
+
+        ttk.Button(
+            self.sidebar,
+            text="Clients",
+            command=lambda: self.show_page("Clients")
+        ).pack(fill="x", pady=4)
+
+        ttk.Button(
+            self.sidebar,
+            text="Import Centre",
+            command=lambda: self.show_page("Import Centre")
+        ).pack(fill="x", pady=4)
+
+        ttk.Button(
+            self.sidebar,
+            text="Back Office",
+            command=lambda: self.show_page("Back Office")
+        ).pack(fill="x", pady=4)
+
+        ttk.Button(
+            self.sidebar,
+            text="Settings",
+            command=lambda: self.show_page("Settings")
+        ).pack(fill="x", pady=4)
+
+        # Main content area
+        self.content = ttk.Frame(
+            self.main_frame,
+            padding=25
+        )
+
+        self.content.pack(
+            side="left",
+            fill="both",
+            expand=True
+        )
+
+    def clear_content(self):
+
+        for widget in self.content.winfo_children():
+            widget.destroy()
+
+    def show_dashboard(self):
+
+        self.clear_content()
+
+        # Top row
+        top_bar = ttk.Frame(self.content)
+        top_bar.pack(fill="x", pady=(0, 20))
+
+        ttk.Label(
+            top_bar,
+            text="Dashboard",
+            font=("Arial", 24, "bold")
+        ).pack(side="left")
+
+        self.search_entry = ttk.Entry(
+            top_bar,
+            font=("Arial", 12),
+            width=35
+        )
+
+        self.search_entry.pack(
+            side="right",
+            padx=(10, 0)
+        )
+
+        self.search_entry.insert(
+            0,
+            "Search events, markets or selections..."
+        )
+
+        ttk.Button(
+            top_bar,
+            text="Search",
+            command=self.search_placeholder
+        ).pack(side="right")
+
+        # Summary cards
+        cards = ttk.Frame(self.content)
+        cards.pack(fill="x", pady=(0, 25))
+
+        event_count = len(self.platform)
+
+        market_count = sum(
+            len(event.get("markets", []))
+            for event in self.platform
+        )
+
+        selection_count = sum(
+            len(market.get("selections", []))
+            for event in self.platform
+            for market in event.get("markets", [])
+        )
+
+        client_count = len(self.clients)
+
+        self.create_summary_card(cards, "Events", str(event_count))
+        self.create_summary_card(cards, "Markets", str(market_count))
+        self.create_summary_card(cards, "Selections", str(selection_count))
+        self.create_summary_card(cards, "Clients", str(client_count))
+
+        # Main dashboard columns
+        dashboard_body = ttk.Frame(self.content)
+        dashboard_body.pack(fill="both", expand=True)
+
+        left_column = ttk.Frame(dashboard_body)
+        left_column.pack(
+            side="left",
+            fill="both",
+            expand=True,
+            padx=(0, 10)
+        )
+
+        right_column = ttk.Frame(dashboard_body)
+        right_column.pack(
+            side="left",
+            fill="both",
+            expand=True,
+            padx=(10, 0)
+        )
+
+        # Recent events
+        recent_frame = ttk.LabelFrame(
+            left_column,
+            text="Recent Events",
+            padding=15
+        )
+
+        recent_frame.pack(
+            fill="both",
+            expand=True,
+            pady=(0, 10)
+        )
+
+        self.add_event_row(
+            recent_frame,
+            "Strictly Come Dancing 2026",
+            "Active"
+        )
+
+        self.add_event_row(
+            recent_frame,
+            "Love Island 2026",
+            "Active"
+        )
+
+        self.add_event_row(
+            recent_frame,
+            "Eurovision 2027",
+            "Draft"
+        )
+
+        # Favourites
+        favourites_frame = ttk.LabelFrame(
+            left_column,
+            text="Favourite Events",
+            padding=15
+        )
+
+        favourites_frame.pack(
+            fill="both",
+            expand=True,
+            pady=(10, 0)
+        )
+
+        self.add_event_row(
+            favourites_frame,
+            "General Election",
+            "Active"
+        )
+
+        self.add_event_row(
+            favourites_frame,
+            "Celebrity Big Brother",
+            "Suspended"
+        )
+
+        # Activity panel
+        activity_frame = ttk.LabelFrame(
+            right_column,
+            text="Recent Activity",
+            padding=15
+        )
+
+        activity_frame.pack(
+            fill="both",
+            expand=True
+        )
+
+        ttk.Label(
+            activity_frame,
+            text="22:43  Price changed",
+            font=("Arial", 11, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            activity_frame,
+            text="Strictly > Outright > James Dobson\n5/2 → 2/1"
+        ).pack(anchor="w", pady=(2, 15))
+
+        ttk.Label(
+            activity_frame,
+            text="22:38  Market suspended",
+            font=("Arial", 11, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            activity_frame,
+            text="Love Island > Winning Couple"
+        ).pack(anchor="w", pady=(2, 15))
+
+        ttk.Label(
+            activity_frame,
+            text="22:30  Event published",
+            font=("Arial", 11, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            activity_frame,
+            text="Eurovision 2027"
+        ).pack(anchor="w")
+
+    def show_trading(self):
+
+        self.clear_content()
+
+        top_bar = ttk.Frame(self.content)
+        top_bar.pack(fill="x", pady=(0, 20))
+
+        ttk.Label(
+            top_bar,
+            text="Trading",
+            font=("Arial", 24, "bold")
+        ).pack(side="left")
+
+        search_entry = ttk.Entry(
+            top_bar,
+            width=35,
+            font=("Arial", 12)
+        )
+
+        search_entry.pack(side="right")
+
+        search_entry.insert(
+            0,
+            "Search events..."
+        )
+
+        events_frame = ttk.LabelFrame(
+            self.content,
+            text="Events",
+            padding=15
+        )
+
+        events_frame.pack(
+            fill="both",
+            expand=True
+        )
+
+        for event in self.platform:
+
+            event_name = event.get(
+                "event_name",
+                "Unnamed Event"
+            )
+
+            status = (
+                "Active"
+                if event.get("active", True)
+                else "Suspended"
+            )
+
+            row = ttk.Frame(events_frame)
+            row.pack(fill="x", pady=5)
+
+            ttk.Button(
+                row,
+                text=event_name,
+                command=lambda selected_event=event:
+                    self.show_event_screen(selected_event)
+            ).pack(
+                side="left",
+                fill="x",
+                expand=True
+            )
+
+            ttk.Label(
+                row,
+                text=status,
+                width=12,
+                anchor="center"
+            ).pack(
+                side="right",
+                padx=(10, 0)
+            )
+
+    def show_event_screen(self, event):
+
+        self.clear_content()
+
+        ttk.Button(
+            self.content,
+            text="← Back to Trading",
+            command=self.show_trading
+        ).pack(anchor="w", pady=(0, 15))
+
+        ttk.Label(
+            self.content,
+            text=event.get("event_name", "Unnamed Event"),
+            font=("Arial", 24, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            self.content,
+            text="Markets",
+            font=("Arial", 16, "bold")
+        ).pack(anchor="w", pady=(25, 10))
+
+        for market in event.get("markets", []):
+
+            ttk.Button(
+                self.content,
+                text=market.get("name", "Unnamed Market"),
+                command=lambda selected_market=market:
+                    self.show_market_screen(
+                        event,
+                        selected_market
+                    )
+            ).pack(
+                fill="x",
+                anchor="w",
+                pady=4
+            )
+
+    def show_market_screen(self, event, market):
+
+        self.clear_content()
+
+        ttk.Button(
+            self.content,
+            text="← Back to Event",
+            command=lambda: self.show_event_screen(event)
+        ).pack(anchor="w", pady=(0, 15))
+
+        ttk.Label(
+            self.content,
+            text=market.get("name", "Unnamed Market"),
+            font=("Arial", 24, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            self.content,
+            text=f"Event: {event.get('event_name', 'Unnamed Event')}",
+            font=("Arial", 11)
+        ).pack(anchor="w", pady=(5, 20))
+
+        for selection in market.get("selections", []):
+
+            price = selection.get("price", [0, 1])
+
+            ttk.Label(
+                self.content,
+                text=(
+                    f"{selection.get('name', 'Unnamed Selection')}"
+                    f"    {price[0]}/{price[1]}"
+                ),
+                font=("Arial", 12)
+            ).pack(anchor="w", pady=4)
+
+    def create_summary_card(self, parent, heading, value):
+
+        card = ttk.LabelFrame(
+            parent,
+            text=heading,
+            padding=20
+        )
+
+        card.pack(
+            side="left",
+            fill="x",
+            expand=True,
+            padx=5
+        )
+
+        ttk.Label(
+            card,
+            text=value,
+            font=("Arial", 24, "bold")
+        ).pack()
+
+    def add_event_row(self, parent, event_name, status):
+
+        row = ttk.Frame(parent)
+        row.pack(fill="x", pady=6)
+
+        ttk.Button(
+            row,
+            text=event_name,
+            command=lambda name=event_name: self.open_event_placeholder(name)
+        ).pack(
+            side="left",
+            fill="x",
+            expand=True
+        )
+
+        ttk.Label(
+            row,
+            text=status,
+            width=12,
+            anchor="center"
+        ).pack(
+            side="right",
+            padx=(10, 0)
+        )
+
+
+    def search_placeholder(self):
+
+        search_term = self.search_entry.get()
+
+        print(f"GUI search: {search_term}")
+
+
+    def open_event_placeholder(self, event_name):
+
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text=event_name,
+            font=("Arial", 24, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            self.content,
+            text="Event trading screen coming next.",
+            font=("Arial", 12)
+        ).pack(anchor="w", pady=10)
+
+        ttk.Button(
+            self.content,
+            text="Back to Dashboard",
+            command=self.show_dashboard
+        ).pack(anchor="w", pady=20)
+
+if __name__ == "__main__":
+
+    platform = load_platform()
+    clients = load_clients()
+
+    root = tk.Tk()
+
+    app = OddsPlatformGUI(
+        root,
+        platform,
+        clients
+    )
+
+    root.mainloop()
