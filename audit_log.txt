@@ -91,3 +91,8 @@
 06/07/2026 01:14:44 - Client created: Tommy D
 06/07/2026 01:14:58 - Tommy D booked Strictly Come Dancing 2026
 07/07/2026 22:34:23 - Outright settled - Winner: Indigo
+24/07/2026 19:04:08 - Dani Dyer suspended in Strictly Come Dancing 2026 / Outright
+24/07/2026 19:04:10 - Dani Dyer unsuspended in Strictly Come Dancing 2026 / Outright
+24/07/2026 19:04:12 - Dani Dyer suspended in Strictly Come Dancing 2026 / Outright
+24/07/2026 19:04:19 - Dani Dyer unsuspended in Strictly Come Dancing 2026 / Outright
+24/07/2026 19:04:31 - Dani Dyer suspended in Strictly Come Dancing 2026 / Outright

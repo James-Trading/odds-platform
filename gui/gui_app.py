@@ -9,6 +9,13 @@ from price_engine.price_ladder import (
     set_price,
 )
 
+from platform_functions import (
+    suspend_platform_selection,
+    unsuspend_platform_selection,
+)
+
+from audit_functions import add_audit_log
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -540,14 +547,17 @@ class OddsPlatformGUI:
             else:
                 price_text = str(price)
 
-            if pending_key in self.pending_prices:
-                status_text = "Pending"
-            elif selection.get("suspended", False):
+            is_pending = pending_key in self.pending_prices
+            is_active = selection.get("active", True)
+
+            if not is_active and is_pending:
+                status_text = "Suspended / Pending"
+            elif not is_active:
                 status_text = "Suspended"
+            elif is_pending:
+                status_text = "Pending"
             else:
-                status_text = str(
-                    selection.get("status", "Active")
-                ).title()
+                status_text = "Active"
 
             selection_table.insert(
                 "",
@@ -635,12 +645,23 @@ class OddsPlatformGUI:
 
         # #3 = down/shorten
         # #4 = up/lengthen
-        if column_id not in ("#3", "#4"):
+        # #3 = down/shorten
+        # #4 = up/lengthen
+        # #5 = status toggle
+        if column_id not in ("#3", "#4", "#5"):
             return
 
         try:
             selection_index = int(row_id)
             selection = market["selections"][selection_index]
+
+            if column_id == "#5":
+                self.toggle_selection_suspension(
+                    event,
+                    market,
+                    selection,
+                )
+                return
 
             pending_key = (id(market), selection_index)
 
@@ -691,6 +712,55 @@ class OddsPlatformGUI:
                 "Price update failed",
                 "The selection price could not be updated.",
             )
+
+    def toggle_selection_suspension(
+        self,
+        event,
+        market,
+        selection,
+    ):
+        event_name = event.get("event_name", "")
+        market_name = market.get("name", "")
+        selection_name = selection.get("name", "")
+
+        try:
+            if selection.get("active", True):
+                suspend_platform_selection(
+                    self.platform,
+                    event_name,
+                    market_name,
+                    selection_name,
+                )
+
+                add_audit_log(
+                    f"{selection_name} suspended in "
+                    f"{event_name} / {market_name}"
+                )
+
+            else:
+                unsuspend_platform_selection(
+                    self.platform,
+                    event_name,
+                    market_name,
+                    selection_name,
+                )
+
+                add_audit_log(
+                    f"{selection_name} unsuspended in "
+                    f"{event_name} / {market_name}"
+                )
+
+            save_platform(self.platform)
+
+        except (TypeError, KeyError):
+            messagebox.showerror(
+                "Suspension failed",
+                "The selection status could not be updated.",
+            )
+            return
+
+        self.show_market_screen(event, market)
+
     def edit_price_cell(
         self,
         event_click,
