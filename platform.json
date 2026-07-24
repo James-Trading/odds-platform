@@ -401,8 +401,8 @@
                         "id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
                         "name": "Dani Dyer",
                         "price": [
-                            7,
-                            2
+                            2,
+                            1
                         ],
                         "pending_price": null,
                         "price_history": [
@@ -423,9 +423,53 @@
                                     7,
                                     2
                                 ]
+                            },
+                            {
+                                "time": "2026-07-24 20:55:31",
+                                "old_price": [
+                                    7,
+                                    2
+                                ],
+                                "new_price": [
+                                    12,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-24 20:55:37",
+                                "old_price": [
+                                    12,
+                                    1
+                                ],
+                                "new_price": [
+                                    3,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-24 21:25:24",
+                                "old_price": [
+                                    3,
+                                    1
+                                ],
+                                "new_price": [
+                                    9,
+                                    4
+                                ]
+                            },
+                            {
+                                "time": "2026-07-25 00:04:52",
+                                "old_price": [
+                                    9,
+                                    4
+                                ],
+                                "new_price": [
+                                    2,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": true,
                         "result": ""
                     },

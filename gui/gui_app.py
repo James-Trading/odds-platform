@@ -18,6 +18,8 @@ from platform_functions import (
 
 from audit_functions import add_audit_log
 
+from pricing import probability
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -436,6 +438,18 @@ class OddsPlatformGUI:
 
         # Container for the trading grid
 
+        market_summary_frame = ttk.Frame(self.content)
+        market_summary_frame.pack(fill="x", pady=(0, 12))
+
+        self.overround_label = ttk.Label(
+            market_summary_frame,
+            text="Overround: 0.00%",
+            font=("Arial", 14, "bold"),
+        )
+
+        self.overround_label.pack(side="left")
+        self.update_market_overround(market)
+
         action_frame = ttk.Frame(self.content)
         action_frame.pack(fill="x", pady=(0, 10))
 
@@ -477,13 +491,26 @@ class OddsPlatformGUI:
             ),
         ).pack(side="left", padx=(20, 0))
 
+        price_history_button = ttk.Button(
+            action_frame,
+            text="Price History",
+            command=lambda: self.show_price_history_popup(
+                market,
+            ),
+        )
+
+        price_history_button.pack(
+            side="left",
+            padx=(8, 0),
+        )
 
         table_frame = ttk.Frame(self.content)
         table_frame.pack(fill="both", expand=True)
 
         columns = (
             "selection", 
-            "price", 
+            "price",
+            "probability",
             "shorten",
             "lengthen",
             "status"
@@ -496,8 +523,11 @@ class OddsPlatformGUI:
             height=14,
         )
 
+        self.selection_table = selection_table
+
         selection_table.heading("selection", text="Selection")
         selection_table.heading("price", text="Price")
+        selection_table.heading("probability", text="Probability")
         selection_table.heading("shorten", text="▼")
         selection_table.heading("lengthen", text="▲")
         selection_table.heading("status", text="Status")
@@ -512,6 +542,12 @@ class OddsPlatformGUI:
             "price",
             width=140,
             minwidth=100,
+            anchor="center",
+        )
+        selection_table.column(
+            "probability",
+            width=90,
+            minwidth=80,
             anchor="center",
         )
         selection_table.column(
@@ -553,6 +589,18 @@ class OddsPlatformGUI:
             fill="y",
         )
 
+        selection_table.tag_configure(
+            "pending",
+            background="#fff4cc",
+            foreground="#5c4a00",
+        )
+
+        selection_table.tag_configure(
+            "suspended",
+            background="#fbeaea",
+            foreground="#8a2d2d",
+        )
+
         # Add the real selections from the backend
         for selection_index, selection in enumerate(
             market.get("selections", [])
@@ -568,6 +616,15 @@ class OddsPlatformGUI:
                 price_text = f"{price[0]}/{price[1]}"
             else:
                 price_text = str(price)
+
+            if isinstance(price, (list, tuple)) and len(price) == 2:
+                probability_value = probability(
+                    price[0],
+                    price[1],
+                )
+                probability_text = f"{probability_value:.2f}%"
+            else:
+                probability_text = "-"
 
             is_pending = pending_key in self.pending_prices
             selection_is_active = selection.get("active", True)
@@ -589,6 +646,13 @@ class OddsPlatformGUI:
             else:
                 status_text = "Active"
 
+            if market_is_suspended or not selection_is_active:
+                row_tag = "suspended"
+            elif is_pending:
+                row_tag = "pending"
+            else:
+                row_tag = ""
+
             selection_table.insert(
                 "",
                 "end",
@@ -596,10 +660,12 @@ class OddsPlatformGUI:
                 values=(
                     selection.get("name", "Unnamed Selection"),
                     price_text,
+                    probability_text,
                     "▼",
                     "▲",
                     status_text,
-                )
+                ),
+                tags=(row_tag,) if row_tag else (),
             )
         selection_table.bind(
             "<Double-1>",
@@ -618,6 +684,229 @@ class OddsPlatformGUI:
                 event,
                 market,
             ),
+        )
+
+    def show_price_history_popup(
+        self,
+        market,
+    ):
+        selected_rows = self.selection_table.selection()
+
+        if not selected_rows:
+            messagebox.showinfo(
+                "Price History",
+                "Select a runner first.",
+            )
+            return
+
+        row_id = selected_rows[0]
+
+        try:
+            selection_index = int(row_id)
+            selection = market["selections"][selection_index]
+        except (ValueError, IndexError, KeyError):
+            messagebox.showerror(
+                "Price History",
+                "Could not find the selected runner.",
+            )
+            return
+
+        selection_name = selection.get(
+            "name",
+            "Unnamed Selection",
+        )
+
+        current_price = selection.get(
+            "price",
+            [0, 1],
+        )
+
+        current_price_text = (
+            f"{current_price[0]}/{current_price[1]}"
+        )
+
+        popup = tk.Toplevel(self.root)
+        popup.title(f"Price History - {selection_name}")
+        popup.geometry("500x430")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        title_label = ttk.Label(
+            popup,
+            text=selection_name,
+            font=("Arial", 16, "bold"),
+        )
+        title_label.pack(
+            anchor="w",
+            padx=20,
+            pady=(18, 4),
+        )
+
+        current_price_label = ttk.Label(
+            popup,
+            text=f"Current Price: {current_price_text}",
+            font=("Arial", 11, "bold"),
+        )
+        current_price_label.pack(
+            anchor="w",
+            padx=20,
+            pady=(0, 14),
+        )
+
+        history_table = ttk.Treeview(
+            popup,
+            columns=(
+                "date",
+                "time",
+                "price",
+            ),
+            show="headings",
+            height=12,
+        )
+
+        history_table.heading(
+            "date",
+            text="Date",
+        )
+        history_table.heading(
+            "time",
+            text="Time",
+        )
+        history_table.heading(
+            "price",
+            text="Price",
+        )
+
+        history_table.column(
+            "date",
+            width=150,
+            anchor="center",
+        )
+        history_table.column(
+            "time",
+            width=150,
+            anchor="center",
+        )
+        history_table.column(
+            "price",
+            width=100,
+            anchor="center",
+        )
+
+        history_table.pack(
+            fill="both",
+            expand=True,
+            padx=20,
+            pady=(0, 14),
+        )
+
+        price_history = selection.get(
+            "price_history",
+            [],
+        )
+
+        for entry in reversed(price_history):
+            created = str(
+                entry.get("time", "")
+            )
+
+            date_text = ""
+            time_text = ""
+
+            if "T" in created:
+                date_text, time_text = created.split(
+                    "T",
+                    1,
+                )
+            elif " " in created:
+                date_text, time_text = created.split(
+                    " ",
+                    1,
+                )
+            else:
+                date_text = created
+
+            time_text = time_text.split(".")[0]
+
+            price = entry.get(
+                "new_price",
+                ["-", "-"],
+            )
+
+            if (
+                isinstance(price, (list, tuple))
+                and len(price) == 2
+            ):
+                price_text = f"{price[0]}/{price[1]}"
+            else:
+                price_text = str(price)
+
+            history_table.insert(
+                "",
+                "end",
+                values=(
+                    date_text,
+                    time_text,
+                    price_text,
+                ),
+            )
+
+        if not price_history:
+            history_table.insert(
+                "",
+                "end",
+                values=(
+                    "No price history",
+                    "",
+                    "",
+                ),
+            )
+
+        close_button = ttk.Button(
+            popup,
+            text="Close",
+            command=popup.destroy,
+        )
+        close_button.pack(
+            pady=(0, 18),
+        )
+
+    def update_market_overround(self, market):
+        overround = 0.0
+
+        for selection_index, selection in enumerate(
+            market.get("selections", [])
+        ):
+            # Hidden or individually suspended selections do not count.
+            if not selection.get("displayed", True):
+                continue
+
+            if not selection.get("active", True):
+                continue
+
+            pending_key = (id(market), selection_index)
+
+            price = self.pending_prices.get(
+                pending_key,
+                selection.get("price", [0, 1]),
+            )
+
+            if not isinstance(price, (list, tuple)) or len(price) != 2:
+                continue
+
+            numerator = price[0]
+            denominator = price[1]
+
+            if numerator <= 0 or denominator <= 0:
+                continue
+
+            overround += probability(
+                numerator,
+                denominator,
+            )
+
+        self.overround_label.config(
+            text=f"Overround: {overround:.2f}%"
         )
 
     def save_pending_prices(self, event, market):
@@ -678,14 +967,14 @@ class OddsPlatformGUI:
         # #3 = down/shorten
         # #4 = up/lengthen
         # #5 = status toggle
-        if column_id not in ("#3", "#4", "#5"):
+        if column_id not in ("#4", "#5", "#6"):
             return
 
         try:
             selection_index = int(row_id)
             selection = market["selections"][selection_index]
 
-            if column_id == "#5":
+            if column_id == "#6":
                 self.toggle_selection_suspension(
                     event,
                     market,
@@ -703,7 +992,7 @@ class OddsPlatformGUI:
             current_price = list(current_price)
             ladder_index = PRICE_LADDER.index(current_price)
 
-            if column_id == "#3":
+            if column_id == "#4":
                 # Down arrow: shorten the price.
                 if ladder_index == 0:
                     return
@@ -725,11 +1014,29 @@ class OddsPlatformGUI:
                 f"{new_price[0]}/{new_price[1]}",
             )
 
+            new_probability = probability(
+                new_price[0],
+                new_price[1],
+            )
+
+            selection_table.set(
+                row_id,
+                "probability",
+                f"{new_probability:.2f}%",
+            )
+
             selection_table.set(
                 row_id,
                 "status",
                 "Pending",
             )
+
+            selection_table.item(
+                row_id,
+                tags=("pending,"),
+            )
+
+            self.update_market_overround(market)
 
         except ValueError:
             messagebox.showerror(
