@@ -39,13 +39,7 @@ def change_event_price(event, market_name, selection_name, new_price):
 
     for selection in market["selections"]:
         if selection["name"] == selection_name:
-            selection["price"] = new_price
-
-def suspend_market(event, market_name):
-    market = find_market(event, market_name)
-
-    if market:
-        market["status"] = "SUSPENDED"     
+            selection["price"] = new_price   
 
 def open_market(event, market_name):
     market = find_market(event, market_name)
@@ -88,14 +82,6 @@ def suspend_market(market):
 
     market["status"] = "SUSPENDED"
 
-    for selection in market["selections"]:
-
-        selection["active"] = False
-
 def unsuspend_market(market):
 
-    market["status"] = "Active"
-
-    for selection in market["selections"]:
-
-        selection["active"] = True                      
+    market["status"] = "Active"                  

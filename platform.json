@@ -388,7 +388,7 @@
             {
                 "id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
                 "name": "Outright",
-                "status": "Trading",
+                "status": "Active",
                 "published": false,
                 "displayed": true,
                 "limits": {

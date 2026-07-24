@@ -12,6 +12,8 @@ from price_engine.price_ladder import (
 from platform_functions import (
     suspend_platform_selection,
     unsuspend_platform_selection,
+    suspend_platform_market,
+    unsuspend_platform_market,
 )
 
 from audit_functions import add_audit_log
@@ -437,6 +439,17 @@ class OddsPlatformGUI:
         action_frame = ttk.Frame(self.content)
         action_frame.pack(fill="x", pady=(0, 10))
 
+        market_is_suspended = (
+            str(market.get("status", "ACTIVE")).upper()
+            == "SUSPENDED"
+        )
+
+        market_button_text = (
+            "Unsuspend Market"
+            if market_is_suspended
+            else "Suspend Market"
+        )
+
         ttk.Button(
             action_frame,
             text="Save Changes",
@@ -454,6 +467,15 @@ class OddsPlatformGUI:
                 market,
             ),
         ).pack(side="left", padx=(8, 0))
+
+        ttk.Button(
+            action_frame,
+            text=market_button_text,
+            command=lambda: self.toggle_market_suspension(
+                event,
+                market,
+            ),
+        ).pack(side="left", padx=(20, 0))
 
 
         table_frame = ttk.Frame(self.content)
@@ -548,11 +570,19 @@ class OddsPlatformGUI:
                 price_text = str(price)
 
             is_pending = pending_key in self.pending_prices
-            is_active = selection.get("active", True)
+            selection_is_active = selection.get("active", True)
+            market_is_suspended = (
+                str(market.get("status", "ACTIVE")).upper()
+                == "SUSPENDED"
+            )
 
-            if not is_active and is_pending:
+            if market_is_suspended and is_pending:
                 status_text = "Suspended / Pending"
-            elif not is_active:
+            elif market_is_suspended:
+                status_text = "Suspended"
+            elif not selection_is_active and is_pending:
+                status_text = "Suspended / Pending"
+            elif not selection_is_active:
                 status_text = "Suspended"
             elif is_pending:
                 status_text = "Pending"
@@ -756,6 +786,53 @@ class OddsPlatformGUI:
             messagebox.showerror(
                 "Suspension failed",
                 "The selection status could not be updated.",
+            )
+            return
+
+        self.show_market_screen(event, market)
+
+    def toggle_market_suspension(
+        self,
+        event,
+        market,
+    ):
+        event_name = event.get("event_name", "")
+        market_name = market.get("name", "")
+
+        market_is_suspended = (
+            str(market.get("status", "ACTIVE")).upper()
+            == "SUSPENDED"
+        )
+
+        try:
+            if market_is_suspended:
+                unsuspend_platform_market(
+                    self.platform,
+                    event_name,
+                    market_name,
+                )
+
+                add_audit_log(
+                    f"{market_name} unsuspended in {event_name}"
+                )
+
+            else:
+                suspend_platform_market(
+                    self.platform,
+                    event_name,
+                    market_name,
+                )
+
+                add_audit_log(
+                    f"{market_name} suspended in {event_name}"
+                )
+
+            save_platform(self.platform)
+
+        except (TypeError, KeyError):
+            messagebox.showerror(
+                "Market suspension failed",
+                "The market status could not be updated.",
             )
             return
 
