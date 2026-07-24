@@ -4,8 +4,10 @@ from tkinter import ttk, messagebox
 from save_load import save_platform, load_platform
 from client_save_load import load_clients
 
-from price_engine.price_ladder import set_price
-
+from price_engine.price_ladder import (
+    PRICE_LADDER,
+    set_price,
+)
 
 class OddsPlatformGUI:
 
@@ -14,6 +16,7 @@ class OddsPlatformGUI:
         self.root = root
         self.platform = platform
         self.clients = clients
+        self.pending_prices = {}
 
         self.root.title("Odds Platform")
         self.root.geometry("1200x750")
@@ -423,10 +426,39 @@ class OddsPlatformGUI:
         ).pack(anchor="w", pady=(5, 20))
 
         # Container for the trading grid
+
+        action_frame = ttk.Frame(self.content)
+        action_frame.pack(fill="x", pady=(0, 10))
+
+        ttk.Button(
+            action_frame,
+            text="Save Changes",
+            command=lambda: self.save_pending_prices(
+                event,
+                market,
+            ),
+        ).pack(side="left")
+
+        ttk.Button(
+            action_frame,
+            text="Discard Changes",
+            command=lambda: self.discard_pending_prices(
+                event,
+                market,
+            ),
+        ).pack(side="left", padx=(8, 0))
+
+
         table_frame = ttk.Frame(self.content)
         table_frame.pack(fill="both", expand=True)
 
-        columns = ("selection", "price", "status")
+        columns = (
+            "selection", 
+            "price", 
+            "shorten",
+            "lengthen",
+            "status"
+        )
 
         selection_table = ttk.Treeview(
             table_frame,
@@ -437,6 +469,8 @@ class OddsPlatformGUI:
 
         selection_table.heading("selection", text="Selection")
         selection_table.heading("price", text="Price")
+        selection_table.heading("shorten", text="▼")
+        selection_table.heading("lengthen", text="▲")
         selection_table.heading("status", text="Status")
 
         selection_table.column(
@@ -450,6 +484,20 @@ class OddsPlatformGUI:
             width=140,
             minwidth=100,
             anchor="center",
+        )
+        selection_table.column(
+            "shorten",
+            width=90,
+            minwidth=70,
+            anchor="center",
+            stretch=False,
+        )
+        selection_table.column(
+            "lengthen",
+            width=90,
+            minwidth=70,
+            anchor="center",
+            stretch=False,
         )
         selection_table.column(
             "status",
@@ -480,14 +528,21 @@ class OddsPlatformGUI:
         for selection_index, selection in enumerate(
             market.get("selections", [])
         ):
-            price = selection.get("price", [0, 1])
+            pending_key = (id(market), selection_index)
+
+            price = self.pending_prices.get(
+                pending_key,
+                selection.get("price", [0, 1]),
+            )
 
             if isinstance(price, (list, tuple)) and len(price) == 2:
                 price_text = f"{price[0]}/{price[1]}"
             else:
                 price_text = str(price)
 
-            if selection.get("suspended", False):
+            if pending_key in self.pending_prices:
+                status_text = "Pending"
+            elif selection.get("suspended", False):
                 status_text = "Suspended"
             else:
                 status_text = str(
@@ -501,8 +556,10 @@ class OddsPlatformGUI:
                 values=(
                     selection.get("name", "Unnamed Selection"),
                     price_text,
+                    "▼",
+                    "▲",
                     status_text,
-                ),
+                )
             )
         selection_table.bind(
             "<Double-1>",
@@ -513,7 +570,127 @@ class OddsPlatformGUI:
                 market,
             ),
         )
+        selection_table.bind(
+            "<ButtonRelease-1>",
+            lambda event_click: self.handle_price_tick_click(
+                event_click,
+                selection_table,
+                event,
+                market,
+            ),
+        )
 
+    def save_pending_prices(self, event, market):
+        changes_saved = False
+
+        for selection_index, selection in enumerate(
+            market.get("selections", [])
+        ):
+            pending_key = (id(market), selection_index)
+
+            if pending_key not in self.pending_prices:
+                continue
+
+            new_price = self.pending_prices[pending_key]
+
+            set_price(
+                selection,
+                new_price[0],
+                new_price[1],
+            )
+
+            del self.pending_prices[pending_key]
+            changes_saved = True
+
+        if changes_saved:
+            save_platform(self.platform)
+
+        self.show_market_screen(event, market)
+
+    def discard_pending_prices(self, event, market):
+        keys_to_remove = []
+
+        for pending_key in self.pending_prices:
+            if pending_key[0] == id(market):
+                keys_to_remove.append(pending_key)
+
+        for pending_key in keys_to_remove:
+            del self.pending_prices[pending_key]
+
+        self.show_market_screen(event, market)
+
+
+    def handle_price_tick_click(
+        self,
+        event_click,
+        selection_table,
+        event,
+        market,
+    ):
+        row_id = selection_table.identify_row(event_click.y)
+        column_id = selection_table.identify_column(event_click.x)
+
+        if not row_id:
+            return
+
+        # #3 = down/shorten
+        # #4 = up/lengthen
+        if column_id not in ("#3", "#4"):
+            return
+
+        try:
+            selection_index = int(row_id)
+            selection = market["selections"][selection_index]
+
+            pending_key = (id(market), selection_index)
+
+            current_price = self.pending_prices.get(
+                pending_key,
+                selection["price"],
+            )
+
+            current_price = list(current_price)
+            ladder_index = PRICE_LADDER.index(current_price)
+
+            if column_id == "#3":
+                # Down arrow: shorten the price.
+                if ladder_index == 0:
+                    return
+
+                new_price = PRICE_LADDER[ladder_index - 1]
+
+            else:
+                # Up arrow: lengthen the price.
+                if ladder_index >= len(PRICE_LADDER) - 1:
+                    return
+
+                new_price = PRICE_LADDER[ladder_index + 1]
+
+            self.pending_prices[pending_key] = list(new_price)
+
+            selection_table.set(
+                row_id,
+                "price",
+                f"{new_price[0]}/{new_price[1]}",
+            )
+
+            selection_table.set(
+                row_id,
+                "status",
+                "Pending",
+            )
+
+        except ValueError:
+            messagebox.showerror(
+                "Price ladder error",
+                "This selection's current price is not on the price ladder.",
+            )
+
+        except (TypeError, KeyError, IndexError):
+            messagebox.showerror(
+                "Price update failed",
+                "The selection price could not be updated.",
+            )
     def edit_price_cell(
         self,
         event_click,
