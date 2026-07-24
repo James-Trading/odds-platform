@@ -397,39 +397,108 @@ class OddsPlatformGUI:
             )
 
     def show_market_screen(self, event, market):
-
         self.clear_content()
 
+        # Back button
         ttk.Button(
             self.content,
             text="← Back to Event",
-            command=lambda: self.show_event_screen(event)
+            command=lambda: self.show_event_screen(event),
         ).pack(anchor="w", pady=(0, 15))
 
+        # Market heading
         ttk.Label(
             self.content,
             text=market.get("name", "Unnamed Market"),
-            font=("Arial", 24, "bold")
+            font=("Arial", 24, "bold"),
         ).pack(anchor="w")
 
+        # Event heading
         ttk.Label(
             self.content,
             text=f"Event: {event.get('event_name', 'Unnamed Event')}",
-            font=("Arial", 11)
+            font=("Arial", 11),
         ).pack(anchor="w", pady=(5, 20))
 
-        for selection in market.get("selections", []):
+        # Container for the trading grid
+        table_frame = ttk.Frame(self.content)
+        table_frame.pack(fill="both", expand=True)
 
+        columns = ("selection", "price", "status")
+
+        selection_table = ttk.Treeview(
+            table_frame,
+            columns=columns,
+            show="headings",
+            height=14,
+        )
+
+        selection_table.heading("selection", text="Selection")
+        selection_table.heading("price", text="Price")
+        selection_table.heading("status", text="Status")
+
+        selection_table.column(
+            "selection",
+            width=420,
+            minwidth=200,
+            anchor="w",
+        )
+        selection_table.column(
+            "price",
+            width=140,
+            minwidth=100,
+            anchor="center",
+        )
+        selection_table.column(
+            "status",
+            width=140,
+            minwidth=100,
+            anchor="center",
+        )
+
+        scrollbar = ttk.Scrollbar(
+            table_frame,
+            orient="vertical",
+            command=selection_table.yview,
+        )
+
+        selection_table.configure(yscrollcommand=scrollbar.set)
+
+        selection_table.pack(
+            side="left",
+            fill="both",
+            expand=True,
+        )
+        scrollbar.pack(
+            side="right",
+            fill="y",
+        )
+
+        # Add the real selections from the backend
+        for selection in market.get("selections", []):
             price = selection.get("price", [0, 1])
 
-            ttk.Label(
-                self.content,
-                text=(
-                    f"{selection.get('name', 'Unnamed Selection')}"
-                    f"    {price[0]}/{price[1]}"
+            if isinstance(price, (list, tuple)) and len(price) == 2:
+                price_text = f"{price[0]}/{price[1]}"
+            else:
+                price_text = str(price)
+
+            if selection.get("suspended", False):
+                status_text = "Suspended"
+            else:
+                status_text = str(
+                    selection.get("status", "Active")
+                ).title()
+
+            selection_table.insert(
+                "",
+                "end",
+                values=(
+                    selection.get("name", "Unnamed Selection"),
+                    price_text,
+                    status_text,
                 ),
-                font=("Arial", 12)
-            ).pack(anchor="w", pady=4)
+            )
 
     def create_summary_card(self, parent, heading, value):
 
