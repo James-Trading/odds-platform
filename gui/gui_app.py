@@ -20,6 +20,8 @@ from audit_functions import add_audit_log
 
 from pricing import probability
 
+from event_functions import add_selection
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -504,6 +506,20 @@ class OddsPlatformGUI:
             padx=(8, 0),
         )
 
+        manage_selections_button = ttk.Button(
+            action_frame,
+            text="Manage Selections",
+            command=lambda: self.show_manage_selections_popup(
+                event,
+                market,
+            ),
+        )
+
+        manage_selections_button.pack(
+            side="left",
+            padx=(8, 0),
+        )
+
         table_frame = ttk.Frame(self.content)
         table_frame.pack(fill="both", expand=True)
 
@@ -685,6 +701,254 @@ class OddsPlatformGUI:
                 market,
             ),
         )
+
+    def show_manage_selections_popup(
+        self,
+        event,
+        market,
+    ):
+        popup = tk.Toplevel(self.root)
+        popup.title("Manage Selections")
+        popup.geometry("650x500")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        title_label = ttk.Label(
+            popup,
+            text=f"Manage Selections - {market.get('name', 'Market')}",
+            font=("Arial", 15, "bold"),
+        )
+        title_label.pack(
+            anchor="w",
+            padx=20,
+            pady=(18, 12),
+        )
+
+        form_frame = ttk.Frame(popup)
+        form_frame.pack(
+            fill="x",
+            padx=20,
+            pady=(0, 15),
+        )
+
+        ttk.Label(
+            form_frame,
+            text="Selection Name",
+        ).grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=(0, 10),
+        )
+
+        name_entry = ttk.Entry(
+            form_frame,
+            width=32,
+        )
+        name_entry.grid(
+            row=1,
+            column=0,
+            sticky="w",
+            padx=(0, 10),
+        )
+
+        ttk.Label(
+            form_frame,
+            text="Price",
+        ).grid(
+            row=0,
+            column=1,
+            sticky="w",
+            padx=(0, 10),
+        )
+
+        price_entry = ttk.Entry(
+            form_frame,
+            width=12,
+        )
+        price_entry.grid(
+            row=1,
+            column=1,
+            sticky="w",
+            padx=(0, 10),
+        )
+
+        selections_table = ttk.Treeview(
+            popup,
+            columns=(
+                "selection",
+                "price",
+                "status",
+            ),
+            show="headings",
+            height=14,
+        )
+
+        selections_table.heading(
+            "selection",
+            text="Selection",
+        )
+        selections_table.heading(
+            "price",
+            text="Price",
+        )
+        selections_table.heading(
+            "status",
+            text="Status",
+        )
+
+        selections_table.column(
+            "selection",
+            width=330,
+            anchor="w",
+        )
+        selections_table.column(
+            "price",
+            width=100,
+            anchor="center",
+        )
+        selections_table.column(
+            "status",
+            width=130,
+            anchor="center",
+        )
+
+        selections_table.pack(
+            fill="both",
+            expand=True,
+            padx=20,
+            pady=(0, 15),
+        )
+
+        def refresh_table():
+            for row in selections_table.get_children():
+                selections_table.delete(row)
+
+            sorted_selections = sorted(
+                market.get("selections", []),
+                key=lambda selection: probability(
+                    selection["price"][0],
+                    selection["price"][1],
+                ),
+                reverse=True,
+            )
+
+            for selection in sorted_selections:
+                price = selection.get(
+                    "price",
+                    [0, 1],
+                )
+
+                price_text = f"{price[0]}/{price[1]}"
+
+                if not selection.get("active", True):
+                    status_text = "Suspended"
+                elif not selection.get("displayed", True):
+                    status_text = "Non Display"
+                else:
+                    status_text = "Active"
+
+                selections_table.insert(
+                    "",
+                    "end",
+                    values=(
+                        selection.get(
+                            "name",
+                            "Unnamed Selection",
+                        ),
+                        price_text,
+                        status_text,
+                    ),
+                )
+
+        def add_new_selection():
+            selection_name = name_entry.get().strip()
+            price_text = price_entry.get().strip()
+
+            if not selection_name:
+                messagebox.showwarning(
+                    "Add Selection",
+                    "Enter a selection name.",
+                )
+                return
+
+            if "/" not in price_text:
+                messagebox.showwarning(
+                    "Add Selection",
+                    "Enter the price as fractional odds, for example 5/1.",
+                )
+                return
+
+            try:
+                numerator_text, denominator_text = price_text.split(
+                    "/",
+                    1,
+                )
+
+                numerator = int(numerator_text)
+                denominator = int(denominator_text)
+
+                if numerator <= 0 or denominator <= 0:
+                    raise ValueError
+
+            except ValueError:
+                messagebox.showwarning(
+                    "Add Selection",
+                    "Enter a valid fractional price, for example 5/1.",
+                )
+                return
+
+            add_selection(
+                market,
+                selection_name,
+                [
+                    numerator,
+                    denominator,
+                ],
+            )
+
+            market["selections"].sort(
+                key=lambda selection: probability(
+                    selection["price"][0],
+                    selection["price"][1],
+                ),
+                reverse=True,
+            )
+
+            save_platform(self.platform)
+
+            name_entry.delete(0, "end")
+            price_entry.delete(0, "end")
+
+            refresh_table()
+
+            self.show_market_screen(
+                event,
+                market,
+            )
+
+        add_button = ttk.Button(
+            form_frame,
+            text="Add Selection",
+            command=add_new_selection,
+        )
+        add_button.grid(
+            row=1,
+            column=2,
+            sticky="w",
+        )
+
+        close_button = ttk.Button(
+            popup,
+            text="Close",
+            command=popup.destroy,
+        )
+        close_button.pack(
+            pady=(0, 18),
+        )
+
+        refresh_table()
+        name_entry.focus_set()
 
     def show_price_history_popup(
         self,
@@ -932,6 +1196,14 @@ class OddsPlatformGUI:
             changes_saved = True
 
         if changes_saved:
+            market["selections"].sort(
+                key=lambda selection: probability(
+                    selection["price"][0],
+                    selection["price"][1],
+                ),
+                reverse=True,
+            )
+
             save_platform(self.platform)
 
         self.show_market_screen(event, market)

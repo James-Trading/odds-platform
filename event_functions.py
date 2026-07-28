@@ -42,20 +42,24 @@ def create_market(event, market_name):
 
 
 def add_selection(market, selection_name, price):
-    market["selections"].append(
-        {
-            "id": str(uuid.uuid4()),
-            "name": selection_name,
-            "price": price,
-            "pending_price": None,
-            "price_history": [
-                {
-                    "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "price": price
-                }
-            ],
-            "active": True,
-            "displayed": True,
-            "result": ""
-        }
-    )
+    selection = {
+        "id": str(uuid.uuid4()),
+        "name": selection_name,
+        "price": price,
+        "pending_price": None,
+        "price_history": [
+            {
+                "created": datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+                "price": price,
+            }
+        ],
+        "active": True,
+        "displayed": True,
+        "result": "",
+    }
+
+    market["selections"].append(selection)
+
+    return selection
