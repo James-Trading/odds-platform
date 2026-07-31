@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 
 from save_load import save_platform, load_platform
 from client_save_load import load_clients
@@ -20,7 +20,17 @@ from audit_functions import add_audit_log
 
 from pricing import probability
 
-from event_functions import add_selection
+from event_functions import (
+    create_event,
+    create_market,
+    add_selection,
+)
+
+from bets.settlement_functions import settle_market_results
+
+from imports.excel_preview import preview_excel_import
+
+from imports.excel_import import import_excel_event
 
 class OddsPlatformGUI:
 
@@ -89,7 +99,7 @@ class OddsPlatformGUI:
         ttk.Button(
             self.sidebar,
             text="Import Centre",
-            command=lambda: self.show_page("Import Centre")
+            command=self.show_import_centre,
         ).pack(fill="x", pady=4)
 
         ttk.Button(
@@ -520,6 +530,20 @@ class OddsPlatformGUI:
             padx=(8, 0),
         )
 
+        settle_market_button = ttk.Button(
+            action_frame,
+            text="Settle Market",
+            command=lambda: self.show_settlement_popup(
+                event,
+                market,
+            ),
+        )
+
+        settle_market_button.pack(
+            side="left",
+            padx=(8, 0),
+        )
+
         table_frame = ttk.Frame(self.content)
         table_frame.pack(fill="both", expand=True)
 
@@ -617,6 +641,24 @@ class OddsPlatformGUI:
             foreground="#8a2d2d",
         )
 
+        selection_table.tag_configure(
+            "winner",
+            background="#e5f4e5",
+            foreground="#246b24",
+        )
+
+        selection_table.tag_configure(
+            "loser",
+            background="#f2f2f2",
+            foreground="#666666",
+        )
+
+        selection_table.tag_configure(
+            "void",
+            background="#fff3d6",
+            foreground="#7a5a00",
+        )
+
         # Add the real selections from the backend
         for selection_index, selection in enumerate(
             market.get("selections", [])
@@ -649,12 +691,16 @@ class OddsPlatformGUI:
                 == "SUSPENDED"
             )
 
-            if market_is_suspended and is_pending:
-                status_text = "Suspended / Pending"
+            result = selection.get("result", "")
+
+            if result == "Won":
+                status_text = "Won"
+            elif result == "Lost":
+                status_text = "Lost"
+            elif result == "Void":
+                status_text = "Void"
             elif market_is_suspended:
                 status_text = "Suspended"
-            elif not selection_is_active and is_pending:
-                status_text = "Suspended / Pending"
             elif not selection_is_active:
                 status_text = "Suspended"
             elif is_pending:
@@ -662,7 +708,13 @@ class OddsPlatformGUI:
             else:
                 status_text = "Active"
 
-            if market_is_suspended or not selection_is_active:
+            if result == "Won":
+                row_tag = "winner"
+            elif result == "Lost":
+                row_tag = "loser"
+            elif result == "Void":
+                row_tag = "void"
+            elif market_is_suspended or not selection_is_active:
                 row_tag = "suspended"
             elif is_pending:
                 row_tag = "pending"
@@ -950,6 +1002,322 @@ class OddsPlatformGUI:
         refresh_table()
         name_entry.focus_set()
 
+    def show_settlement_popup(
+        self,
+        event,
+        market,
+    ):
+        popup = tk.Toplevel(self.root)
+        popup.title(f"Settle Market - {market.get('name', 'Market')}")
+        popup.geometry("700x560")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        pending_results = {}
+
+        title_label = ttk.Label(
+            popup,
+            text=f"Settle Market - {market.get('name', 'Market')}",
+            font=("Arial", 15, "bold"),
+        )
+        title_label.pack(
+            anchor="w",
+            padx=20,
+            pady=(18, 12),
+        )
+
+        bulk_frame = ttk.Frame(popup)
+        bulk_frame.pack(
+            fill="x",
+            padx=20,
+            pady=(0, 12),
+        )
+
+        ttk.Label(
+            bulk_frame,
+            text="Bulk result:",
+            font=("Arial", 10, "bold"),
+        ).pack(
+            side="left",
+            padx=(0, 10),
+        )
+
+        table = ttk.Treeview(
+            popup,
+            columns=(
+                "selection",
+                "result",
+                "win",
+                "lose",
+                "void",
+            ),
+            show="headings",
+            height=16,
+        )
+
+        table.heading("selection", text="Selection")
+        table.heading("result", text="Result")
+        table.heading("win", text="W")
+        table.heading("lose", text="L")
+        table.heading("void", text="V")
+
+        table.column(
+            "selection",
+            width=330,
+            anchor="w",
+        )
+        table.column(
+            "result",
+            width=120,
+            anchor="center",
+        )
+        table.column(
+            "win",
+            width=55,
+            anchor="center",
+        )
+        table.column(
+            "lose",
+            width=55,
+            anchor="center",
+        )
+        table.column(
+            "void",
+            width=55,
+            anchor="center",
+        )
+
+        table.pack(
+            fill="both",
+            expand=True,
+            padx=20,
+            pady=(0, 15),
+        )
+
+        def get_display_result(selection):
+            selection_id = selection.get("id")
+
+            if selection_id in pending_results:
+                return pending_results[selection_id]
+
+            return selection.get("result", "")
+
+        def refresh_table():
+            for row in table.get_children():
+                table.delete(row)
+
+            for selection_index, selection in enumerate(
+                market.get("selections", [])
+            ):
+                result_text = get_display_result(selection)
+
+                table.insert(
+                    "",
+                    "end",
+                    iid=str(selection_index),
+                    values=(
+                        selection.get("name", "Unnamed Selection"),
+                        result_text or "Unsettled",
+                        "W",
+                        "L",
+                        "V",
+                    ),
+                )
+
+        def set_individual_result(
+            selection_index,
+            result_value,
+        ):
+            selections = market.get("selections", [])
+
+            if selection_index >= len(selections):
+                return
+
+            selection = selections[selection_index]
+            selection_id = selection.get("id")
+
+            pending_results[selection_id] = result_value
+            refresh_table()
+
+        def apply_bulk_result(result_value):
+            for selection in market.get("selections", []):
+                selection_id = selection.get("id")
+
+                # Individual pending settlement takes priority.
+                if selection_id in pending_results:
+                    continue
+
+                # Existing saved settlement also takes priority.
+                if selection.get("result", ""):
+                    continue
+
+                pending_results[selection_id] = result_value
+
+            refresh_table()
+
+        def handle_table_click(event_click):
+            region = table.identify_region(
+                event_click.x,
+                event_click.y,
+            )
+
+            if region != "cell":
+                return
+
+            row_id = table.identify_row(event_click.y)
+            column_id = table.identify_column(event_click.x)
+
+            if not row_id:
+                return
+
+            selection_index = int(row_id)
+
+            if column_id == "#3":
+                set_individual_result(
+                    selection_index,
+                    "Won",
+                )
+
+            elif column_id == "#4":
+                set_individual_result(
+                    selection_index,
+                    "Lost",
+                )
+
+            elif column_id == "#5":
+                set_individual_result(
+                    selection_index,
+                    "Void",
+                )
+
+        def clear_pending_results():
+            pending_results.clear()
+            refresh_table()
+
+        def save_settlement():
+            if not pending_results:
+                messagebox.showinfo(
+                    "Settle Market",
+                    "No settlement changes have been selected.",
+                )
+                return
+
+            unsettled_selections = [
+                selection
+                for selection in market.get("selections", [])
+                if (
+                    not selection.get("result", "")
+                    and selection.get("id") not in pending_results
+                )
+            ]
+
+            if unsettled_selections:
+                proceed = messagebox.askyesno(
+                    "Incomplete Settlement",
+                    "Some selections are still unsettled. Save anyway?",
+                )
+
+                if not proceed:
+                    return
+
+            confirmed = messagebox.askyesno(
+                "Confirm Settlement",
+                "Save these market results?",
+            )
+
+            if not confirmed:
+                return
+
+            print("Saving settlement:", pending_results)
+
+            settle_market_results(
+                self.platform,
+                [],
+                event,
+                market,
+                pending_results,
+            )
+
+            print(
+                "Saved results:",
+                [
+                    (
+                        selection.get("name"),
+                        selection.get("result"),
+                    )
+                    for selection in market.get("selections", [])
+                ],
+            )
+
+            popup.destroy()
+
+            self.show_market_screen(
+                event,
+                market,
+            )
+
+        ttk.Button(
+            bulk_frame,
+            text="W",
+            command=lambda: apply_bulk_result("Won"),
+        ).pack(
+            side="left",
+            padx=3,
+        )
+
+        ttk.Button(
+            bulk_frame,
+            text="L",
+            command=lambda: apply_bulk_result("Lost"),
+        ).pack(
+            side="left",
+            padx=3,
+        )
+
+        ttk.Button(
+            bulk_frame,
+            text="V",
+            command=lambda: apply_bulk_result("Void"),
+        ).pack(
+            side="left",
+            padx=3,
+        )
+
+        button_frame = ttk.Frame(popup)
+        button_frame.pack(
+            fill="x",
+            padx=20,
+            pady=(0, 18),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Clear Pending",
+            command=clear_pending_results,
+        ).pack(side="left")
+
+        ttk.Button(
+            button_frame,
+            text="Save Settlement",
+            command=save_settlement,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Close",
+            command=popup.destroy,
+        ).pack(side="right")
+
+        table.bind(
+            "<Button-1>",
+            handle_table_click,
+        )
+
+        refresh_table()
+
     def show_price_history_popup(
         self,
         market,
@@ -1146,6 +1514,11 @@ class OddsPlatformGUI:
                 continue
 
             if not selection.get("active", True):
+                continue
+
+            result = selection.get("result", "")
+
+            if result in ("Won", "Lost", "Void"):
                 continue
 
             pending_key = (id(market), selection_index)
@@ -1567,6 +1940,225 @@ class OddsPlatformGUI:
             padx=(10, 0)
         )
 
+    def show_import_centre(self):
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text="Import Centre",
+            font=("Arial", 20, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 8),
+        )
+
+        ttk.Label(
+            self.content,
+            text=(
+                "Import one event and one pre-match market "
+                "from an Excel pricing worksheet."
+            ),
+        ).pack(
+            anchor="w",
+            pady=(0, 20),
+        )
+
+        file_frame = ttk.Frame(self.content)
+        file_frame.pack(
+            fill="x",
+            pady=(0, 15),
+        )
+
+        self.import_file_path = tk.StringVar()
+
+        file_entry = ttk.Entry(
+            file_frame,
+            textvariable=self.import_file_path,
+            state="readonly",
+            width=70,
+        )
+        file_entry.pack(
+            side="left",
+            fill="x",
+            expand=True,
+        )
+
+        ttk.Button(
+            file_frame,
+            text="Choose Excel File",
+            command=self.choose_excel_import_file,
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        self.import_preview_frame = ttk.LabelFrame(
+            self.content,
+            text="Import Preview",
+        )
+        self.import_preview_frame.pack(
+            fill="both",
+            expand=True,
+            pady=(0, 15),
+        )
+
+        ttk.Label(
+            self.import_preview_frame,
+            text="Choose an Excel file to preview it.",
+        ).pack(
+            anchor="w",
+            padx=15,
+            pady=15,
+        )
+
+        ttk.Button(
+            self.content,
+            text="Import Event",
+            command=self.import_excel_event,
+        ).pack(
+            anchor="w",
+            padx=15,
+            pady=(0, 15),
+        )
+
+
+    def choose_excel_import_file(self):
+        file_path = filedialog.askopenfilename(
+            title="Choose Excel Pricing File",
+            filetypes=[
+                (
+                    "Excel workbooks",
+                    "*.xlsx *.xlsm",
+                ),
+                (
+                    "All files",
+                    "*.*",
+                ),
+            ],
+        )
+
+        if not file_path:
+            return
+
+        self.import_file_path.set(file_path)
+
+        try:
+            preview = preview_excel_import(file_path)
+        except Exception as error:
+            messagebox.showerror(
+                "Import Centre",
+                f"Could not read the Excel file:\n\n{error}",
+            )
+            return
+
+        self.current_import_preview = preview
+
+        for widget in self.import_preview_frame.winfo_children():
+            widget.destroy()
+
+        event_name = preview.get("event") or "Not found"
+        market_name = preview.get("market") or "Not found"
+        category = preview.get("category") or "Not found"
+        event_class = preview.get("class") or "Not found"
+        event_type = preview.get("type") or "Not found"
+        event_date = preview.get("date") or "Not found"
+        event_time = preview.get("time") or "Not found"
+        selection_count = len(preview.get("selections", []))
+
+        display_date = event_date
+        display_time = event_time
+
+        if hasattr(display_date, "strftime"):
+            display_date = display_date.strftime("%d/%m/%Y")
+
+        if hasattr(display_time, "strftime"):
+            display_time = display_time.strftime("%H:%M")
+
+
+        preview_text = (
+            f"Event: {event_name}\n"
+            f"Market: {market_name}\n"
+            f"Category: {category}\n"
+            f"Class: {event_class}\n"
+            f"Type: {event_type}\n"
+            f"Date: {display_date}\n"
+            f"Time: {display_time}\n"
+            f"Selections found: {selection_count}"
+        )
+
+        ttk.Label(
+            self.import_preview_frame,
+            text=preview_text,
+            justify="left",
+        ).pack(
+            anchor="w",
+            padx=15,
+            pady=15,
+        )
+
+    def import_excel_event(self):
+        preview = getattr(self, "current_import_preview", None)
+
+        if not preview:
+            messagebox.showwarning(
+                "Import Centre",
+                "Choose and preview an Excel file first.",
+            )
+            return
+
+        event = create_event(
+            preview["category"],
+            preview["class"],
+            preview["type"],
+            preview["event"],
+        )
+
+        event_date = preview.get("date")
+        event_time = preview.get("time")
+
+        if hasattr(event_date, "strftime"):
+            event_date = event_date.strftime("%Y-%m-%d")
+
+        if hasattr(event_time, "strftime"):
+            event_time = event_time.strftime("%H:%M")
+
+        event["start_time"] = f"{event_date} {event_time}"
+        event["status"] = "Draft"
+        event["published"] = False
+        event["displayed"] = False
+
+        market = create_market(
+            event,
+            preview["market"],
+        )
+
+        market["status"] = "Suspended"
+        market["published"] = False
+        market["displayed"] = False
+
+        for runner in preview["selections"]:
+            selection = add_selection(
+                market,
+                runner["name"],
+                str(runner["price"]),
+            )
+
+            selection["active"] = False
+            selection["displayed"] = False
+
+        self.platform.append(event)
+        save_platform(self.platform)
+
+        messagebox.showinfo(
+            "Import Complete",
+            (
+                f"{preview['event']} imported successfully.\n\n"
+                f"Market: {preview['market']}\n"
+                f"Selections: {len(preview['selections'])}"
+            ),
+        )
+
+        self.show_trading()
 
     def search_placeholder(self):
 

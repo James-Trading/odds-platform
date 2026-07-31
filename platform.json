@@ -388,7 +388,7 @@
             {
                 "id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
                 "name": "Outright",
-                "status": "Active",
+                "status": "Settled",
                 "published": false,
                 "displayed": true,
                 "limits": {
@@ -622,38 +622,6 @@
                         "result": ""
                     },
                     {
-                        "id": "2d0c5cb8-606c-4b4a-9e4c-009b8efc3bf4",
-                        "name": "Test Runner 2",
-                        "price": [
-                            12,
-                            1
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-07-28 23:01:20",
-                                "price": [
-                                    16,
-                                    1
-                                ]
-                            },
-                            {
-                                "time": "2026-07-28 23:02:09",
-                                "old_price": [
-                                    16,
-                                    1
-                                ],
-                                "new_price": [
-                                    12,
-                                    1
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    },
-                    {
                         "id": "711bfb53-2016-4c10-a3df-6b43c155f614",
                         "name": "Chris Appleton",
                         "price": [
@@ -715,6 +683,189 @@
                         ],
                         "active": true,
                         "displayed": true,
+                        "result": "Void"
+                    },
+                    {
+                        "id": "2d0c5cb8-606c-4b4a-9e4c-009b8efc3bf4",
+                        "name": "Test Runner 2",
+                        "price": [
+                            50,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-28 23:01:20",
+                                "price": [
+                                    16,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-28 23:02:09",
+                                "old_price": [
+                                    16,
+                                    1
+                                ],
+                                "new_price": [
+                                    12,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-29 23:46:42",
+                                "old_price": [
+                                    12,
+                                    1
+                                ],
+                                "new_price": [
+                                    25,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-29 23:46:51",
+                                "old_price": [
+                                    25,
+                                    1
+                                ],
+                                "new_price": [
+                                    33,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-07-29 23:52:21",
+                                "old_price": [
+                                    33,
+                                    1
+                                ],
+                                "new_price": [
+                                    50,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": "Void"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "a74bc5aa-8731-4029-83ab-4fe2ff3bf2a6",
+        "category": "Specials",
+        "class": "TV Specials",
+        "type": "Big Brother",
+        "event_name": "Big Brother 2026",
+        "status": "Draft",
+        "displayed": false,
+        "published": false,
+        "start_time": "2026-09-21 21:00",
+        "suspend_mode": "AUTO",
+        "markets": [
+            {
+                "id": "f761c9a3-bcc7-4b97-b39b-ad872f68f1cc",
+                "name": "Outright",
+                "status": "Suspended",
+                "published": false,
+                "displayed": false,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "932a7c2b-d3fe-46fc-9a71-302eabdaed85",
+                        "name": "James",
+                        "price": "2/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-31 11:55:10",
+                                "price": "2/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "cce34c8f-92be-47bb-8386-95c4341ef6be",
+                        "name": "Cath",
+                        "price": "3/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-31 11:55:10",
+                                "price": "3/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "8058ae00-7120-4a25-95cb-65d85c6dc4f6",
+                        "name": "Harvey",
+                        "price": "4/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-31 11:55:10",
+                                "price": "4/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "26472447-46ae-4484-b996-720be0160a07",
+                        "name": "Tom",
+                        "price": "5/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-31 11:55:10",
+                                "price": "5/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "036548ca-dbf3-45a7-ad42-33c61d819e1d",
+                        "name": "Gill",
+                        "price": "6/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-31 11:55:10",
+                                "price": "6/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "3e064dc1-3a96-412f-9b18-fd59db72d0d1",
+                        "name": "Deb",
+                        "price": "8/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-07-31 11:55:10",
+                                "price": "8/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
                         "result": ""
                     }
                 ]
