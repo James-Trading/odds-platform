@@ -381,7 +381,7 @@
         "event_name": "Strictly Come Dancing 2026",
         "status": "draft",
         "displayed": true,
-        "published": false,
+        "published": true,
         "start_time": "19/09/2026 18:00",
         "suspend_mode": "AUTO",
         "markets": [
@@ -401,8 +401,8 @@
                         "id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
                         "name": "Dani Dyer",
                         "price": [
-                            2,
-                            1
+                            5,
+                            2
                         ],
                         "pending_price": null,
                         "price_history": [
@@ -488,6 +488,17 @@
                                 "new_price": [
                                     2,
                                     1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-02 14:22:50",
+                                "old_price": [
+                                    2,
+                                    1
+                                ],
+                                "new_price": [
+                                    5,
+                                    2
                                 ]
                             }
                         ],
@@ -762,7 +773,7 @@
         "event_name": "Big Brother 2026",
         "status": "Draft",
         "displayed": false,
-        "published": false,
+        "published": true,
         "start_time": "2026-09-21 21:00",
         "suspend_mode": "AUTO",
         "markets": [

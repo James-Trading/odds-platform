@@ -32,6 +32,8 @@ from imports.excel_preview import preview_excel_import
 
 from imports.excel_import import import_excel_event
 
+from distribution.feed_functions import get_published_events
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -402,6 +404,26 @@ class OddsPlatformGUI:
             font=("Arial", 24, "bold")
         ).pack(anchor="w")
 
+        status = "Published" if event.get("published") else "Draft"
+
+        ttk.Label(
+            self.content,
+            text=f"Status: {status}",
+            font=("Arial", 11)
+        ).pack(anchor="w", pady=(0, 15))
+
+        button_text = (
+            "Unpublish Event"
+            if event.get("published")
+            else "Publish Event"
+        )
+
+        ttk.Button(
+            self.content,
+            text=button_text,
+            command=lambda: self.toggle_event_publish(event)
+        ).pack(anchor="w", pady=(0, 20))
+
         ttk.Label(
             self.content,
             text="Markets",
@@ -423,6 +445,14 @@ class OddsPlatformGUI:
                 anchor="w",
                 pady=4
             )
+
+    def toggle_event_publish(self, event):
+
+        event["published"] = not event.get("published", False)
+
+        save_platform(self.platform)
+
+        self.show_event_screen(event)
 
     def show_market_screen(self, event, market):
         self.clear_content()
