@@ -116,3 +116,40 @@ def get_published_events(platform):
         customer_events.append(customer_event)
 
     return customer_events
+
+def get_client_feed(platform, client):
+    if client.get("status", "").lower() != "active":
+        return []
+
+    feed_settings = client.get("feed", {})
+
+    if not feed_settings.get("enabled", False):
+        return []
+
+    published_events = get_published_events(platform)
+
+    booked_events = {
+        str(event_name).strip().lower()
+        for event_name in client.get("booked_events", [])
+    }
+
+    subscriptions = {
+        str(category).strip().lower()
+        for category in client.get("subscriptions", [])
+    }
+
+    client_events = []
+
+    for event in published_events:
+        event_name = str(event.get("name", "")).strip().lower()
+        event_category = str(event.get("category", "")).strip().lower()
+
+        is_booked = event_name in booked_events
+        is_subscribed = event_category in subscriptions
+
+        if not is_booked and not is_subscribed:
+            continue
+
+        client_events.append(event)
+
+    return client_events

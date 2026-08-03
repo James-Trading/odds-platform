@@ -32,7 +32,10 @@ from imports.excel_preview import preview_excel_import
 
 from imports.excel_import import import_excel_event
 
-from distribution.feed_functions import get_published_events
+from distribution.feed_functions import (
+    get_published_events, 
+    get_client_feed,
+)
 
 class OddsPlatformGUI:
 

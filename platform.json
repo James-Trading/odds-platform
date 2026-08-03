@@ -401,8 +401,8 @@
                         "id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
                         "name": "Dani Dyer",
                         "price": [
-                            5,
-                            2
+                            3,
+                            1
                         ],
                         "pending_price": null,
                         "price_history": [
@@ -499,6 +499,17 @@
                                 "new_price": [
                                     5,
                                     2
+                                ]
+                            },
+                            {
+                                "time": "2026-08-02 17:27:49",
+                                "old_price": [
+                                    5,
+                                    2
+                                ],
+                                "new_price": [
+                                    3,
+                                    1
                                 ]
                             }
                         ],

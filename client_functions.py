@@ -1,3 +1,5 @@
+import secrets
+
 def create_client(
         name,
         contact,
@@ -16,6 +18,7 @@ def create_client(
         "feed": {
             "enabled": True,
             "connector": "None",
+            "api_key": f"GTM_{secrets.token_hex(16)}",
             "last_price_update": None,
             "last_bet_received": None
         },

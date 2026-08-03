@@ -74,5 +74,22 @@
             "Strictly Come Dancing 2026"
         ],
         "subscriptions": []
+    },
+    {
+        "name": "Rosie",
+        "contact": "Aroo",
+        "email": "Aroo",
+        "status": "Active",
+        "feed": {
+            "enabled": true,
+            "connector": "None",
+            "api_key": "GTM_b4154604e7169285832daa5a05c019fb",
+            "last_price_update": null,
+            "last_bet_received": null
+        },
+        "booked_events": [
+            "Strictly Come Dancing 2026"
+        ],
+        "subscriptions": []
     }
 ]
