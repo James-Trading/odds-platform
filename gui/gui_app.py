@@ -24,6 +24,7 @@ from event_functions import (
     create_event,
     create_market,
     add_selection,
+    touch_event,
 )
 
 from bets.settlement_functions import settle_market_results
@@ -1610,6 +1611,7 @@ class OddsPlatformGUI:
                 reverse=True,
             )
 
+            touch_event(event)
             save_platform(self.platform)
 
         self.show_market_screen(event, market)
@@ -1765,6 +1767,7 @@ class OddsPlatformGUI:
                     f"{event_name} / {market_name}"
                 )
 
+            touch_event(event)
             save_platform(self.platform)
 
         except (TypeError, KeyError):

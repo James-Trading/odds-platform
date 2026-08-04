@@ -1,4 +1,14 @@
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import (
+    Depends, 
+    FastAPI, 
+    HTTPException, 
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+)
+
+import asyncio
+
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from client_save_load import load_clients
@@ -48,6 +58,20 @@ def get_authenticated_client(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+def get_client_from_api_key(api_key):
+    clients = load_clients()
+
+    for client in clients:
+        stored_key = client.get("feed", {}).get("api_key")
+
+        if stored_key != api_key:
+            continue
+
+        if client.get("status", "").lower() != "active":
+            return None
+
+        if not client.get("feed", {}).get("enabled", False):
+            return None
 
 @app.get("/")
 def api_home():
@@ -89,3 +113,73 @@ def get_client_feed_v1(
         "event_count": len(events),
         "events": events,
     }
+
+@app.websocket("/api/v1/live")
+async def live_feed(websocket: WebSocket):
+    api_key = websocket.query_params.get("api_key")
+    client = get_client_from_api_key(api_key)
+
+    if client is None:
+        await websocket.close(
+            code=1008,
+            reason="Invalid API key or disabled client.",
+        )
+        return
+
+    await websocket.accept()
+
+    client_name = client.get("name", "Unknown client")
+
+    log_activity(
+        "WEBSOCKET",
+        f"{client_name} connected to live feed",
+    )
+
+    last_versions = {}
+
+    try:
+        while True:
+            platform = load_platform()
+            events = get_client_feed(platform, client)
+
+            changed_events = []
+
+            for event in events:
+                event_id = event.get("id")
+                current_version = event.get("version", 0)
+                previous_version = last_versions.get(event_id)
+
+                if (
+                    previous_version is None
+                    or current_version > previous_version
+                ):
+                    changed_events.append(event)
+
+                last_versions[event_id] = current_version
+
+            if changed_events:
+                await websocket.send_json(
+                    {
+                        "type": "feed_update",
+                        "provider": "Goldliner Trading Matrix",
+                        "client": client_name,
+                        "event_count": len(changed_events),
+                        "events": changed_events,
+                    }
+                )
+
+                log_activity(
+                    "WEBSOCKET",
+                    (
+                        f"{client_name} received "
+                        f"{len(changed_events)} changed events"
+                    ),
+                )
+
+            await asyncio.sleep(1)
+
+    except WebSocketDisconnect:
+        log_activity(
+            "WEBSOCKET",
+            f"{client_name} disconnected from live feed",
+        )

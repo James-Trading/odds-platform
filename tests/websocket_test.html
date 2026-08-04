@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Goldliner Live Feed Test</title>
+
+    <style>
+        body {
+            background: #082f27;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 700px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        #status {
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        #messages {
+            background: #111;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            min-height: 300px;
+            overflow-wrap: anywhere;
+            padding: 16px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Goldliner Live Feed Test</h1>
+
+    <p>
+        Enter a real client API key, connect, then change a price
+        or suspension in the trading platform.
+    </p>
+
+    <input
+        id="apiKey"
+        type="password"
+        placeholder="GTM_client_api_key"
+    >
+
+    <div>
+        <button onclick="connectFeed()">Connect</button>
+        <button onclick="disconnectFeed()">Disconnect</button>
+        <button onclick="clearMessages()">Clear</button>
+    </div>
+
+    <div id="status">Status: Disconnected</div>
+    <div id="messages">Waiting for connection...</div>
+
+    <script>
+        let socket = null;
+
+        function setStatus(message) {
+            document.getElementById("status").textContent =
+                `Status: ${message}`;
+        }
+
+        function addMessage(message) {
+            const messages = document.getElementById("messages");
+
+            if (messages.textContent === "Waiting for connection...") {
+                messages.textContent = "";
+            }
+
+            const time = new Date().toLocaleTimeString();
+
+            messages.textContent +=
+                `\n[${time}]\n${message}\n`;
+        }
+
+        function connectFeed() {
+            const apiKey =
+                document.getElementById("apiKey").value.trim();
+
+            if (!apiKey) {
+                alert("Enter a client API key first.");
+                return;
+            }
+
+            if (
+                socket &&
+                (
+                    socket.readyState === WebSocket.OPEN ||
+                    socket.readyState === WebSocket.CONNECTING
+                )
+            ) {
+                addMessage("A connection is already open.");
+                return;
+            }
+
+            const url =
+                "ws://127.0.0.1:8000/api/v1/live" +
+                `?api_key=${encodeURIComponent(apiKey)}`;
+
+            setStatus("Connecting...");
+
+            socket = new WebSocket(url);
+
+            socket.onopen = function () {
+                setStatus("Connected");
+                addMessage("Connected to Goldliner live feed.");
+            };
+
+            socket.onmessage = function (event) {
+                try {
+                    const data = JSON.parse(event.data);
+
+                    addMessage(
+                        JSON.stringify(data, null, 2)
+                    );
+                } catch (error) {
+                    addMessage(event.data);
+                }
+            };
+
+            socket.onerror = function () {
+                setStatus("Connection error");
+                addMessage("A WebSocket error occurred.");
+            };
+
+            socket.onclose = function (event) {
+                setStatus("Disconnected");
+
+                addMessage(
+                    `Connection closed. Code: ${event.code}` +
+                    (
+                        event.reason
+                            ? ` — ${event.reason}`
+                            : ""
+                    )
+                );
+            };
+        }
+
+        function disconnectFeed() {
+            if (socket) {
+                socket.close();
+                socket = null;
+            }
+        }
+
+        function clearMessages() {
+            document.getElementById("messages").textContent =
+                "Waiting for updates...";
+        }
+    </script>
+</body>
+</html>

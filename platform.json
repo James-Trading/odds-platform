@@ -401,8 +401,8 @@
                         "id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
                         "name": "Dani Dyer",
                         "price": [
-                            3,
-                            1
+                            11,
+                            4
                         ],
                         "pending_price": null,
                         "price_history": [
@@ -510,6 +510,17 @@
                                 "new_price": [
                                     3,
                                     1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-04 22:24:25",
+                                "old_price": [
+                                    3,
+                                    1
+                                ],
+                                "new_price": [
+                                    11,
+                                    4
                                 ]
                             }
                         ],
@@ -888,6 +899,69 @@
                         ],
                         "active": false,
                         "displayed": false,
+                        "result": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "1b54a09b-3902-4dd3-b37f-a4e36ea5c2de",
+        "category": "Specials",
+        "class": "Music",
+        "type": "Asia Eurovision",
+        "event_name": "Asia Eurovision 2026",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "19/09/2026 21:00",
+        "suspend_mode": "AUTO",
+        "version": 4,
+        "change_id": 4,
+        "last_updated": "2026-08-04T21:53:50.069606+00:00",
+        "markets": [
+            {
+                "id": "44418b82-aa39-456f-824c-40bd2ea2731f",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "997a534a-f86c-455b-a041-325e9644b9e2",
+                        "name": "Bhutan",
+                        "price": [
+                            8,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-04 22:49:22",
+                                "price": [
+                                    10,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-04 22:52:55",
+                                "old_price": [
+                                    10,
+                                    1
+                                ],
+                                "new_price": [
+                                    8,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
                         "result": ""
                     }
                 ]

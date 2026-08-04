@@ -1,5 +1,8 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
+
+from state.change_sequence import next_change_id
+
 def create_event(category, event_class, event_type, event_name):
     return {
         "id": str(uuid.uuid4()),
@@ -7,13 +10,14 @@ def create_event(category, event_class, event_type, event_name):
         "class": event_class,
         "type": event_type,
         "event_name": event_name,
-        "status": "Trading",
+        "status": "draft",
         "displayed": True,
         "published": False,
         "start_time": "",
         "suspend_mode": "AUTO",
-        "status": "draft",
-        "displayed": True,
+        "version": 1,
+        "change_id": next_change_id(),
+        "last_updated": datetime.now(timezone.utc).isoformat(),
         "markets": []
     }
 
@@ -63,3 +67,10 @@ def add_selection(market, selection_name, price):
     market["selections"].append(selection)
 
     return selection
+
+def touch_event(event):
+    event["version"] = event.get("version", 0) + 1
+    event["change_id"] = next_change_id()
+    event["last_updated"] = datetime.now(
+        timezone.utc
+    ).isoformat()
