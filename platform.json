@@ -382,7 +382,7 @@
         "status": "draft",
         "displayed": true,
         "published": true,
-        "start_time": "19/09/2026 18:00",
+        "start_time": "21/09/2026 18:00",
         "suspend_mode": "AUTO",
         "markets": [
             {
@@ -785,7 +785,10 @@
                     }
                 ]
             }
-        ]
+        ],
+        "version": 2,
+        "change_id": 6,
+        "last_updated": "2026-08-05T20:07:43.786367+00:00"
     },
     {
         "id": "a74bc5aa-8731-4029-83ab-4fe2ff3bf2a6",

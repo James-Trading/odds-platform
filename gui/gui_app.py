@@ -38,6 +38,8 @@ from distribution.feed_functions import (
     get_client_feed,
 )
 
+from datetime import datetime, timezone
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -162,15 +164,15 @@ class OddsPlatformGUI:
             padx=(10, 0)
         )
 
-        self.search_entry.insert(
-            0,
-            "Search events, markets or selections..."
+        self.search_entry.bind(
+            "<Return>",
+            lambda event: self.search_dashboard()
         )
 
         ttk.Button(
             top_bar,
             text="Search",
-            command=self.search_placeholder
+            command=self.search_dashboard
         ).pack(side="right")
 
         # Summary cards
@@ -318,7 +320,7 @@ class OddsPlatformGUI:
             text="Eurovision 2027"
         ).pack(anchor="w")
 
-    def show_trading(self):
+    def show_trading(self, filtered_events=None):
 
         self.clear_content()
 
@@ -331,17 +333,20 @@ class OddsPlatformGUI:
             font=("Arial", 24, "bold")
         ).pack(side="left")
 
-        search_entry = ttk.Entry(
+        self.trading_search_entry = ttk.Entry(
             top_bar,
             width=35,
             font=("Arial", 12)
         )
 
-        search_entry.pack(side="right")
+        self.trading_search_entry.pack(
+            side="right",
+            padx=(10, 0),
+        )
 
-        search_entry.insert(
-            0,
-            "Search events..."
+        self.trading_search_entry.bind(
+            "<Return>",
+            lambda event: self.filter_trading_events(),
         )
 
         events_frame = ttk.LabelFrame(
@@ -355,7 +360,13 @@ class OddsPlatformGUI:
             expand=True
         )
 
-        for event in self.platform:
+        events_to_show = (
+            filtered_events
+            if filtered_events is not None
+            else self.platform
+        )
+
+        for event in events_to_show:
 
             event_name = event.get(
                 "event_name",
@@ -391,6 +402,31 @@ class OddsPlatformGUI:
                 side="right",
                 padx=(10, 0)
             )
+
+    def filter_trading_events(self):
+        search_term = (
+            self.trading_search_entry.get()
+            .strip()
+            .lower()
+        )
+
+        if not search_term:
+            self.show_trading()
+            return
+
+        matching_events = [
+            event
+            for event in self.platform
+            if search_term
+            in event.get(
+                "event_name",
+                "",
+            ).lower()
+        ]
+
+        self.show_trading(
+            filtered_events=matching_events
+        )
 
     def show_event_screen(self, event):
 
@@ -481,6 +517,84 @@ class OddsPlatformGUI:
             text=f"Event: {event.get('event_name', 'Unnamed Event')}",
             font=("Arial", 11),
         ).pack(anchor="w", pady=(5, 20))
+
+        # Event information panel
+        event_info_frame = ttk.LabelFrame(
+            self.content,
+            text="Event Details",
+            padding=12,
+        )
+
+        event_info_frame.pack(
+            fill="x",
+            pady=(0, 15),
+        )
+
+        start_time = event.get("start_time") or "Not set"
+        event_status = event.get("status", "draft").title()
+        category = event.get("category") or "Not set"
+        suspend_mode = event.get("suspend_mode", "AUTO")
+
+        ttk.Label(
+            event_info_frame,
+            text=f"Category: {category}",
+        ).grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=(0, 30),
+            pady=4,
+        )
+
+        ttk.Label(
+            event_info_frame,
+            text=f"Status: {event_status}",
+        ).grid(
+            row=0,
+            column=1,
+            sticky="w",
+            padx=(0, 30),
+            pady=4,
+        )
+
+        ttk.Label(
+            event_info_frame,
+            text=f"Start time: {start_time}",
+        ).grid(
+            row=1,
+            column=0,
+            sticky="w",
+            padx=(0, 30),
+            pady=4,
+        )
+
+        ttk.Label(
+            event_info_frame,
+            text=f"Auto suspend: {suspend_mode}",
+        ).grid(
+            row=1,
+            column=1,
+            sticky="w",
+            padx=(0, 30),
+            pady=4,
+        )
+
+        ttk.Button(
+            event_info_frame,
+            text="Edit Event Details",
+            command=lambda: self.edit_event_details(event, market),
+        ).grid(
+            row=0,
+            column=2,
+            rowspan=2,
+            sticky="e",
+            padx=(20, 0),
+        )
+
+        event_info_frame.columnconfigure(
+            2,
+            weight=1,
+        )
 
         # Container for the trading grid
 
@@ -786,6 +900,229 @@ class OddsPlatformGUI:
                 event,
                 market,
             ),
+        )
+
+    def edit_event_details(self, event, market):
+        popup = tk.Toplevel(self.root)
+        popup.title("Edit Event Details")
+        popup.geometry("480x350")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        form_frame = ttk.Frame(
+            popup,
+            padding=20,
+        )
+        form_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        # Event name
+        ttk.Label(
+            form_frame,
+            text="Event name",
+        ).grid(
+            row=0,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        event_name_var = tk.StringVar(
+            value=event.get("event_name", "")
+        )
+
+        ttk.Entry(
+            form_frame,
+            textvariable=event_name_var,
+            width=36,
+        ).grid(
+            row=0,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
+        # Start date and time
+        ttk.Label(
+            form_frame,
+            text="Start date/time",
+        ).grid(
+            row=1,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        start_time_var = tk.StringVar(
+            value=event.get("start_time", "")
+        )
+
+        ttk.Entry(
+            form_frame,
+            textvariable=start_time_var,
+            width=36,
+        ).grid(
+            row=1,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
+        ttk.Label(
+            form_frame,
+            text="Use format: DD/MM/YYYY HH:MM",
+        ).grid(
+            row=2,
+            column=1,
+            sticky="w",
+            padx=(15, 0),
+        )
+
+        # Status
+        ttk.Label(
+            form_frame,
+            text="Status",
+        ).grid(
+            row=3,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        status_var = tk.StringVar(
+            value=event.get("status", "draft").title()
+        )
+
+        status_box = ttk.Combobox(
+            form_frame,
+            textvariable=status_var,
+            values=[
+                "Draft",
+                "Trading",
+                "Suspended",
+                "Settled",
+            ],
+            state="readonly",
+            width=33,
+        )
+        status_box.grid(
+            row=3,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
+        # Auto suspend mode
+        ttk.Label(
+            form_frame,
+            text="Suspend mode",
+        ).grid(
+            row=4,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        suspend_mode_var = tk.StringVar(
+            value=event.get("suspend_mode", "AUTO")
+        )
+
+        suspend_mode_box = ttk.Combobox(
+            form_frame,
+            textvariable=suspend_mode_var,
+            values=[
+                "AUTO",
+                "MANUAL",
+            ],
+            state="readonly",
+            width=33,
+        )
+        suspend_mode_box.grid(
+            row=4,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
+        def save_event_details():
+            event_name = event_name_var.get().strip()
+            start_time = start_time_var.get().strip()
+
+            parsed_start_time = None
+
+            if start_time:
+                try:
+                    parsed_start_time = datetime.strptime(
+                        start_time,
+                        "%d/%m/%Y %H:%M",
+                    )
+                except ValueError:
+                    messagebox.showwarning(
+                        "Event Details",
+                        "Start date/time must use DD/MM/YYYY HH:MM.",
+                        parent=popup,
+                    )
+                    return
+
+            if not event_name:
+                messagebox.showwarning(
+                    "Event Details",
+                    "Event name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            event["event_name"] = event_name
+            event["start_time"] = (
+                parsed_start_time.strftime("%d/%m/%Y %H:%M")
+                if parsed_start_time
+                else ""
+            )
+            event["status"] = status_var.get().lower()
+            event["suspend_mode"] = suspend_mode_var.get()
+
+            touch_event(event)
+            save_platform(self.platform)
+
+            popup.destroy()
+            self.show_market_screen(event, market)
+
+        button_frame = ttk.Frame(form_frame)
+        button_frame.grid(
+            row=5,
+            column=0,
+            columnspan=2,
+            sticky="e",
+            pady=(25, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Save",
+            command=save_event_details,
+        ).pack(
+            side="right",
+        )
+
+        form_frame.columnconfigure(
+            1,
+            weight=1,
         )
 
     def show_manage_selections_popup(
@@ -2196,12 +2533,139 @@ class OddsPlatformGUI:
 
         self.show_trading()
 
-    def search_placeholder(self):
+    def search_dashboard(self):
+        search_term = self.search_entry.get().strip().lower()
 
-        search_term = self.search_entry.get()
+        if not search_term:
+            messagebox.showinfo(
+                "Search",
+                "Enter an event, market or selection name."
+            )
+            return
 
-        print(f"GUI search: {search_term}")
+        matches = []
 
+        for event in self.platform:
+            event_name = event.get(
+                "event_name",
+                "Unnamed Event"
+            )
+
+            if search_term in event_name.lower():
+                matches.append(
+                    {
+                        "type": "event",
+                        "event": event,
+                        "label": event_name,
+                    }
+                )
+
+            for market in event.get("markets", []):
+                market_name = market.get(
+                    "name",
+                    "Unnamed Market"
+                )
+
+                if search_term in market_name.lower():
+                    matches.append(
+                        {
+                            "type": "market",
+                            "event": event,
+                            "market": market,
+                            "label": (
+                                f"{event_name} > {market_name}"
+                            ),
+                        }
+                    )
+
+                for selection in market.get(
+                    "selections",
+                    [],
+                ):
+                    selection_name = selection.get(
+                        "name",
+                        "Unnamed Selection"
+                    )
+
+                    if search_term in selection_name.lower():
+                        matches.append(
+                            {
+                                "type": "selection",
+                                "event": event,
+                                "market": market,
+                                "selection": selection,
+                                "label": (
+                                    f"{event_name} > "
+                                    f"{market_name} > "
+                                    f"{selection_name}"
+                                ),
+                            }
+                        )
+
+        if not matches:
+            messagebox.showinfo(
+                "Search",
+                f'No results found for "{search_term}".'
+            )
+            return
+
+        if len(matches) == 1:
+            self.open_search_result(matches[0])
+            return
+
+        self.show_search_results(
+            search_term,
+            matches,
+        )
+
+    def open_search_result(self, result):
+        result_type = result["type"]
+        event = result["event"]
+
+        if result_type == "event":
+            self.show_event_screen(event)
+            return
+
+        market = result["market"]
+        self.show_market_screen(event, market)
+
+    def show_search_results(
+        self,
+        search_term,
+        matches,
+    ):
+        self.clear_content()
+
+        ttk.Button(
+            self.content,
+            text="← Back to Dashboard",
+            command=self.show_dashboard,
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        ttk.Label(
+            self.content,
+            text=f'Search results for "{search_term}"',
+            font=("Arial", 22, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        for result in matches:
+            ttk.Button(
+                self.content,
+                text=result["label"],
+                command=lambda selected=result: (
+                    self.open_search_result(selected)
+                ),
+            ).pack(
+                fill="x",
+                anchor="w",
+                pady=4,
+            )
 
     def open_event_placeholder(self, event_name):
 
