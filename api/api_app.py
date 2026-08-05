@@ -73,6 +73,9 @@ def get_client_from_api_key(api_key):
         if not client.get("feed", {}).get("enabled", False):
             return None
 
+        return client
+    return None
+
 @app.get("/")
 def api_home():
     return {

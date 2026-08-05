@@ -786,9 +786,10 @@
                 ]
             }
         ],
-        "version": 2,
-        "change_id": 6,
-        "last_updated": "2026-08-05T20:07:43.786367+00:00"
+        "version": 7,
+        "change_id": 11,
+        "last_updated": "2026-08-05T20:49:53.441270+00:00",
+        "trader_notes": "Top price Dani Dyer until further notice"
     },
     {
         "id": "a74bc5aa-8731-4029-83ab-4fe2ff3bf2a6",
@@ -970,5 +971,58 @@
                 ]
             }
         ]
+    },
+    {
+        "id": "176233fa-d92a-46ff-abe1-e764b40551e7",
+        "category": "Specials",
+        "class": "TV",
+        "type": "Im A Celeb",
+        "event_name": "Im A Celeb 2026",
+        "status": "Trading",
+        "displayed": true,
+        "published": true,
+        "start_time": "06/08/2026 00:03",
+        "suspend_mode": "AUTO",
+        "version": 27,
+        "change_id": 38,
+        "last_updated": "2026-08-05T23:03:00.261731+00:00",
+        "markets": [
+            {
+                "id": "af5f49f3-2132-43e5-b736-60884ff22012",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "2e5f91ae-a443-4c20-8ebb-0222c1504a5a",
+                        "name": "Cath",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-05 22:50:33",
+                                "price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ],
+        "active": false
     }
 ]

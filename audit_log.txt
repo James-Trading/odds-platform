@@ -205,3 +205,5 @@
 02/08/2026 16:34:15 - Rosie booked Strictly Come Dancing 2026
 04/08/2026 22:53:43 - Bhutan suspended in Asia Eurovision 2026 / Outright
 04/08/2026 22:53:50 - Bhutan unsuspended in Asia Eurovision 2026 / Outright
+05/08/2026 22:52:50 - Im A Celeb 2026 automatically suspended at start time
+05/08/2026 23:52:25 - Im A Celeb 2026 automatically suspended at start time

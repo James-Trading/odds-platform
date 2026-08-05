@@ -55,6 +55,7 @@ class OddsPlatformGUI:
 
         self.build_layout()
         self.show_dashboard()
+        self.check_scheduled_events()
 
     def build_layout(self):
 
@@ -494,6 +495,25 @@ class OddsPlatformGUI:
 
         self.show_event_screen(event)
 
+    def toggle_event_publish_from_market(
+        self,
+        event,
+        market,
+    ):
+        event["published"] = not event.get(
+            "published",
+            False,
+        )
+
+        touch_event(event)
+        save_platform(self.platform)
+
+        self.show_market_screen(
+            event,
+            market,
+        )
+
+
     def show_market_screen(self, event, market):
         self.clear_content()
 
@@ -531,9 +551,25 @@ class OddsPlatformGUI:
         )
 
         start_time = event.get("start_time") or "Not set"
-        event_status = event.get("status", "draft").title()
+        event_status = (
+            event.get("status", "draft").title()
+            if event.get("active", True)
+            else "Suspended"
+        )
         category = event.get("category") or "Not set"
         suspend_mode = event.get("suspend_mode", "AUTO")
+
+        publish_status = (
+            "Published"
+            if event.get("published", False)
+            else "Unpublished"
+        )
+
+        publish_button_text = (
+            "Unpublish Event"
+            if event.get("published", False)
+            else "Publish Event"
+        )
 
         ttk.Label(
             event_info_frame,
@@ -586,14 +622,79 @@ class OddsPlatformGUI:
         ).grid(
             row=0,
             column=2,
-            rowspan=2,
+            rowspan=3,
             sticky="e",
             padx=(20, 0),
+        )
+
+        ttk.Label(
+            event_info_frame,
+            text=f"Publish: {publish_status}",
+        ).grid(
+            row=2,
+            column=0,
+            sticky="w",
+            padx=(0, 30),
+            pady=4,
+        )
+
+        ttk.Button(
+            event_info_frame,
+            text=publish_button_text,
+            command=lambda: self.toggle_event_publish_from_market(
+                event,
+                market,
+            ),
+        ).grid(
+            row=2,
+            column=1,
+            sticky="w",
+            pady=4,
         )
 
         event_info_frame.columnconfigure(
             2,
             weight=1,
+        )
+
+        # Trader notes
+        notes_frame = ttk.LabelFrame(
+            self.content,
+            text="Trader Notes",
+            padding=10,
+        )
+
+        notes_frame.pack(
+            fill="x",
+            pady=(0, 15),
+        )
+
+        self.trader_notes_text = tk.Text(
+            notes_frame,
+            height=4,
+            wrap="word",
+        )
+
+        self.trader_notes_text.pack(
+            fill="x",
+            expand=True,
+        )
+
+        self.trader_notes_text.insert(
+            "1.0",
+            event.get("trader_notes", ""),
+        )
+
+        ttk.Button(
+            notes_frame,
+            text="Save Notes",
+            command=lambda: self.save_trader_notes(
+                event,
+                market,
+            ),
+        ).pack(
+            anchor="e",
+            pady=(8, 0),
         )
 
         # Container for the trading grid
@@ -1085,8 +1186,15 @@ class OddsPlatformGUI:
                 if parsed_start_time
                 else ""
             )
-            event["status"] = status_var.get().lower()
+            selected_status = status_var.get()
+
+            event["status"] = selected_status
             event["suspend_mode"] = suspend_mode_var.get()
+
+            if selected_status == "Suspended":
+                event["active"] = False
+            elif selected_status in ("Trading", "Draft"):
+                event["active"] = True
 
             touch_event(event)
             save_platform(self.platform)
@@ -2116,6 +2224,27 @@ class OddsPlatformGUI:
 
         self.show_market_screen(event, market)
 
+    def save_trader_notes(self, event, market):
+        notes = self.trader_notes_text.get(
+            "1.0",
+            "end-1c",
+        ).strip()
+
+        event["trader_notes"] = notes
+
+        touch_event(event)
+        save_platform(self.platform)
+
+        messagebox.showinfo(
+            "Trader Notes",
+            "Notes saved.",
+        )
+
+        self.show_market_screen(
+            event,
+            market,
+        )
+
     def toggle_market_suspension(
         self,
         event,
@@ -2162,6 +2291,59 @@ class OddsPlatformGUI:
             return
 
         self.show_market_screen(event, market)
+
+    def suspend_event_for_schedule(self, event):
+        if event.get("active", True) is False:
+            return False
+
+        event["active"] = False
+
+        touch_event(event)
+        save_platform(self.platform)
+
+        add_audit_log(
+            f"{event.get('event_name', 'Unnamed Event')} "
+            "automatically suspended at start time"
+        )
+
+        return True
+
+    def check_scheduled_events(self):
+        now = datetime.now()
+
+        for event in self.platform:
+            if str(
+                event.get("suspend_mode", "")
+            ).upper() != "AUTO":
+                continue
+
+            if event.get("active", True) is False:
+                continue
+
+            start_time_text = str(
+                event.get("start_time", "")
+            ).strip()
+
+            if not start_time_text:
+                continue
+
+            try:
+                start_time = datetime.strptime(
+                    start_time_text,
+                    "%d/%m/%Y %H:%M",
+                )
+            except ValueError:
+                continue
+
+            if now >= start_time:
+                event["active"] = False
+                touch_event(event)
+                save_platform(self.platform)
+
+        self.root.after(
+            1000,
+            self.check_scheduled_events,
+        )
 
     def edit_price_cell(
         self,
