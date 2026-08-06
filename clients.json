@@ -1,8 +1,8 @@
 [
     {
         "name": "James",
-        "contact": "jd",
-        "email": "jdd",
+        "contact": "JD",
+        "email": "jdobson@msn.com",
         "status": "Active",
         "booked_events": [
             "Strictly Come Dancing 2026",
@@ -31,7 +31,8 @@
             "last_bet_received": null
         },
         "booked_events": [
-            "Oscars"
+            "Oscars",
+            "Strictly Come Dancing 2026"
         ]
     },
     {
@@ -90,8 +91,24 @@
             "last_bet_received": null
         },
         "booked_events": [
-            "Strictly Come Dancing 2026"
+            "Strictly Come Dancing 2026",
+            "Im A Celeb 2026"
         ],
+        "subscriptions": []
+    },
+    {
+        "name": "Miguel",
+        "contact": "Miguel",
+        "email": "mmm@hotmail.co.uk",
+        "status": "Active",
+        "feed": {
+            "enabled": false,
+            "connector": "None",
+            "api_key": "GTM_9901e2ede49904290956eba7ad964cb1",
+            "last_price_update": null,
+            "last_bet_received": null
+        },
+        "booked_events": [],
         "subscriptions": []
     }
 ]

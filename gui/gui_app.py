@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 
 from save_load import save_platform, load_platform
-from client_save_load import load_clients
+from client_save_load import load_clients, save_clients
 
 from price_engine.price_ladder import (
     PRICE_LADDER,
@@ -36,6 +36,12 @@ from imports.excel_import import import_excel_event
 from distribution.feed_functions import (
     get_published_events, 
     get_client_feed,
+)
+
+from client_functions import (
+    create_client,
+    book_event_for_client,
+    unbook_event_for_client,
 )
 
 from datetime import datetime, timezone
@@ -102,7 +108,7 @@ class OddsPlatformGUI:
         ttk.Button(
             self.sidebar,
             text="Clients",
-            command=lambda: self.show_page("Clients")
+            command=self.show_clients
         ).pack(fill="x", pady=4)
 
         ttk.Button(
@@ -321,6 +327,748 @@ class OddsPlatformGUI:
             text="Eurovision 2027"
         ).pack(anchor="w")
 
+    def show_clients(self):
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text="Clients",
+            font=("Arial", 26, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        top_bar = ttk.Frame(self.content)
+        top_bar.pack(
+            fill="x",
+            pady=(0, 12),
+        )
+
+        ttk.Button(
+            top_bar,
+            text="Add Client",
+            command=self.add_client_popup,
+        ).pack(
+            side="left",
+        )
+
+        ttk.Label(
+            top_bar,
+            text=f"Total clients: {len(self.clients)}",
+        ).pack(
+            side="right",
+        )
+
+        workspace = ttk.Frame(self.content)
+        workspace.pack(
+            fill="both",
+            expand=True,
+        )
+
+        workspace.columnconfigure(
+            0,
+            weight=1,
+        )
+        workspace.columnconfigure(
+            1,
+            weight=2,
+        )
+        workspace.rowconfigure(
+            0,
+            weight=1,
+        )
+
+        # Left side: client list
+        client_list_frame = ttk.LabelFrame(
+            workspace,
+            text="Client List",
+            padding=10,
+        )
+        client_list_frame.grid(
+            row=0,
+            column=0,
+            sticky="nsew",
+            padx=(0, 10),
+        )
+
+        # Right side: selected client details
+        self.client_details_frame = ttk.LabelFrame(
+            workspace,
+            text="Client Details",
+            padding=15,
+        )
+        self.client_details_frame.grid(
+            row=0,
+            column=1,
+            sticky="nsew",
+        )
+
+        if not self.clients:
+            ttk.Label(
+                client_list_frame,
+                text="No clients have been added.",
+            ).pack(
+                anchor="w",
+                pady=8,
+            )
+
+            ttk.Label(
+                self.client_details_frame,
+                text="Select or add a client.",
+            ).pack(
+                anchor="w",
+            )
+            return
+
+        for client in self.clients:
+            client_name = client.get(
+                "name",
+                "Unnamed Client",
+            )
+
+            client_status = client.get(
+                "status",
+                "Unknown",
+            )
+
+            button_text = (
+                f"{client_name} — {client_status}"
+            )
+
+            ttk.Button(
+                client_list_frame,
+                text=button_text,
+                command=lambda selected_client=client: (
+                    self.show_client_details(
+                        selected_client
+                    )
+                ),
+            ).pack(
+                fill="x",
+                pady=3,
+            )
+
+        self.show_client_details(
+            self.clients[0]
+        )
+
+    def show_client_details(self, client):
+        for widget in self.client_details_frame.winfo_children():
+            widget.destroy()
+
+        client_name = client.get(
+            "name",
+            "Unnamed Client",
+        )
+
+        contact = client.get(
+            "contact",
+            "Not set",
+        )
+
+        email = client.get(
+            "email",
+            "Not set",
+        )
+
+        status = client.get(
+            "status",
+            "Unknown",
+        )
+
+        feed = client.get(
+            "feed",
+            {},
+        )
+
+        feed_enabled = (
+            "Enabled"
+            if feed.get("enabled", False)
+            else "Disabled"
+        )
+
+        api_key = feed.get(
+            "api_key",
+            "Not generated",
+        )
+
+        booked_events = client.get(
+            "booked_events",
+            [],
+        )
+
+        ttk.Label(
+            self.client_details_frame,
+            text=client_name,
+            font=("Arial", 20, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        details_grid = ttk.Frame(
+            self.client_details_frame
+        )
+        details_grid.pack(
+            fill="x",
+        )
+
+        detail_rows = [
+            ("Contact", contact),
+            ("Email", email),
+            ("Status", status),
+            ("Feed", feed_enabled),
+            ("API key", api_key),
+        ]
+
+        for row_number, (label, value) in enumerate(
+            detail_rows
+        ):
+            ttk.Label(
+                details_grid,
+                text=f"{label}:",
+                font=("Arial", 10, "bold"),
+            ).grid(
+                row=row_number,
+                column=0,
+                sticky="nw",
+                padx=(0, 15),
+                pady=5,
+            )
+
+            ttk.Label(
+                details_grid,
+                text=value,
+                wraplength=500,
+            ).grid(
+                row=row_number,
+                column=1,
+                sticky="nw",
+                pady=5,
+            )
+
+        button_frame = ttk.Frame(
+            self.client_details_frame
+        )
+
+        button_frame.pack(
+            fill="x",
+            pady=(15, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Edit Client",
+            command=lambda: self.edit_client_popup(
+                client
+            ),
+        ).pack(
+            side="left",
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Book Events",
+            command=lambda: self.manage_client_events_popup(
+                client
+            ),
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Copy API Key",
+            command=lambda: self.copy_client_api_key(
+                client
+            ),
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        feed_button_text = (
+            "Disable Feed"
+            if feed.get("enabled", False)
+            else "Enable Feed"
+        )
+
+        ttk.Button(
+            button_frame,
+            text=feed_button_text,
+            command=lambda: self.toggle_client_feed(
+                client
+            ),
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        ttk.Separator(
+            self.client_details_frame,
+            orient="horizontal",
+        ).pack(
+            fill="x",
+            pady=15,
+        )
+
+        ttk.Label(
+            self.client_details_frame,
+            text="Booked Events",
+            font=("Arial", 13, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 8),
+        )
+
+        if booked_events:
+            for event_name in booked_events:
+                ttk.Label(
+                    self.client_details_frame,
+                    text=f"• {event_name}",
+                ).pack(
+                    anchor="w",
+                    pady=2,
+                )
+        else:
+            ttk.Label(
+                self.client_details_frame,
+                text="No events currently booked.",
+            ).pack(
+                anchor="w",
+            )
+
+    def add_client_popup(self):
+        popup = tk.Toplevel(self.root)
+        popup.title("Add Client")
+        popup.geometry("450x280")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        form = ttk.Frame(
+            popup,
+            padding=20,
+        )
+        form.pack(
+            fill="both",
+            expand=True,
+        )
+
+        name_var = tk.StringVar()
+        contact_var = tk.StringVar()
+        email_var = tk.StringVar()
+
+        fields = [
+            ("Client name", name_var),
+            ("Contact name", contact_var),
+            ("Email", email_var),
+        ]
+
+        for row_number, (label, variable) in enumerate(
+            fields
+        ):
+            ttk.Label(
+                form,
+                text=label,
+            ).grid(
+                row=row_number,
+                column=0,
+                sticky="w",
+                pady=8,
+            )
+
+            ttk.Entry(
+                form,
+                textvariable=variable,
+                width=35,
+            ).grid(
+                row=row_number,
+                column=1,
+                sticky="ew",
+                padx=(15, 0),
+                pady=8,
+            )
+
+        def save_new_client():
+            name = name_var.get().strip()
+            contact = contact_var.get().strip()
+            email = email_var.get().strip()
+
+            if not name:
+                messagebox.showwarning(
+                    "Add Client",
+                    "Client name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            new_client = create_client(
+                name,
+                contact,
+                email,
+            )
+
+            self.clients.append(
+                new_client
+            )
+
+            save_clients(
+                self.clients
+            )
+
+            popup.destroy()
+            self.show_clients()
+
+        button_frame = ttk.Frame(form)
+        button_frame.grid(
+            row=3,
+            column=0,
+            columnspan=2,
+            sticky="e",
+            pady=(20, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Add Client",
+            command=save_new_client,
+        ).pack(
+            side="right",
+        )
+
+        form.columnconfigure(
+            1,
+            weight=1,
+        )
+
+    def copy_client_api_key(self, client):
+        api_key = client.get(
+            "feed",
+            {},
+        ).get(
+            "api_key",
+            "",
+        )
+
+        if not api_key:
+            messagebox.showwarning(
+                "API Key",
+                "This client does not have an API key.",
+            )
+            return
+
+        self.root.clipboard_clear()
+        self.root.clipboard_append(api_key)
+        self.root.update()
+
+        messagebox.showinfo(
+            "API Key",
+            "API key copied to clipboard.",
+        )
+
+    def toggle_client_feed(self, client):
+        feed = client.setdefault(
+            "feed",
+            {},
+        )
+
+        feed["enabled"] = not feed.get(
+            "enabled",
+            False,
+        )
+
+        save_clients(
+            self.clients
+        )
+
+        self.show_client_details(
+            client
+        )
+
+    def edit_client_popup(self, client):
+        popup = tk.Toplevel(self.root)
+        popup.title("Edit Client")
+        popup.geometry("450x330")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        form = ttk.Frame(
+            popup,
+            padding=20,
+        )
+
+        form.pack(
+            fill="both",
+            expand=True,
+        )
+
+        name_var = tk.StringVar(
+            value=client.get("name", "")
+        )
+
+        contact_var = tk.StringVar(
+            value=client.get("contact", "")
+        )
+
+        email_var = tk.StringVar(
+            value=client.get("email", "")
+        )
+
+        status_var = tk.StringVar(
+            value=client.get("status", "Active")
+        )
+
+        fields = [
+            ("Client name", name_var),
+            ("Contact name", contact_var),
+            ("Email", email_var),
+        ]
+
+        for row_number, (label, variable) in enumerate(
+            fields
+        ):
+            ttk.Label(
+                form,
+                text=label,
+            ).grid(
+                row=row_number,
+                column=0,
+                sticky="w",
+                pady=8,
+            )
+
+            ttk.Entry(
+                form,
+                textvariable=variable,
+                width=35,
+            ).grid(
+                row=row_number,
+                column=1,
+                sticky="ew",
+                padx=(15, 0),
+                pady=8,
+            )
+
+        ttk.Label(
+            form,
+            text="Status",
+        ).grid(
+            row=3,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        ttk.Combobox(
+            form,
+            textvariable=status_var,
+            values=[
+                "Active",
+                "Inactive",
+            ],
+            state="readonly",
+            width=32,
+        ).grid(
+            row=3,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
+        def save_client_changes():
+            name = name_var.get().strip()
+
+            if not name:
+                messagebox.showwarning(
+                    "Edit Client",
+                    "Client name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            client["name"] = name
+            client["contact"] = (
+                contact_var.get().strip()
+            )
+            client["email"] = (
+                email_var.get().strip()
+            )
+            client["status"] = status_var.get()
+
+            save_clients(
+                self.clients
+            )
+
+            popup.destroy()
+            self.show_clients()
+
+        button_frame = ttk.Frame(form)
+
+        button_frame.grid(
+            row=4,
+            column=0,
+            columnspan=2,
+            sticky="e",
+            pady=(20, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Save",
+            command=save_client_changes,
+        ).pack(
+            side="right",
+        )
+
+        form.columnconfigure(
+            1,
+            weight=1,
+        )
+
+    def manage_client_events_popup(self, client):
+        popup = tk.Toplevel(self.root)
+        popup.title(
+            f"Manage Events - {client.get('name', 'Client')}"
+        )
+        popup.geometry("520x480")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        main_frame = ttk.Frame(
+            popup,
+            padding=15,
+        )
+
+        main_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        ttk.Label(
+            main_frame,
+            text="Select the events this client should receive:",
+            font=("Arial", 11, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 12),
+        )
+
+        booked_events = client.setdefault(
+            "booked_events",
+            [],
+        )
+
+        event_variables = {}
+
+        events_frame = ttk.Frame(
+            main_frame
+        )
+
+        events_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        for event in self.platform:
+            event_name = event.get(
+                "event_name",
+                "Unnamed Event",
+            )
+
+            variable = tk.BooleanVar(
+                value=event_name in booked_events
+            )
+
+            event_variables[event_name] = variable
+
+            ttk.Checkbutton(
+                events_frame,
+                text=event_name,
+                variable=variable,
+            ).pack(
+                anchor="w",
+                pady=3,
+            )
+
+        def save_event_bookings():
+            for event_name, variable in (
+                event_variables.items()
+            ):
+                is_booked = (
+                    event_name
+                    in client["booked_events"]
+                )
+
+                if variable.get() and not is_booked:
+                    book_event_for_client(
+                        client,
+                        event_name,
+                    )
+
+                elif not variable.get() and is_booked:
+                    unbook_event_for_client(
+                        client,
+                        event_name,
+                    )
+
+            save_clients(
+                self.clients
+            )
+
+            popup.destroy()
+            self.show_client_details(
+                client
+            )
+
+        button_frame = ttk.Frame(
+            main_frame
+        )
+
+        button_frame.pack(
+            fill="x",
+            pady=(15, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Save Bookings",
+            command=save_event_bookings,
+        ).pack(
+            side="right",
+        )
+
     def show_trading(self, filtered_events=None):
 
         self.clear_content()
@@ -538,24 +1286,41 @@ class OddsPlatformGUI:
             font=("Arial", 11),
         ).pack(anchor="w", pady=(5, 20))
 
-        # Event information panel
-        event_info_frame = ttk.LabelFrame(
-            self.content,
-            text="Event Details",
-            padding=12,
+        # Event details and trader notes row
+        details_row = ttk.Frame(self.content)
+
+        details_row.pack(
+            fill="x",
+            pady=(0, 10),
         )
 
-        event_info_frame.pack(
-            fill="x",
-            pady=(0, 15),
+        details_row.columnconfigure(0, weight=1)
+        details_row.columnconfigure(1, weight=2)
+
+        # -------------------------
+        # Event information panel
+        # -------------------------
+        event_info_frame = ttk.LabelFrame(
+            details_row,
+            text="Event Details",
+            padding=8,
+        )
+
+        event_info_frame.grid(
+            row=0,
+            column=0,
+            sticky="nsew",
+            padx=(0, 8),
         )
 
         start_time = event.get("start_time") or "Not set"
+
         event_status = (
             event.get("status", "draft").title()
             if event.get("active", True)
             else "Suspended"
         )
+
         category = event.get("category") or "Not set"
         suspend_mode = event.get("suspend_mode", "AUTO")
 
@@ -578,8 +1343,8 @@ class OddsPlatformGUI:
             row=0,
             column=0,
             sticky="w",
-            padx=(0, 30),
-            pady=4,
+            padx=(0, 20),
+            pady=3,
         )
 
         ttk.Label(
@@ -589,8 +1354,7 @@ class OddsPlatformGUI:
             row=0,
             column=1,
             sticky="w",
-            padx=(0, 30),
-            pady=4,
+            pady=3,
         )
 
         ttk.Label(
@@ -600,8 +1364,8 @@ class OddsPlatformGUI:
             row=1,
             column=0,
             sticky="w",
-            padx=(0, 30),
-            pady=4,
+            padx=(0, 20),
+            pady=3,
         )
 
         ttk.Label(
@@ -611,20 +1375,7 @@ class OddsPlatformGUI:
             row=1,
             column=1,
             sticky="w",
-            padx=(0, 30),
-            pady=4,
-        )
-
-        ttk.Button(
-            event_info_frame,
-            text="Edit Event Details",
-            command=lambda: self.edit_event_details(event, market),
-        ).grid(
-            row=0,
-            column=2,
-            rowspan=3,
-            sticky="e",
-            padx=(20, 0),
+            pady=3,
         )
 
         ttk.Label(
@@ -634,49 +1385,65 @@ class OddsPlatformGUI:
             row=2,
             column=0,
             sticky="w",
-            padx=(0, 30),
-            pady=4,
+            pady=3,
+        )
+
+        event_button_frame = ttk.Frame(event_info_frame)
+
+        event_button_frame.grid(
+            row=3,
+            column=0,
+            columnspan=2,
+            sticky="w",
+            pady=(6, 0),
         )
 
         ttk.Button(
-            event_info_frame,
+            event_button_frame,
+            text="Edit Event Details",
+            command=lambda: self.edit_event_details(
+                event,
+                market,
+            ),
+        ).pack(
+            side="left",
+        )
+
+        ttk.Button(
+            event_button_frame,
             text=publish_button_text,
             command=lambda: self.toggle_event_publish_from_market(
                 event,
                 market,
             ),
-        ).grid(
-            row=2,
-            column=1,
-            sticky="w",
-            pady=4,
+        ).pack(
+            side="left",
+            padx=(8, 0),
         )
 
-        event_info_frame.columnconfigure(
-            2,
-            weight=1,
-        )
-
-        # Trader notes
+        # -------------------------
+        # Trader notes panel
+        # -------------------------
         notes_frame = ttk.LabelFrame(
-            self.content,
+            details_row,
             text="Trader Notes",
-            padding=10,
+            padding=8,
         )
 
-        notes_frame.pack(
-            fill="x",
-            pady=(0, 15),
+        notes_frame.grid(
+            row=0,
+            column=1,
+            sticky="nsew",
         )
 
         self.trader_notes_text = tk.Text(
             notes_frame,
-            height=4,
+            height=3,
             wrap="word",
         )
 
         self.trader_notes_text.pack(
-            fill="x",
+            fill="both",
             expand=True,
         )
 
@@ -694,8 +1461,9 @@ class OddsPlatformGUI:
             ),
         ).pack(
             anchor="e",
-            pady=(8, 0),
+            pady=(6, 0),
         )
+
 
         # Container for the trading grid
 
