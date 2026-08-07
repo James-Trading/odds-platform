@@ -1024,5 +1024,388 @@
             }
         ],
         "active": false
+    },
+    {
+        "id": "ab620afb-b305-48c4-b7e8-d993ed0a0ba9",
+        "category": "Specials",
+        "class": "TV",
+        "type": "Reality TV",
+        "event_name": "Test Manual Event",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "08/08/2026 09:00",
+        "suspend_mode": "AUTO",
+        "version": 1,
+        "change_id": 39,
+        "last_updated": "2026-08-07T10:17:35.908508+00:00",
+        "markets": [],
+        "active": true
+    },
+    {
+        "id": "2c5ad130-eda5-4fd7-8de6-98bbbc7e2d4a",
+        "category": "Specials",
+        "class": "TV",
+        "type": "TV",
+        "event_name": "Test 2",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "08/08/2026 10:00",
+        "suspend_mode": "AUTO",
+        "version": 2,
+        "change_id": 41,
+        "last_updated": "2026-08-07T10:25:32.747623+00:00",
+        "markets": [
+            {
+                "id": "4be3305a-b804-425c-8f81-18983cf85b29",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": []
+            }
+        ],
+        "active": true
+    },
+    {
+        "id": "5fbe93d1-9b18-4028-b99e-f59b6faa988e",
+        "category": "Specials",
+        "class": "Test Events",
+        "type": "Test",
+        "event_name": "Test 3",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "08/08/2026 10:30",
+        "suspend_mode": "AUTO",
+        "version": 6,
+        "change_id": 47,
+        "last_updated": "2026-08-07T10:30:43.730011+00:00",
+        "markets": [
+            {
+                "id": "e9891a92-9d2b-4288-9ff9-5b0058f2fbaa",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "af4498f2-9ce2-43e6-b0c4-0a398173b154",
+                        "name": "Cath",
+                        "price": "3/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:30:29",
+                                "price": "3/1"
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "cde426b9-1576-4407-ba91-dca77b737336",
+                        "name": "James",
+                        "price": "4/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:30:33",
+                                "price": "4/1"
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "8abbe029-b53e-496c-a780-af907df50b5c",
+                        "name": "Rosie",
+                        "price": "5/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:30:38",
+                                "price": "5/1"
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "c38c7a5b-7a55-455b-bdde-86c733946f73",
+                        "name": "Harvey",
+                        "price": "10/11",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:30:43",
+                                "price": "10/11"
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ],
+        "active": true
+    },
+    {
+        "id": "dac6bc6f-0ea5-4ea9-ba0f-5f1c10ae6a66",
+        "category": "Test",
+        "class": "Test",
+        "type": "Test",
+        "event_name": "Test4",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "08/08/2026 11:00",
+        "suspend_mode": "AUTO",
+        "version": 7,
+        "change_id": 54,
+        "last_updated": "2026-08-07T10:47:07.927258+00:00",
+        "markets": [
+            {
+                "id": "017dd5b8-89cb-43fa-adf4-fa16febd53cd",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "a03065db-ff79-4213-a58e-32c05556b329",
+                        "name": "Harvey",
+                        "price": [
+                            4,
+                            5
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:46:07",
+                                "price": [
+                                    4,
+                                    5
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "b6afa8c6-d38a-420d-901c-69c576df5740",
+                        "name": "James",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:46:01",
+                                "price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "76c75afd-ed94-4eff-ab56-a04c6f78416f",
+                        "name": "Cath",
+                        "price": [
+                            9,
+                            2
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:45:56",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-07 11:47:07",
+                                "old_price": [
+                                    5,
+                                    1
+                                ],
+                                "new_price": [
+                                    9,
+                                    2
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "e71b5df3-0fca-4f45-96b9-72f1df8f18a4",
+                        "name": "Rosie",
+                        "price": [
+                            10,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 11:46:17",
+                                "price": [
+                                    10,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ],
+        "active": true
+    },
+    {
+        "id": "1517c9f0-6037-419e-852f-6a4758dd31f1",
+        "category": "Test",
+        "class": "Test",
+        "type": "Test",
+        "event_name": "Test5",
+        "status": "draft",
+        "displayed": true,
+        "published": false,
+        "start_time": "08/08/2026 10:15",
+        "suspend_mode": "AUTO",
+        "version": 6,
+        "change_id": 60,
+        "last_updated": "2026-08-07T11:37:58.524610+00:00",
+        "markets": [
+            {
+                "id": "dcf10659-7b98-40f8-a109-7e7610b166f5",
+                "name": "Outright",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "66caf4b4-b9f4-4b08-b580-1c916582725a",
+                        "name": "Harvey",
+                        "price": [
+                            5,
+                            6
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 12:37:48",
+                                "price": [
+                                    5,
+                                    6
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "2c16affa-c32a-4209-850a-518fbb6a9886",
+                        "name": "Cath",
+                        "price": [
+                            2,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 12:37:44",
+                                "price": [
+                                    2,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "36c0c4b6-f6ef-47d4-a496-30243cc403b5",
+                        "name": "Rosie",
+                        "price": [
+                            11,
+                            2
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 12:37:58",
+                                "price": [
+                                    11,
+                                    2
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
+                        "id": "861f5684-5f72-4e76-beb0-633d5d7798f5",
+                        "name": "James",
+                        "price": [
+                            6,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 12:37:52",
+                                "price": [
+                                    6,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
+            }
+        ],
+        "active": true
     }
 ]

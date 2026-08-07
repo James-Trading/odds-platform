@@ -113,7 +113,7 @@ class OddsPlatformGUI:
 
         ttk.Button(
             self.sidebar,
-            text="Import Centre",
+            text="Event Builder",
             command=self.show_import_centre,
         ).pack(fill="x", pady=4)
 
@@ -3813,11 +3813,38 @@ class OddsPlatformGUI:
 
         ttk.Label(
             self.content,
-            text="Import Centre",
+            text="Event Builder",
             font=("Arial", 20, "bold"),
         ).pack(
             anchor="w",
             pady=(0, 8),
+        )
+
+        manual_frame = ttk.LabelFrame(
+            self.content,
+            text="Manual Creation",
+            padding=15,
+        )
+
+        manual_frame.pack(
+            fill="x",
+            pady=(0, 15),
+        )
+
+        ttk.Label(
+            manual_frame,
+            text="Create an event manually, then add markets and selections.",
+        ).pack(
+            anchor="w",
+            pady=(0, 10),
+        )
+
+        ttk.Button(
+            manual_frame,
+            text="Create Event",
+            command=self.create_event_popup,
+        ).pack(
+            anchor="w",
         )
 
         ttk.Label(
@@ -3889,6 +3916,555 @@ class OddsPlatformGUI:
             pady=(0, 15),
         )
 
+    def create_event_popup(self):
+        popup = tk.Toplevel(self.root)
+        popup.title("Create Event")
+        popup.geometry("480x420")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        form = ttk.Frame(
+            popup,
+            padding=20,
+        )
+        form.pack(
+            fill="both",
+            expand=True,
+        )
+
+        name_var = tk.StringVar()
+        category_var = tk.StringVar()
+        class_var = tk.StringVar()
+        type_var = tk.StringVar()
+        start_time_var = tk.StringVar()
+        suspend_mode_var = tk.StringVar(value="AUTO")
+
+        fields = [
+            ("Event name", name_var),
+            ("Category", category_var),
+            ("Class", class_var),
+            ("Type", type_var),
+            ("Start date/time", start_time_var),
+        ]
+
+        for row_number, (label, variable) in enumerate(fields):
+            ttk.Label(
+                form,
+                text=label,
+            ).grid(
+                row=row_number,
+                column=0,
+                sticky="w",
+                pady=8,
+            )
+
+            ttk.Entry(
+                form,
+                textvariable=variable,
+                width=35,
+            ).grid(
+                row=row_number,
+                column=1,
+                sticky="ew",
+                padx=(15, 0),
+                pady=8,
+            )
+
+        ttk.Label(
+            form,
+            text="Use format DD/MM/YYYY HH:MM",
+            font=("Arial", 9),
+        ).grid(
+            row=5,
+            column=1,
+            sticky="w",
+            padx=(15, 0),
+        )
+
+        ttk.Label(
+            form,
+            text="Suspend mode",
+        ).grid(
+            row=6,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        ttk.Combobox(
+            form,
+            textvariable=suspend_mode_var,
+            values=["AUTO", "MANUAL"],
+            state="readonly",
+            width=32,
+        ).grid(
+            row=6,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
+        def save_new_event():
+            event_name = name_var.get().strip()
+            category = category_var.get().strip()
+            event_class = class_var.get().strip()
+            event_type = type_var.get().strip()
+            start_time = start_time_var.get().strip()
+
+            if not event_name:
+                messagebox.showwarning(
+                    "Create Event",
+                    "Event name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            if start_time:
+                try:
+                    datetime.strptime(
+                        start_time,
+                        "%d/%m/%Y %H:%M",
+                    )
+                except ValueError:
+                    messagebox.showwarning(
+                        "Create Event",
+                        "Start time must use DD/MM/YYYY HH:MM.",
+                        parent=popup,
+                    )
+                    return
+
+            event = create_event(
+                category,
+                event_class,
+                event_type,
+                event_name,
+            )
+
+            event["start_time"] = start_time
+            event["suspend_mode"] = suspend_mode_var.get()
+            event["active"] = True
+
+            self.platform.append(event)
+
+            save_platform(self.platform)
+
+            popup.destroy()
+
+            add_market = messagebox.askyesno(
+                "Event Created",
+                f"{event_name} created successfully.\n\n"
+                "Would you like to add a market now?",
+            )
+
+            if add_market:
+                self.create_market_popup(event)
+            else:
+                self.show_import_centre()
+
+
+        button_frame = ttk.Frame(form)
+        button_frame.grid(
+            row=7,
+            column=0,
+            columnspan=2,
+            sticky="e",
+            pady=(20, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Create Event",
+            command=save_new_event,
+        ).pack(
+            side="right",
+        )
+
+        form.columnconfigure(
+            1,
+            weight=1,
+        )
+
+    def create_market_popup(self, event):
+        popup = tk.Toplevel(self.root)
+        popup.title("Add Market")
+        popup.geometry("450x260")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        form = ttk.Frame(
+            popup,
+            padding=20,
+        )
+        form.pack(
+            fill="both",
+            expand=True,
+        )
+
+        ttk.Label(
+            form,
+            text=f"Event: {event.get('event_name', 'Unknown Event')}",
+            font=("Arial", 12, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 20),
+        )
+
+        ttk.Label(
+            form,
+            text="Market name",
+        ).pack(
+            anchor="w",
+        )
+
+        market_name_var = tk.StringVar()
+
+        market_entry = ttk.Entry(
+            form,
+            textvariable=market_name_var,
+            width=40,
+        )
+        market_entry.pack(
+            fill="x",
+            pady=(5, 20),
+        )
+
+        market_entry.focus_set()
+
+        def save_new_market():
+            market_name = market_name_var.get().strip()
+
+            if not market_name:
+                messagebox.showwarning(
+                    "Add Market",
+                    "Market name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            market = create_market(
+                event,
+                market_name,
+            )
+
+            touch_event(event)
+            save_platform(self.platform)
+
+            popup.destroy()
+
+            add_selections = messagebox.askyesno(
+                "Market Created",
+                f"{market_name} created successfully.\n\n"
+                "Would you like to add selections now?",
+            )
+
+            if add_selections:
+                self.create_selection_popup(
+                    event,
+                    market,
+                )
+            else:
+                self.show_import_centre()
+
+        button_frame = ttk.Frame(form)
+        button_frame.pack(
+            fill="x",
+            pady=(10, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
+        ).pack(
+            side="right",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Create Market",
+            command=save_new_market,
+        ).pack(
+            side="right",
+        )
+
+    def create_selection_popup(self, event, market):
+        popup = tk.Toplevel(self.root)
+        popup.title("Add Selections")
+        popup.geometry("600x500")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        main_frame = ttk.Frame(
+            popup,
+            padding=20,
+        )
+        main_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        ttk.Label(
+            main_frame,
+            text=event.get(
+                "event_name",
+                "Unknown Event",
+            ),
+            font=("Arial", 14, "bold"),
+        ).pack(
+            anchor="w",
+        )
+
+        ttk.Label(
+            main_frame,
+            text=f"Market: {market.get('market_name', 'Unknown Market')}",
+            font=("Arial", 11),
+        ).pack(
+            anchor="w",
+            pady=(0, 20),
+        )
+
+        # -------------------------
+        # Add selection form
+        # -------------------------
+
+        entry_frame = ttk.Frame(
+            main_frame
+        )
+        entry_frame.pack(
+            fill="x",
+            pady=(0, 15),
+        )
+
+        name_var = tk.StringVar()
+        price_var = tk.StringVar()
+
+        ttk.Label(
+            entry_frame,
+            text="Selection",
+        ).grid(
+            row=0,
+            column=0,
+            sticky="w",
+        )
+
+        ttk.Label(
+            entry_frame,
+            text="Price",
+        ).grid(
+            row=0,
+            column=1,
+            sticky="w",
+            padx=(10, 0),
+        )
+
+        name_entry = ttk.Entry(
+            entry_frame,
+            textvariable=name_var,
+            width=35,
+        )
+        name_entry.grid(
+            row=1,
+            column=0,
+            sticky="ew",
+            pady=(5, 0),
+        )
+
+        price_entry = ttk.Entry(
+            entry_frame,
+            textvariable=price_var,
+            width=15,
+        )
+        price_entry.grid(
+            row=1,
+            column=1,
+            sticky="ew",
+            padx=(10, 0),
+            pady=(5, 0),
+        )
+
+        entry_frame.columnconfigure(
+            0,
+            weight=1,
+        )
+
+        # -------------------------
+        # Existing selections
+        # -------------------------
+
+        selections_frame = ttk.LabelFrame(
+            main_frame,
+            text="Selections Added",
+            padding=10,
+        )
+        selections_frame.pack(
+            fill="both",
+            expand=True,
+            pady=(0, 15),
+        )
+
+        selection_list = tk.Listbox(
+            selections_frame,
+            height=12,
+        )
+        selection_list.pack(
+            fill="both",
+            expand=True,
+        )
+
+        def refresh_selection_list():
+            selection_list.delete(
+                0,
+                "end",
+            )
+
+            for selection in market.get(
+                "selections",
+                [],
+            ):
+                selection_list.insert(
+                    "end",
+                    (
+                        f"{selection.get('name', 'Unnamed')} "
+                        f"— {selection.get('price', '')}"
+                    ),
+                )
+
+        def add_new_selection():
+            selection_name = (
+                name_var.get().strip()
+            )
+
+            price = (
+                price_var.get().strip()
+            )
+
+            if not selection_name:
+                messagebox.showwarning(
+                    "Add Selection",
+                    "Selection name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            if not price:
+                messagebox.showwarning(
+                    "Add Selection",
+                    "Please enter a starting price.",
+                    parent=popup,
+                )
+                return
+
+            try:
+                if "/" not in price:
+                    raise ValueError
+
+                numerator, denominator = price.split("/", 1)
+
+                numerator = int(numerator.strip())
+                denominator = int(denominator.strip())
+
+                if denominator <= 0:
+                    raise ValueError
+
+                parsed_price = [
+                    numerator,
+                    denominator,
+                ]
+
+            except ValueError:
+                messagebox.showwarning(
+                    "Add Selection",
+                    "Price must be entered as fractional odds, for example 3/1, 10/11 or 4/7.",
+                    parent=popup,
+                )
+                return
+
+            try:
+                add_selection(
+                    market,
+                    selection_name,
+                    parsed_price,
+                )
+            except Exception as error:
+                messagebox.showerror(
+                    "Add Selection",
+                    str(error),
+                    parent=popup,
+                )
+                return
+
+            market["selections"].sort(
+                key=lambda selection: probability(
+                    selection["price"][0],
+                    selection["price"][1],
+                ),
+                reverse=True,
+            )
+
+            touch_event(event)
+            save_platform(self.platform)
+
+            name_var.set("")
+            price_var.set("")
+
+            refresh_selection_list()
+
+            name_entry.focus_set()
+
+        ttk.Button(
+            entry_frame,
+            text="Add Selection",
+            command=add_new_selection,
+        ).grid(
+            row=1,
+            column=2,
+            padx=(10, 0),
+            pady=(5, 0),
+        )
+
+        # Pressing Enter adds the runner
+        popup.bind(
+            "<Return>",
+            lambda event_key: add_new_selection(),
+        )
+
+        # -------------------------
+        # Finish
+        # -------------------------
+
+        bottom_frame = ttk.Frame(
+            main_frame
+        )
+        bottom_frame.pack(
+            fill="x",
+        )
+
+        ttk.Button(
+            bottom_frame,
+            text="Finish",
+            command=lambda: (
+                popup.destroy(),
+                self.show_import_centre(),
+            ),
+        ).pack(
+            side="right",
+        )
+
+        refresh_selection_list()
+        name_entry.focus_set()
 
     def choose_excel_import_file(self):
         file_path = filedialog.askopenfilename(
