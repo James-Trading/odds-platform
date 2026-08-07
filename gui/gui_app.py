@@ -120,7 +120,7 @@ class OddsPlatformGUI:
         ttk.Button(
             self.sidebar,
             text="Back Office",
-            command=lambda: self.show_page("Back Office")
+            command=self.show_back_office
         ).pack(fill="x", pady=4)
 
         ttk.Button(
@@ -1261,6 +1261,551 @@ class OddsPlatformGUI:
             market,
         )
 
+    def show_back_office(self):
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text="Back Office",
+            font=("Arial", 22, "bold")
+        ).pack(anchor="w", pady=(0, 20))
+
+        # ----- Summary -----
+        summary_frame = ttk.LabelFrame(
+            self.content,
+            text="System Overview",
+            padding=15
+        )
+        summary_frame.pack(fill="x", pady=(0, 15))
+
+        clients = getattr(self, "clients", [])
+
+        enabled_clients = sum(
+            1
+            for client in clients
+            if client.get("feed", {}).get("enabled", False)
+        )
+
+        published_events = sum(
+            1
+            for event in self.platform
+            if event.get("published", False)
+        )
+
+        ttk.Label(
+            summary_frame,
+            text=f"Clients Enabled: {enabled_clients} / {len(clients)}"
+        ).grid(row=0, column=0, sticky="w", padx=(0, 40))
+
+        ttk.Label(
+            summary_frame,
+            text=f"Published Events: {published_events}"
+        ).grid(row=0, column=1, sticky="w")
+
+        # ----- Recent feed activity -----
+        activity_frame = ttk.LabelFrame(
+            self.content,
+            text="Recent Feed Activity",
+            padding=15
+        )
+        activity_frame.pack(fill="both", expand=True)
+
+        activity_text = tk.Text(
+            activity_frame,
+            height=14,
+            wrap="word"
+        )
+        activity_text.pack(fill="both", expand=True)
+
+        try:
+            with open(
+                "logs/activity_log.txt",
+                "r",
+                encoding="utf-8"
+            ) as file:
+                lines = file.readlines()
+
+            recent_lines = lines[-20:]
+
+            if recent_lines:
+                activity_text.insert(
+                    "1.0",
+                    "".join(recent_lines)
+                )
+            else:
+                activity_text.insert(
+                    "1.0",
+                    "No feed activity recorded yet."
+                )
+
+        except FileNotFoundError:
+            activity_text.insert(
+                "1.0",
+                "No activity log found."
+            )
+
+        activity_text.config(state="disabled")
+
+        # ----- Tools -----
+        tools_frame = ttk.Frame(self.content)
+        tools_frame.pack(fill="x", pady=(15, 0))
+
+        ttk.Button(
+            tools_frame,
+            text="Refresh",
+            command=self.show_back_office
+        ).pack(side="left")
+
+        ttk.Button(
+            tools_frame,
+            text="Audit Log",
+            command=self.show_audit_log
+        ).pack(side="left", padx=5)
+
+        ttk.Button(
+            tools_frame,
+            text="System Health",
+            command=self.show_system_health
+        ).pack(side="left", padx=5)
+
+        ttk.Button(
+            tools_frame,
+            text="Feed History",
+            command=self.show_feed_history
+        ).pack(side="left", padx=5)
+
+    def show_audit_log(self):
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text="Audit Log",
+            font=("Arial", 22, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        top_bar = ttk.Frame(
+            self.content
+        )
+        top_bar.pack(
+            fill="x",
+            pady=(0, 10),
+        )
+
+        ttk.Button(
+            top_bar,
+            text="← Back to Back Office",
+            command=self.show_back_office,
+        ).pack(
+            side="left",
+        )
+
+        ttk.Button(
+            top_bar,
+            text="Refresh",
+            command=self.show_audit_log,
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        log_frame = ttk.LabelFrame(
+            self.content,
+            text="Recorded Activity",
+            padding=10,
+        )
+
+        log_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        audit_text = tk.Text(
+            log_frame,
+            wrap="word",
+            state="normal",
+        )
+
+        audit_text.pack(
+            fill="both",
+            expand=True,
+        )
+
+        try:
+            with open(
+                "audit_log.txt",
+                "r",
+                encoding="utf-8",
+            ) as file:
+                lines = file.readlines()
+
+            if lines:
+                audit_text.insert(
+                    "1.0",
+                    "".join(reversed(lines)),
+                )
+            else:
+                audit_text.insert(
+                    "1.0",
+                    "No audit activity recorded yet.",
+                )
+
+        except FileNotFoundError:
+            audit_text.insert(
+                "1.0",
+                "No audit log file found.",
+            )
+
+        audit_text.config(
+            state="disabled"
+        )
+
+    def show_system_health(self):
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text="System Health",
+            font=("Arial", 22, "bold"),
+        ).pack(anchor="w", pady=(0, 15))
+
+        top_bar = ttk.Frame(self.content)
+        top_bar.pack(fill="x", pady=(0, 15))
+
+        ttk.Button(
+            top_bar,
+            text="← Back to Back Office",
+            command=self.show_back_office,
+        ).pack(side="left")
+
+        ttk.Button(
+            top_bar,
+            text="Refresh",
+            command=self.show_system_health,
+        ).pack(side="left", padx=(8, 0))
+
+        # -------------------------
+        # Calculate platform totals
+        # -------------------------
+
+        events = len(self.platform)
+
+        markets = sum(
+            len(event.get("markets", []))
+            for event in self.platform
+        )
+
+        selections = sum(
+            len(market.get("selections", []))
+            for event in self.platform
+            for market in event.get("markets", [])
+        )
+
+        clients = getattr(self, "clients", [])
+
+        suspended_events = sum(
+            1
+            for event in self.platform
+            if not event.get("active", True)
+        )
+
+        suspended_markets = sum(
+            1
+            for event in self.platform
+            for market in event.get("markets", [])
+            if str(
+                market.get("status", "ACTIVE")
+            ).upper() == "SUSPENDED"
+        )
+
+        published_events = sum(
+            1
+            for event in self.platform
+            if event.get("published", False)
+        )
+
+        unpublished_events = len(self.platform) - published_events
+
+
+        try:
+            with open(
+                "audit_log.txt",
+                "r",
+                encoding="utf-8",
+            ) as file:
+                audit_entries = len(file.readlines())
+        except FileNotFoundError:
+            audit_entries = 0
+
+        # -------------------------
+        # Platform section
+        # -------------------------
+
+        platform_frame = ttk.LabelFrame(
+            self.content,
+            text="Platform",
+            padding=15,
+        )
+        platform_frame.pack(fill="x", pady=(0, 15))
+
+        platform_stats = [
+            ("Events", events),
+            ("Markets", markets),
+            ("Selections", selections),
+            ("Clients", len(clients)),
+        ]
+
+        for row, (label, value) in enumerate(platform_stats):
+            ttk.Label(
+                platform_frame,
+                text=label,
+            ).grid(
+                row=row,
+                column=0,
+                sticky="w",
+                padx=(0, 40),
+                pady=4,
+            )
+
+            ttk.Label(
+                platform_frame,
+                text=str(value),
+                font=("Arial", 11, "bold"),
+            ).grid(
+                row=row,
+                column=1,
+                sticky="w",
+                pady=4,
+            )
+
+        # -------------------------
+        # Trading status
+        # -------------------------
+
+        trading_frame = ttk.LabelFrame(
+            self.content,
+            text="Trading Status",
+            padding=15,
+        )
+        trading_frame.pack(fill="x", pady=(0, 15))
+
+        trading_stats = [
+            ("Suspended Events", suspended_events),
+            ("Suspended Markets", suspended_markets),
+            ("Published Events", published_events),
+            ("Unpublished Events", unpublished_events),
+        ]
+
+        for row, (label, value) in enumerate(trading_stats):
+            ttk.Label(
+                trading_frame,
+                text=label,
+            ).grid(
+                row=row,
+                column=0,
+                sticky="w",
+                padx=(0, 40),
+                pady=4,
+            )
+
+            ttk.Label(
+                trading_frame,
+                text=str(value),
+                font=("Arial", 11, "bold"),
+            ).grid(
+                row=row,
+                column=1,
+                sticky="w",
+                pady=4,
+            )
+
+        # -------------------------
+        # Logs
+        # -------------------------
+
+        logs_frame = ttk.LabelFrame(
+            self.content,
+            text="Logs",
+            padding=15,
+        )
+        logs_frame.pack(fill="x")
+
+        ttk.Label(
+            logs_frame,
+            text="Audit Entries",
+        ).grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=(0, 40),
+            pady=4,
+        )
+
+        ttk.Label(
+            logs_frame,
+            text=str(audit_entries),
+            font=("Arial", 11, "bold"),
+        ).grid(
+            row=0,
+            column=1,
+            sticky="w",
+            pady=4,
+        )
+
+    def show_feed_history(self):
+        self.clear_content()
+
+        ttk.Label(
+            self.content,
+            text="Feed History",
+            font=("Arial", 22, "bold"),
+        ).pack(anchor="w", pady=(0, 15))
+
+        top_bar = ttk.Frame(self.content)
+        top_bar.pack(fill="x", pady=(0, 10))
+
+        ttk.Button(
+            top_bar,
+            text="← Back to Back Office",
+            command=self.show_back_office,
+        ).pack(side="left")
+
+        # -------------------------
+        # Client filter
+        # -------------------------
+        ttk.Label(
+            top_bar,
+            text="Client:",
+        ).pack(
+            side="left",
+            padx=(20, 6),
+        )
+
+        client_names = [
+            client.get("name", "Unnamed Client")
+            for client in self.clients
+        ]
+
+        filter_options = [
+            "All Clients",
+            *client_names,
+        ]
+
+        client_filter_var = tk.StringVar(
+            value="All Clients"
+        )
+
+        client_filter = ttk.Combobox(
+            top_bar,
+            textvariable=client_filter_var,
+            values=filter_options,
+            state="readonly",
+            width=25,
+        )
+
+        client_filter.pack(
+            side="left"
+        )
+
+        feed_frame = ttk.LabelFrame(
+            self.content,
+            text="Client Feed Activity",
+            padding=10,
+        )
+
+        feed_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        feed_text = tk.Text(
+            feed_frame,
+            wrap="word",
+        )
+
+        feed_text.pack(
+            fill="both",
+            expand=True,
+        )
+
+        def load_feed_history():
+            feed_text.config(state="normal")
+            feed_text.delete("1.0", "end")
+
+            selected_client = (
+                client_filter_var.get()
+            )
+
+            try:
+                with open(
+                    "logs/activity_log.txt",
+                    "r",
+                    encoding="utf-8",
+                ) as file:
+                    lines = file.readlines()
+
+                feed_lines = [
+                    line
+                    for line in lines
+                    if (
+                        "feed" in line.lower()
+                        or "websocket" in line.lower()
+                        or "received" in line.lower()
+                        or "requested" in line.lower()
+                        or "connected" in line.lower()
+                    )
+                ]
+
+                if selected_client != "All Clients":
+                    feed_lines = [
+                        line
+                        for line in feed_lines
+                        if selected_client.lower()
+                        in line.lower()
+                    ]
+
+                if feed_lines:
+                    feed_text.insert(
+                        "1.0",
+                        "".join(
+                            reversed(
+                                feed_lines[-100:]
+                            )
+                        ),
+                    )
+                else:
+                    feed_text.insert(
+                        "1.0",
+                        "No matching feed activity found.",
+                    )
+
+            except FileNotFoundError:
+                feed_text.insert(
+                    "1.0",
+                    "No activity log found.",
+                )
+
+            feed_text.config(
+                state="disabled"
+            )
+
+        ttk.Button(
+            top_bar,
+            text="Refresh",
+            command=load_feed_history,
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        client_filter.bind(
+            "<<ComboboxSelected>>",
+            lambda event: load_feed_history(),
+        )
+
+        load_feed_history()
 
     def show_market_screen(self, event, market):
         self.clear_content()
