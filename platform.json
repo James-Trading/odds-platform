@@ -784,11 +784,46 @@
                         "result": "Void"
                     }
                 ]
+            },
+            {
+                "id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+                "name": "1st Elimination",
+                "status": "Trading",
+                "published": false,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+                        "name": "Dani Dyer",
+                        "price": [
+                            100,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 12:46:59",
+                                "price": [
+                                    100,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    }
+                ]
             }
         ],
-        "version": 7,
-        "change_id": 11,
-        "last_updated": "2026-08-05T20:49:53.441270+00:00",
+        "version": 9,
+        "change_id": 62,
+        "last_updated": "2026-08-07T11:46:59.936855+00:00",
         "trader_notes": "Top price Dani Dyer until further notice"
     },
     {
@@ -915,19 +950,19 @@
         "class": "Music",
         "type": "Asia Eurovision",
         "event_name": "Asia Eurovision 2026",
-        "status": "draft",
+        "status": "Settled",
         "displayed": true,
         "published": false,
         "start_time": "19/09/2026 21:00",
         "suspend_mode": "AUTO",
-        "version": 4,
-        "change_id": 4,
-        "last_updated": "2026-08-04T21:53:50.069606+00:00",
+        "version": 6,
+        "change_id": 67,
+        "last_updated": "2026-08-07T20:55:16.329079+00:00",
         "markets": [
             {
                 "id": "44418b82-aa39-456f-824c-40bd2ea2731f",
                 "name": "Outright",
-                "status": "Trading",
+                "status": "Settled",
                 "published": false,
                 "displayed": true,
                 "limits": {
@@ -966,11 +1001,12 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Won"
                     }
                 ]
             }
-        ]
+        ],
+        "archived": true
     },
     {
         "id": "176233fa-d92a-46ff-abe1-e764b40551e7",
@@ -981,11 +1017,11 @@
         "status": "Trading",
         "displayed": true,
         "published": true,
-        "start_time": "06/08/2026 00:03",
+        "start_time": "06/06/2026 00:03",
         "suspend_mode": "AUTO",
-        "version": 27,
-        "change_id": 38,
-        "last_updated": "2026-08-05T23:03:00.261731+00:00",
+        "version": 36,
+        "change_id": 76,
+        "last_updated": "2026-08-07T21:32:51.493052+00:00",
         "markets": [
             {
                 "id": "af5f49f3-2132-43e5-b736-60884ff22012",
@@ -1023,7 +1059,8 @@
                 ]
             }
         ],
-        "active": false
+        "active": false,
+        "archived": true
     },
     {
         "id": "ab620afb-b305-48c4-b7e8-d993ed0a0ba9",
@@ -1053,13 +1090,13 @@
         "published": false,
         "start_time": "08/08/2026 10:00",
         "suspend_mode": "AUTO",
-        "version": 2,
-        "change_id": 41,
-        "last_updated": "2026-08-07T10:25:32.747623+00:00",
+        "version": 3,
+        "change_id": 63,
+        "last_updated": "2026-08-07T13:10:58.676253+00:00",
         "markets": [
             {
                 "id": "4be3305a-b804-425c-8f81-18983cf85b29",
-                "name": "Outright",
+                "name": "Winner",
                 "status": "Trading",
                 "published": false,
                 "displayed": true,
@@ -1301,111 +1338,13 @@
         "status": "draft",
         "displayed": true,
         "published": false,
+        "archived": false,
         "start_time": "08/08/2026 10:15",
         "suspend_mode": "AUTO",
-        "version": 6,
-        "change_id": 60,
-        "last_updated": "2026-08-07T11:37:58.524610+00:00",
-        "markets": [
-            {
-                "id": "dcf10659-7b98-40f8-a109-7e7610b166f5",
-                "name": "Outright",
-                "status": "Trading",
-                "published": false,
-                "displayed": true,
-                "limits": {
-                    "max_win_per_customer": 500,
-                    "max_liability": 5000
-                },
-                "notes": "",
-                "selections": [
-                    {
-                        "id": "66caf4b4-b9f4-4b08-b580-1c916582725a",
-                        "name": "Harvey",
-                        "price": [
-                            5,
-                            6
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-08-07 12:37:48",
-                                "price": [
-                                    5,
-                                    6
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    },
-                    {
-                        "id": "2c16affa-c32a-4209-850a-518fbb6a9886",
-                        "name": "Cath",
-                        "price": [
-                            2,
-                            1
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-08-07 12:37:44",
-                                "price": [
-                                    2,
-                                    1
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    },
-                    {
-                        "id": "36c0c4b6-f6ef-47d4-a496-30243cc403b5",
-                        "name": "Rosie",
-                        "price": [
-                            11,
-                            2
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-08-07 12:37:58",
-                                "price": [
-                                    11,
-                                    2
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    },
-                    {
-                        "id": "861f5684-5f72-4e76-beb0-633d5d7798f5",
-                        "name": "James",
-                        "price": [
-                            6,
-                            1
-                        ],
-                        "pending_price": null,
-                        "price_history": [
-                            {
-                                "created": "2026-08-07 12:37:52",
-                                "price": [
-                                    6,
-                                    1
-                                ]
-                            }
-                        ],
-                        "active": true,
-                        "displayed": true,
-                        "result": ""
-                    }
-                ]
-            }
-        ],
+        "version": 8,
+        "change_id": 65,
+        "last_updated": "2026-08-07T20:49:02.359427+00:00",
+        "markets": [],
         "active": true
     }
 ]

@@ -32,6 +32,9 @@ def get_published_events(platform):
     customer_events = []
 
     for event in platform:
+        if event.get("archived", False):
+            continue
+            
         if not event.get("published", False):
             continue
 

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+from tkinter import ttk, messagebox, filedialog, simpledialog
 
 from save_load import save_platform, load_platform
 from client_save_load import load_clients, save_clients
@@ -44,7 +44,7 @@ from client_functions import (
     unbook_event_for_client,
 )
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 class OddsPlatformGUI:
 
@@ -1073,6 +1073,8 @@ class OddsPlatformGUI:
 
         self.clear_content()
 
+        self.archive_old_events()
+
         top_bar = ttk.Frame(self.content)
         top_bar.pack(fill="x", pady=(0, 20))
 
@@ -1114,6 +1116,12 @@ class OddsPlatformGUI:
             if filtered_events is not None
             else self.platform
         )
+
+        events_to_show = [
+            event
+            for event in events_to_show
+            if not event.get("archived", False)
+        ]
 
         for event in events_to_show:
 
@@ -1219,6 +1227,15 @@ class OddsPlatformGUI:
             font=("Arial", 16, "bold")
         ).pack(anchor="w", pady=(25, 10))
 
+        ttk.Button(
+            self.content,
+            text="+ Add Market",
+            command=lambda: self.create_market_popup(event),
+        ).pack(
+            anchor="w",
+            pady=(0, 10),
+        )
+
         for market in event.get("markets", []):
 
             ttk.Button(
@@ -1234,6 +1251,175 @@ class OddsPlatformGUI:
                 anchor="w",
                 pady=4
             )
+
+        ttk.Button(
+            self.content,
+            text="Manage Markets",
+            command=lambda: self.manage_markets_popup(event),
+        ).pack(
+            anchor="w",
+            pady=(0, 10),
+        )
+
+    def manage_markets_popup(self, event):
+        popup = tk.Toplevel(self.root)
+        popup.title("Manage Markets")
+        popup.geometry("600x450")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        main_frame = ttk.Frame(
+            popup,
+            padding=15,
+        )
+        main_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        ttk.Label(
+            main_frame,
+            text=f"Manage Markets - {event.get('event_name', 'Event')}",
+            font=("Arial", 15, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        market_list = tk.Listbox(
+            main_frame,
+            height=14,
+        )
+        market_list.pack(
+            fill="both",
+            expand=True,
+            pady=(0, 15),
+        )
+
+        def refresh_market_list():
+            market_list.delete(0, "end")
+
+            for market in event.get("markets", []):
+                market_list.insert(
+                    "end",
+                    market.get("name", "Unnamed Market"),
+                )
+
+        def get_selected_market():
+            selection = market_list.curselection()
+
+            if not selection:
+                messagebox.showwarning(
+                    "Manage Markets",
+                    "Please select a market first.",
+                    parent=popup,
+                )
+                return None
+
+            index = selection[0]
+
+            return event.get(
+                "markets",
+                [],
+            )[index]
+
+        def rename_market():
+            market = get_selected_market()
+
+            if market is None:
+                return
+
+            new_name = simpledialog.askstring(
+                "Rename Market",
+                "Enter new market name:",
+                initialvalue=market.get("name", ""),
+                parent=popup,
+            )
+
+            if new_name is None:
+                return
+
+            new_name = new_name.strip()
+
+            if not new_name:
+                messagebox.showwarning(
+                    "Rename Market",
+                    "Market name cannot be blank.",
+                    parent=popup,
+                )
+                return
+
+            market["name"] = new_name
+
+            touch_event(event)
+            save_platform(self.platform)
+
+            refresh_market_list()
+
+        def delete_market():
+            market = get_selected_market()
+
+            if market is None:
+                return
+
+            market_name = market.get(
+                "name",
+                "Unnamed Market",
+            )
+
+            confirmed = messagebox.askyesno(
+                "Delete Market",
+                f"Delete '{market_name}'?\n\n"
+                "This will also delete all selections in this market.",
+                parent=popup,
+            )
+
+            if not confirmed:
+                return
+
+            event["markets"].remove(market)
+
+            touch_event(event)
+            save_platform(self.platform)
+
+            refresh_market_list()
+
+        button_frame = ttk.Frame(
+            main_frame
+        )
+        button_frame.pack(
+            fill="x",
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Rename Market",
+            command=rename_market,
+        ).pack(
+            side="left",
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Delete Market",
+            command=delete_market,
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Close",
+            command=lambda: (
+                popup.destroy(),
+                self.show_event_screen(event),
+            ),
+        ).pack(
+            side="right",
+        )
+
+        refresh_market_list()
 
     def toggle_event_publish(self, event):
 
@@ -1373,6 +1559,15 @@ class OddsPlatformGUI:
             text="Feed History",
             command=self.show_feed_history
         ).pack(side="left", padx=5)
+
+        ttk.Button(
+            self.content,
+            text="Archived Events",
+            command=self.show_archived_events,
+        ).pack(
+            anchor="w",
+            pady=5,
+        )
 
     def show_audit_log(self):
         self.clear_content()
@@ -1652,6 +1847,200 @@ class OddsPlatformGUI:
             column=1,
             sticky="w",
             pady=4,
+        )
+
+    def show_archived_events(self):
+        self.clear_content()
+
+        ttk.Button(
+            self.content,
+            text="← Back to Back Office",
+            command=self.show_back_office,
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        ttk.Label(
+            self.content,
+            text="Archived Events",
+            font=("Arial", 24, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 15),
+        )
+
+        archived_events = [
+            event
+            for event in self.platform
+            if event.get("archived", False)
+        ]
+
+        if not archived_events:
+            ttk.Label(
+                self.content,
+                text="No archived events.",
+            ).pack(
+                anchor="w",
+                pady=10,
+            )
+            return
+
+        table_frame = ttk.Frame(self.content)
+        table_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        columns = (
+            "event",
+            "category",
+            "start_time",
+            "status",
+        )
+
+        tree = ttk.Treeview(
+            table_frame,
+            columns=columns,
+            show="headings",
+            height=15,
+        )
+
+        tree.heading(
+            "event",
+            text="Event",
+        )
+        tree.heading(
+            "category",
+            text="Category",
+        )
+        tree.heading(
+            "start_time",
+            text="Start Time",
+        )
+        tree.heading(
+            "status",
+            text="Status",
+        )
+
+        tree.column(
+            "event",
+            width=300,
+        )
+        tree.column(
+            "category",
+            width=150,
+        )
+        tree.column(
+            "start_time",
+            width=160,
+        )
+        tree.column(
+            "status",
+            width=120,
+        )
+
+        tree.pack(
+            fill="both",
+            expand=True,
+        )
+
+        for index, event in enumerate(archived_events):
+            tree.insert(
+                "",
+                "end",
+                iid=str(index),
+                values=(
+                    event.get(
+                        "event_name",
+                        "Unnamed Event",
+                    ),
+                    event.get(
+                        "category",
+                        "",
+                    ),
+                    event.get(
+                        "start_time",
+                        "",
+                    ),
+                    event.get(
+                        "status",
+                        "",
+                    ),
+                ),
+            )
+
+        def get_selected_event():
+            selected = tree.selection()
+
+            if not selected:
+                messagebox.showwarning(
+                    "Archived Events",
+                    "Please select an event first.",
+                )
+                return None
+
+            index = int(selected[0])
+
+            return archived_events[index]
+
+        def open_event():
+            event = get_selected_event()
+
+            if event is None:
+                return
+
+            self.show_event_screen(event)
+
+        def restore_event():
+            event = get_selected_event()
+
+            if event is None:
+                return
+
+            event_name = event.get(
+                "event_name",
+                "Unnamed Event",
+            )
+
+            confirmed = messagebox.askyesno(
+                "Restore Event",
+                f"Restore '{event_name}' to Trading?",
+            )
+
+            if not confirmed:
+                return
+
+            event["archived"] = False
+
+            touch_event(event)
+            save_platform(self.platform)
+
+            self.show_archived_events()
+
+        button_frame = ttk.Frame(
+            self.content
+        )
+        button_frame.pack(
+            fill="x",
+            pady=(10, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Open Event",
+            command=open_event,
+        ).pack(
+            side="left",
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Restore Event",
+            command=restore_event,
+        ).pack(
+            side="left",
+            padx=(10, 0),
         )
 
     def show_feed_history(self):
@@ -3030,6 +3419,20 @@ class OddsPlatformGUI:
                 pending_results,
             )
 
+            all_markets_settled = all(
+                all(
+                    selection.get("result", "")
+                    for selection in market_item.get("selections", [])
+                )
+                for market_item in event.get("markets", [])
+            )
+
+            if all_markets_settled:
+                event["archived"] = True
+                touch_event(event)
+                save_platform(self.platform)
+
+
             print(
                 "Saved results:",
                 [
@@ -3657,6 +4060,38 @@ class OddsPlatformGUI:
             1000,
             self.check_scheduled_events,
         )
+
+    def archive_old_events(self):
+        cutoff = datetime.now() - timedelta(days=28)
+
+        changed = False
+
+        for event in self.platform:
+            if event.get("archived", False):
+                continue
+
+            start_time = event.get("start_time", "").strip()
+
+            if not start_time:
+                continue
+
+            try:
+                event_start = datetime.strptime(
+                    start_time,
+                    "%d/%m/%Y %H:%M",
+                )
+            except ValueError:
+                continue
+
+            if event_start <= cutoff:
+                event["archived"] = True
+
+                touch_event(event)
+
+                changed = True
+
+        if changed:
+            save_platform(self.platform)
 
     def edit_price_cell(
         self,

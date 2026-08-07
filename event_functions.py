@@ -13,6 +13,7 @@ def create_event(category, event_class, event_type, event_name):
         "status": "draft",
         "displayed": True,
         "published": False,
+        "archived": False,
         "start_time": "",
         "suspend_mode": "AUTO",
         "version": 1,
