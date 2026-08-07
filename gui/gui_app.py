@@ -5114,10 +5114,27 @@ class OddsPlatformGUI:
         market["displayed"] = False
 
         for runner in preview["selections"]:
+            price_text = str(runner["price"]).strip()
+
+            try:
+                numerator, denominator = price_text.split("/", 1)
+
+                parsed_price = [
+                    int(numerator.strip()),
+                    int(denominator.strip()),
+                ]
+
+            except (ValueError, AttributeError):
+                messagebox.showwarning(
+                    "Import Centre",
+                    f"Invalid price for {runner['name']}: {price_text}",
+                )
+                return
+
             selection = add_selection(
                 market,
                 runner["name"],
-                str(runner["price"]),
+                parsed_price,
             )
 
             selection["active"] = False

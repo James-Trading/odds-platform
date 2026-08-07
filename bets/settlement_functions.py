@@ -80,5 +80,14 @@ def settle_market_results(
         ],
     )
 
-    market["status"] = "Settled"
+    all_settled = all(
+        selection.get("result", "")
+        for selection in market.get("selections", [])
+    )
+
+    if all_settled:
+        market["status"] = "Settled"
+    else:
+        market["status"] = "Trading"
+
     save_platform(platform)

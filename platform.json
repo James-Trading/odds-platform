@@ -379,7 +379,7 @@
         "class": "TV",
         "type": "Strictly Come Dancing",
         "event_name": "Strictly Come Dancing 2026",
-        "status": "draft",
+        "status": "Trading",
         "displayed": true,
         "published": true,
         "start_time": "21/09/2026 18:00",
@@ -684,7 +684,7 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Lost"
                     },
                     {
                         "id": "a56caee1-0add-4d64-9c50-9ce2227bac7b",
@@ -821,10 +821,11 @@
                 ]
             }
         ],
-        "version": 12,
-        "change_id": 79,
-        "last_updated": "2026-08-07T21:51:28.407170+00:00",
-        "trader_notes": "Top price Dani Dyer until further notice"
+        "version": 17,
+        "change_id": 103,
+        "last_updated": "2026-08-07T22:34:46.880715+00:00",
+        "trader_notes": "Top price Dani Dyer until further notice",
+        "active": true
     },
     {
         "id": "a74bc5aa-8731-4029-83ab-4fe2ff3bf2a6",
@@ -841,7 +842,7 @@
             {
                 "id": "f761c9a3-bcc7-4b97-b39b-ad872f68f1cc",
                 "name": "Outright",
-                "status": "Suspended",
+                "status": "Active",
                 "published": false,
                 "displayed": false,
                 "limits": {
@@ -853,90 +854,126 @@
                     {
                         "id": "932a7c2b-d3fe-46fc-9a71-302eabdaed85",
                         "name": "James",
-                        "price": "2/1",
+                        "price": [
+                            2,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-07-31 11:55:10",
-                                "price": "2/1"
+                                "price": [
+                                    2,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "cce34c8f-92be-47bb-8386-95c4341ef6be",
                         "name": "Cath",
-                        "price": "3/1",
+                        "price": [
+                            3,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-07-31 11:55:10",
-                                "price": "3/1"
+                                "price": [
+                                    3,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "8058ae00-7120-4a25-95cb-65d85c6dc4f6",
                         "name": "Harvey",
-                        "price": "4/1",
+                        "price": [
+                            4,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-07-31 11:55:10",
-                                "price": "4/1"
+                                "price": [
+                                    4,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "26472447-46ae-4484-b996-720be0160a07",
                         "name": "Tom",
-                        "price": "5/1",
+                        "price": [
+                            5,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-07-31 11:55:10",
-                                "price": "5/1"
+                                "price": [
+                                    5,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "036548ca-dbf3-45a7-ad42-33c61d819e1d",
                         "name": "Gill",
-                        "price": "6/1",
+                        "price": [
+                            6,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-07-31 11:55:10",
-                                "price": "6/1"
+                                "price": [
+                                    6,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "3e064dc1-3a96-412f-9b18-fd59db72d0d1",
                         "name": "Deb",
-                        "price": "8/1",
+                        "price": [
+                            8,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-07-31 11:55:10",
-                                "price": "8/1"
+                                "price": [
+                                    8,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     }
@@ -945,7 +982,7 @@
             {
                 "id": "9b256bad-9173-45d4-8103-93316f8beb6c",
                 "name": "First Elimination",
-                "status": "Suspended",
+                "status": "Active",
                 "published": false,
                 "displayed": false,
                 "limits": {
@@ -957,72 +994,158 @@
                     {
                         "id": "b94446f6-1f84-4e86-aadb-7ad45f869883",
                         "name": "James",
-                        "price": "2/1",
+                        "price": [
+                            2,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 23:00:03",
-                                "price": "2/1"
+                                "price": [
+                                    2,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "65a5e25d-7553-4f1b-bb1a-b8645da1f9a0",
                         "name": "Cath",
-                        "price": "3/1",
+                        "price": [
+                            3,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 23:00:03",
-                                "price": "3/1"
+                                "price": [
+                                    3,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "3869d05e-3d56-438d-bc3b-f5bad28ddab9",
                         "name": "Harvey",
-                        "price": "4/1",
+                        "price": [
+                            4,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 23:00:03",
-                                "price": "4/1"
+                                "price": [
+                                    4,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "8520d408-4449-441c-981a-e526942563df",
                         "name": "Tom",
-                        "price": "5/1",
+                        "price": [
+                            5,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 23:00:03",
-                                "price": "5/1"
+                                "price": [
+                                    5,
+                                    1
+                                ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
                     {
                         "id": "4b945b2e-8bd2-4373-9804-54f50d64fb11",
                         "name": "Gill",
-                        "price": "6/1",
+                        "price": [
+                            6,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 23:00:03",
-                                "price": "6/1"
+                                "price": [
+                                    6,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "12e2f307-37df-4381-9660-937c589a1b92",
+                        "name": "Deb",
+                        "price": [
+                            8,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": [
+                                    8,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": false,
+                        "result": ""
+                    }
+                ]
+            },
+            {
+                "id": "d34dabb6-9fe2-4b5d-94ba-7af22b01ecea",
+                "name": "Second Elimination",
+                "status": "Suspended",
+                "published": false,
+                "displayed": false,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "26dd84a4-1d6a-47f0-b7d5-5d7875a3cd69",
+                        "name": "James",
+                        "price": [
+                            1,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:38:57",
+                                "price": [
+                                    1,
+                                    1
+                                ]
                             }
                         ],
                         "active": false,
@@ -1030,14 +1153,104 @@
                         "result": ""
                     },
                     {
-                        "id": "12e2f307-37df-4381-9660-937c589a1b92",
-                        "name": "Deb",
-                        "price": "8/1",
+                        "id": "4b8b4791-c541-4ed2-a468-9317b9eecb69",
+                        "name": "Cath",
+                        "price": [
+                            1,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
-                                "created": "2026-08-07 23:00:03",
-                                "price": "8/1"
+                                "created": "2026-08-07 23:38:57",
+                                "price": [
+                                    1,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "e07f86c4-f13b-4cca-a595-7412de3a1c41",
+                        "name": "Harvey",
+                        "price": [
+                            1,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:38:57",
+                                "price": [
+                                    1,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "61f20fa4-5254-4501-800f-0afa3d01b631",
+                        "name": "Tom",
+                        "price": [
+                            1,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:38:57",
+                                "price": [
+                                    1,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "2dd47e8d-2320-48f1-9e0c-f39883a69e8d",
+                        "name": "Gill",
+                        "price": [
+                            1,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:38:57",
+                                "price": [
+                                    1,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "caf22e01-e1e2-4c6d-b088-45185057a89f",
+                        "name": "Deb",
+                        "price": [
+                            1,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:38:57",
+                                "price": [
+                                    1,
+                                    1
+                                ]
                             }
                         ],
                         "active": false,
@@ -1047,9 +1260,9 @@
                 ]
             }
         ],
-        "version": 1,
-        "change_id": 80,
-        "last_updated": "2026-08-07T22:00:03.898079+00:00"
+        "version": 30,
+        "change_id": 114,
+        "last_updated": "2026-08-07T22:38:57.671351+00:00"
     },
     {
         "id": "1b54a09b-3902-4dd3-b37f-a4e36ea5c2de",
@@ -1247,12 +1460,18 @@
                     {
                         "id": "af4498f2-9ce2-43e6-b0c4-0a398173b154",
                         "name": "Cath",
-                        "price": "3/1",
+                        "price": [
+                            3,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 11:30:29",
-                                "price": "3/1"
+                                "price": [
+                                    3,
+                                    1
+                                ]
                             }
                         ],
                         "active": true,
@@ -1262,12 +1481,18 @@
                     {
                         "id": "cde426b9-1576-4407-ba91-dca77b737336",
                         "name": "James",
-                        "price": "4/1",
+                        "price": [
+                            4,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 11:30:33",
-                                "price": "4/1"
+                                "price": [
+                                    4,
+                                    1
+                                ]
                             }
                         ],
                         "active": true,
@@ -1277,12 +1502,18 @@
                     {
                         "id": "8abbe029-b53e-496c-a780-af907df50b5c",
                         "name": "Rosie",
-                        "price": "5/1",
+                        "price": [
+                            5,
+                            1
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 11:30:38",
-                                "price": "5/1"
+                                "price": [
+                                    5,
+                                    1
+                                ]
                             }
                         ],
                         "active": true,
@@ -1292,12 +1523,18 @@
                     {
                         "id": "c38c7a5b-7a55-455b-bdde-86c733946f73",
                         "name": "Harvey",
-                        "price": "10/11",
+                        "price": [
+                            10,
+                            11
+                        ],
                         "pending_price": null,
                         "price_history": [
                             {
                                 "created": "2026-08-07 11:30:43",
-                                "price": "10/11"
+                                "price": [
+                                    10,
+                                    11
+                                ]
                             }
                         ],
                         "active": true,

@@ -207,3 +207,37 @@
 04/08/2026 22:53:50 - Bhutan unsuspended in Asia Eurovision 2026 / Outright
 05/08/2026 22:52:50 - Im A Celeb 2026 automatically suspended at start time
 05/08/2026 23:52:25 - Im A Celeb 2026 automatically suspended at start time
+07/08/2026 23:03:19 - Lacey Turner suspended in Strictly Come Dancing 2026 / Outright
+07/08/2026 23:03:20 - Lacey Turner unsuspended in Strictly Come Dancing 2026 / Outright
+07/08/2026 23:03:21 - Lacey Turner suspended in Strictly Come Dancing 2026 / Outright
+07/08/2026 23:17:16 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:17:17 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:17:18 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:17:19 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:17:20 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:17:29 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:17:29 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:17:30 - Cath unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:17:46 - James unsuspended in Big Brother 2026 / First Elimination
+07/08/2026 23:17:47 - James suspended in Big Brother 2026 / First Elimination
+07/08/2026 23:18:58 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:32:14 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:32:15 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:32:30 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:33:42 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:33:43 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:33:52 - James suspended in Big Brother 2026 / Outright
+07/08/2026 23:34:03 - James unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:34:46 - Lacey Turner unsuspended in Strictly Come Dancing 2026 / Outright
+07/08/2026 23:35:39 - Outright unsuspended in Big Brother 2026
+07/08/2026 23:35:41 - Harvey unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:35:42 - Tom unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:35:43 - Gill unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:35:44 - Deb unsuspended in Big Brother 2026 / Outright
+07/08/2026 23:36:05 - James unsuspended in Big Brother 2026 / First Elimination
+07/08/2026 23:36:08 - First Elimination unsuspended in Big Brother 2026
+07/08/2026 23:36:09 - Cath unsuspended in Big Brother 2026 / First Elimination
+07/08/2026 23:36:09 - Harvey unsuspended in Big Brother 2026 / First Elimination
+07/08/2026 23:36:10 - Tom unsuspended in Big Brother 2026 / First Elimination
+07/08/2026 23:36:11 - Gill unsuspended in Big Brother 2026 / First Elimination
+07/08/2026 23:36:11 - Deb unsuspended in Big Brother 2026 / First Elimination
