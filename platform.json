@@ -941,8 +941,115 @@
                         "result": ""
                     }
                 ]
+            },
+            {
+                "id": "9b256bad-9173-45d4-8103-93316f8beb6c",
+                "name": "First Elimination",
+                "status": "Suspended",
+                "published": false,
+                "displayed": false,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "b94446f6-1f84-4e86-aadb-7ad45f869883",
+                        "name": "James",
+                        "price": "2/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": "2/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "65a5e25d-7553-4f1b-bb1a-b8645da1f9a0",
+                        "name": "Cath",
+                        "price": "3/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": "3/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "3869d05e-3d56-438d-bc3b-f5bad28ddab9",
+                        "name": "Harvey",
+                        "price": "4/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": "4/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "8520d408-4449-441c-981a-e526942563df",
+                        "name": "Tom",
+                        "price": "5/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": "5/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "4b945b2e-8bd2-4373-9804-54f50d64fb11",
+                        "name": "Gill",
+                        "price": "6/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": "6/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    },
+                    {
+                        "id": "12e2f307-37df-4381-9660-937c589a1b92",
+                        "name": "Deb",
+                        "price": "8/1",
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-07 23:00:03",
+                                "price": "8/1"
+                            }
+                        ],
+                        "active": false,
+                        "displayed": false,
+                        "result": ""
+                    }
+                ]
             }
-        ]
+        ],
+        "version": 1,
+        "change_id": 80,
+        "last_updated": "2026-08-07T22:00:03.898079+00:00"
     },
     {
         "id": "1b54a09b-3902-4dd3-b37f-a4e36ea5c2de",

@@ -5020,26 +5020,89 @@ class OddsPlatformGUI:
             )
             return
 
-        event = create_event(
-            preview["category"],
-            preview["class"],
-            preview["type"],
-            preview["event"],
+        # Look for an existing active event with the same name.
+        existing_event = next(
+            (
+                existing
+                for existing in self.platform
+                if existing.get(
+                    "event_name",
+                    "",
+                ).strip().lower()
+                == preview["event"].strip().lower()
+                and not existing.get(
+                    "archived",
+                    False,
+                )
+            ),
+            None,
         )
 
-        event_date = preview.get("date")
-        event_time = preview.get("time")
+        new_event_created = False
 
-        if hasattr(event_date, "strftime"):
-            event_date = event_date.strftime("%Y-%m-%d")
+        if existing_event:
+            event = existing_event
 
-        if hasattr(event_time, "strftime"):
-            event_time = event_time.strftime("%H:%M")
+        else:
+            event = create_event(
+                preview["category"],
+                preview["class"],
+                preview["type"],
+                preview["event"],
+            )
 
-        event["start_time"] = f"{event_date} {event_time}"
-        event["status"] = "Draft"
-        event["published"] = False
-        event["displayed"] = False
+            event_date = preview.get("date")
+            event_time = preview.get("time")
+
+            if hasattr(event_date, "strftime"):
+                event_date = event_date.strftime("%d/%m/%Y")
+
+            if hasattr(event_time, "strftime"):
+                event_time = event_time.strftime("%H:%M")
+
+            event["start_time"] = f"{event_date} {event_time}"
+            event["status"] = "Draft"
+            event["published"] = False
+            event["displayed"] = False
+
+            self.platform.append(event)
+            new_event_created = True
+
+
+        # Check whether this market already exists in the event.
+        existing_market = next(
+            (
+                existing
+                for existing in event.get(
+                    "markets",
+                    [],
+                )
+                if existing.get(
+                    "name",
+                    "",
+                ).strip().lower()
+                == preview["market"].strip().lower()
+            ),
+            None,
+        )
+
+        if existing_market:
+            messagebox.showwarning(
+                "Import Centre",
+                (
+                    f"The market '{preview['market']}' already exists "
+                    f"in {preview['event']}.\n\n"
+                    "Nothing has been imported."
+                ),
+            )
+
+            # Remove the newly-created event if this somehow occurred
+            # before any useful data was added.
+            if new_event_created:
+                self.platform.remove(event)
+
+            return
+
 
         market = create_market(
             event,
@@ -5060,7 +5123,12 @@ class OddsPlatformGUI:
             selection["active"] = False
             selection["displayed"] = False
 
-        self.platform.append(event)
+
+        # Existing events need a new version/change ID because
+        # we have added a new market to them.
+        if not new_event_created:
+            touch_event(event)
+
         save_platform(self.platform)
 
         messagebox.showinfo(
