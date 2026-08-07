@@ -56,6 +56,10 @@ def get_published_events(platform):
             # Hidden markets must not leave the platform.
             if not market.get("displayed", True):
                 continue
+            
+            # Unpublished markets must not leave the platform.
+            if not market.get("published", False):
+                continue
 
             customer_market = {
                 "id": market.get("id"),

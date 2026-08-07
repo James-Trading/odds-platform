@@ -2495,6 +2495,24 @@ class OddsPlatformGUI:
             padx=(8, 0),
         )
 
+        market_publish_button_text = (
+            "Unpublish Market"
+            if market.get("published", False)
+            else "Publish Market"
+        )
+
+        ttk.Button(
+            action_frame,
+            text=market_publish_button_text,
+            command=lambda: self.toggle_market_publish(
+                event,
+                market,
+            ),
+        ).pack(
+            side="left",
+            padx=(5, 0),
+        )
+
         table_frame = ttk.Frame(self.content)
         table_frame.pack(fill="both", expand=True)
 
@@ -3789,6 +3807,23 @@ class OddsPlatformGUI:
 
         self.show_market_screen(event, market)
 
+    def toggle_market_publish(
+        self,
+        event,
+        market,
+    ):
+        market["published"] = not market.get(
+            "published",
+            False,
+        )
+
+        touch_event(event)
+        save_platform(self.platform)
+
+        self.show_market_screen(
+            event,
+            market,
+        )
 
     def handle_price_tick_click(
         self,

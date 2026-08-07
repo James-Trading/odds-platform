@@ -389,7 +389,7 @@
                 "id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
                 "name": "Outright",
                 "status": "Settled",
-                "published": false,
+                "published": true,
                 "displayed": true,
                 "limits": {
                     "max_win_per_customer": 500,
@@ -821,9 +821,9 @@
                 ]
             }
         ],
-        "version": 9,
-        "change_id": 62,
-        "last_updated": "2026-08-07T11:46:59.936855+00:00",
+        "version": 12,
+        "change_id": 79,
+        "last_updated": "2026-08-07T21:51:28.407170+00:00",
         "trader_notes": "Top price Dani Dyer until further notice"
     },
     {
