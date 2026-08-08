@@ -46,6 +46,8 @@ from client_functions import (
 
 from datetime import datetime, timezone, timedelta
 
+from config import API_BASE_URL
+
 import requests
 
 class OddsPlatformGUI:
@@ -523,7 +525,7 @@ class OddsPlatformGUI:
 
         try:
             response = requests.get(
-                "http://127.0.0.1:8000/internal/connections",
+                f"{API_BASE_URL}/internal/connections",
                 timeout=1
             )
 
