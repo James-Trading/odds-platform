@@ -27,6 +27,7 @@ app = FastAPI(
 
 bearer_scheme = HTTPBearer()
 
+active_websocket_clients = {}
 
 def get_authenticated_client(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
@@ -133,6 +134,12 @@ async def live_feed(websocket: WebSocket):
 
     client_name = client.get("name", "Unknown client")
 
+    active_websocket_clients[client_name] = {
+        "connected": True,
+        "connected_at": datetime.now(timezone.utc).isoformat(),
+        "last_update_sent": None,
+    }
+
     log_activity(
         "WEBSOCKET",
         f"{client_name} connected to live feed",
@@ -162,6 +169,10 @@ async def live_feed(websocket: WebSocket):
                     }
                 )
 
+                active_websocket_clients[client_name][
+                    "last_update_sent"
+                ] = datetime.now(timezone.utc).isoformat()
+
                 log_activity(
                     "WEBSOCKET",
                     (
@@ -175,7 +186,23 @@ async def live_feed(websocket: WebSocket):
             await asyncio.sleep(1)
 
     except WebSocketDisconnect:
+        if client_name in active_websocket_clients:
+            active_websocket_clients[client_name][
+                "connected"
+            ] = False
+
         log_activity(
             "WEBSOCKET",
             f"{client_name} disconnected from live feed",
         )
+
+@app.get("/internal/connections")
+def get_active_connections():
+    return {
+        "connection_count": sum(
+            1
+            for client in active_websocket_clients.values()
+            if client.get("connected")
+        ),
+        "clients": active_websocket_clients,
+    }

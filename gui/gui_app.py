@@ -46,6 +46,8 @@ from client_functions import (
 
 from datetime import datetime, timezone, timedelta
 
+import requests
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -514,11 +516,57 @@ class OddsPlatformGUI:
             fill="x",
         )
 
+        # Get live WebSocket connection status
+        connection_status = "Disconnected"
+        connected_since = "-"
+        last_update = "-"
+
+        try:
+            response = requests.get(
+                "http://127.0.0.1:8000/internal/connections",
+                timeout=1
+            )
+
+            if response.status_code == 200:
+                connection_data = response.json()
+                client_name = client.get("name", "")
+                live_client = connection_data.get("clients", {}).get(
+                    client_name,
+                    {}
+                )
+
+                if live_client.get("connected"):
+                    connection_status = "Connected"
+
+                connected_since_raw = live_client.get("connected_at")
+                last_update_raw = live_client.get("last_update_sent")
+
+                if connected_since_raw:
+                    connected_since = (
+                        datetime.fromisoformat(connected_since_raw)
+                        .astimezone()
+                        .strftime("%d/%m/%Y %H:%M")
+                    )
+
+                if last_update_raw:
+                    last_update = (
+                        datetime.fromisoformat(last_update_raw)
+                        .astimezone()
+                        .strftime("%d/%m/%Y %H:%M")
+                    )
+
+        except requests.RequestException:
+            connection_status = "API Offline"
+
+
         detail_rows = [
             ("Contact", contact),
             ("Email", email),
             ("Status", status),
             ("Feed", feed_enabled),
+            ("Live connection", connection_status),
+            ("Connected since", connected_since),
+            ("Last update", last_update),
             ("API key", api_key),
         ]
 
