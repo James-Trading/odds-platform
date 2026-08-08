@@ -9,3 +9,38 @@
 [2026-08-07 23:03:55] Rosie requested feed (1 published events)
 [2026-08-07 23:12:18] Rosie requested feed (1 published events)
 [2026-08-07 23:13:30] Rosie requested feed (1 published events)
+[2026-08-08 14:20:34] Miguel requested feed (1 published events)
+[2026-08-08 14:22:02] Miguel requested feed (1 published events)
+[2026-08-08 14:22:19] Miguel requested feed (1 published events)
+[2026-08-08 14:22:25] Miguel requested feed (1 published events)
+[2026-08-08 14:22:49] Miguel requested feed (1 published events)
+[2026-08-08 14:26:19] Miguel requested feed (2 published events)
+[2026-08-08 14:26:43] Miguel requested feed (2 published events)
+[2026-08-08 14:27:11] Miguel requested feed (2 published events)
+[2026-08-08 14:28:36] Miguel requested feed (1 published events)
+[2026-08-08 14:43:59] Rosie requested feed (0 published events)
+[2026-08-08 14:45:24] Rosie requested feed (1 published events)
+[2026-08-08 14:58:39] Rosie requested feed (1 published events)
+[2026-08-08 14:58:53] Miguel requested feed (0 published events)
+[2026-08-08 14:59:16] Miguel requested feed (1 published events)
+[2026-08-08 15:01:08] Miguel requested feed (1 published events)
+[2026-08-08 15:02:00] Miguel requested feed (0 published events)
+[2026-08-08 15:02:32] Miguel requested feed (1 published events)
+[2026-08-08 15:06:18] Miguel connected to live feed
+[2026-08-08 15:06:18] Miguel received 1 changed events
+[2026-08-08 15:08:44] Rosie connected to live feed
+[2026-08-08 15:08:44] Rosie received 1 changed events
+[2026-08-08 15:14:30] Rosie connected to live feed
+[2026-08-08 15:14:30] Rosie received 1 changed events
+[2026-08-08 15:15:00] Rosie received 1 changed events
+[2026-08-08 22:17:36] Miguel connected to live feed
+[2026-08-08 22:17:36] Miguel received feed update (1 events)
+[2026-08-08 22:17:55] Miguel received feed update (0 events)
+[2026-08-08 22:26:15] Miguel disconnected from live feed
+[2026-08-08 22:29:26] Miguel requested feed (0 published events)
+[2026-08-08 22:30:17] Miguel requested feed (0 published events)
+[2026-08-08 22:32:07] Miguel requested feed (2 published events)
+[2026-08-08 22:36:35] Miguel requested feed (1 published events)
+[2026-08-08 22:52:20] Miguel requested feed (1 published events)
+[2026-08-08 22:52:38] Miguel requested feed (1 published events)
+[2026-08-08 22:52:58] Miguel requested feed (1 published events)

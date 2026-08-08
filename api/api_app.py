@@ -145,39 +145,32 @@ async def live_feed(websocket: WebSocket):
             platform = load_platform()
             events = get_client_feed(platform, client)
 
-            changed_events = []
+            current_versions = {
+                event.get("id"): event.get("version", 0)
+                for event in events
+                if event.get("id")
+            }
 
-            for event in events:
-                event_id = event.get("id")
-                current_version = event.get("version", 0)
-                previous_version = last_versions.get(event_id)
-
-                if (
-                    previous_version is None
-                    or current_version > previous_version
-                ):
-                    changed_events.append(event)
-
-                last_versions[event_id] = current_version
-
-            if changed_events:
+            if current_versions != last_versions:
                 await websocket.send_json(
                     {
                         "type": "feed_update",
                         "provider": "Goldliner Trading Matrix",
                         "client": client_name,
-                        "event_count": len(changed_events),
-                        "events": changed_events,
+                        "event_count": len(events),
+                        "events": events,
                     }
                 )
 
                 log_activity(
                     "WEBSOCKET",
                     (
-                        f"{client_name} received "
-                        f"{len(changed_events)} changed events"
+                        f"{client_name} received feed update "
+                        f"({len(events)} events)"
                     ),
                 )
+
+                last_versions = current_versions
 
             await asyncio.sleep(1)
 

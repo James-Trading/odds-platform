@@ -49,6 +49,7 @@ def get_published_events(platform):
             "type": event.get("type"),
             "start_time": event.get("start_time"),
             "status": event.get("status"),
+            "version": event.get("version", 0),
             "markets": [],
         }
 
@@ -120,9 +121,11 @@ def get_published_events(platform):
                 customer_market
             )
 
-        customer_events.append(customer_event)
+            # Only send the event if at least one market survived filtering.
+        if customer_event["markets"]:
+            customer_events.append(customer_event)
 
-    return customer_events
+        return customer_events
 
 def get_client_feed(platform, client):
     if client.get("status", "").lower() != "active":
@@ -157,6 +160,31 @@ def get_client_feed(platform, client):
         if not is_booked and not is_subscribed:
             continue
 
-        client_events.append(event)
+        market_access = client.get("market_access", {})
 
+        allowed_markets = market_access.get(
+            event.get("name", ""),
+        )
+
+        if allowed_markets is not None:
+            allowed_names = {
+                str(market_name).strip().lower()
+                for market_name in allowed_markets
+            }
+
+            event["markets"] = [
+                market
+                for market in event.get("markets", [])
+                if str(
+                    market.get("name", "")
+                ).strip().lower() in allowed_names
+            ]
+
+            # Don't send an empty event if this client
+            # has no permitted markets left.
+            if not event["markets"]:
+                continue
+
+        client_events.append(event)
+    
     return client_events

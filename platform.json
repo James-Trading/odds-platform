@@ -401,8 +401,8 @@
                         "id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
                         "name": "Dani Dyer",
                         "price": [
-                            11,
-                            4
+                            3,
+                            1
                         ],
                         "pending_price": null,
                         "price_history": [
@@ -521,6 +521,50 @@
                                 "new_price": [
                                     11,
                                     4
+                                ]
+                            },
+                            {
+                                "time": "2026-08-08 15:07:05",
+                                "old_price": [
+                                    11,
+                                    4
+                                ],
+                                "new_price": [
+                                    3,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-08 15:09:27",
+                                "old_price": [
+                                    3,
+                                    1
+                                ],
+                                "new_price": [
+                                    5,
+                                    2
+                                ]
+                            },
+                            {
+                                "time": "2026-08-08 15:12:02",
+                                "old_price": [
+                                    5,
+                                    2
+                                ],
+                                "new_price": [
+                                    11,
+                                    4
+                                ]
+                            },
+                            {
+                                "time": "2026-08-08 15:15:00",
+                                "old_price": [
+                                    11,
+                                    4
+                                ],
+                                "new_price": [
+                                    3,
+                                    1
                                 ]
                             }
                         ],
@@ -789,7 +833,7 @@
                 "id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
                 "name": "1st Elimination",
                 "status": "Trading",
-                "published": false,
+                "published": true,
                 "displayed": true,
                 "limits": {
                     "max_win_per_customer": 500,
@@ -821,9 +865,9 @@
                 ]
             }
         ],
-        "version": 17,
-        "change_id": 103,
-        "last_updated": "2026-08-07T22:34:46.880715+00:00",
+        "version": 26,
+        "change_id": 147,
+        "last_updated": "2026-08-08T21:31:56.558526+00:00",
         "trader_notes": "Top price Dani Dyer until further notice",
         "active": true
     },
@@ -833,17 +877,17 @@
         "class": "TV Specials",
         "type": "Big Brother",
         "event_name": "Big Brother 2026",
-        "status": "Draft",
+        "status": "Trading",
         "displayed": false,
         "published": true,
-        "start_time": "2026-09-21 21:00",
+        "start_time": "21/09/2026 21:00",
         "suspend_mode": "AUTO",
         "markets": [
             {
                 "id": "f761c9a3-bcc7-4b97-b39b-ad872f68f1cc",
                 "name": "Outright",
                 "status": "Active",
-                "published": false,
+                "published": true,
                 "displayed": false,
                 "limits": {
                     "max_win_per_customer": 500,
@@ -1122,8 +1166,8 @@
             {
                 "id": "d34dabb6-9fe2-4b5d-94ba-7af22b01ecea",
                 "name": "Second Elimination",
-                "status": "Suspended",
-                "published": false,
+                "status": "Active",
+                "published": true,
                 "displayed": false,
                 "limits": {
                     "max_win_per_customer": 500,
@@ -1148,7 +1192,7 @@
                                 ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
@@ -1169,7 +1213,7 @@
                                 ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
@@ -1190,7 +1234,7 @@
                                 ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
@@ -1211,7 +1255,7 @@
                                 ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
@@ -1232,7 +1276,7 @@
                                 ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     },
@@ -1253,16 +1297,17 @@
                                 ]
                             }
                         ],
-                        "active": false,
+                        "active": true,
                         "displayed": false,
                         "result": ""
                     }
                 ]
             }
         ],
-        "version": 30,
-        "change_id": 114,
-        "last_updated": "2026-08-07T22:38:57.671351+00:00"
+        "version": 41,
+        "change_id": 130,
+        "last_updated": "2026-08-08T13:24:57.225283+00:00",
+        "active": true
     },
     {
         "id": "1b54a09b-3902-4dd3-b37f-a4e36ea5c2de",
@@ -1393,11 +1438,11 @@
         "published": false,
         "start_time": "08/08/2026 09:00",
         "suspend_mode": "AUTO",
-        "version": 1,
-        "change_id": 39,
-        "last_updated": "2026-08-07T10:17:35.908508+00:00",
+        "version": 2,
+        "change_id": 115,
+        "last_updated": "2026-08-08T13:17:52.302155+00:00",
         "markets": [],
-        "active": true
+        "active": false
     },
     {
         "id": "2c5ad130-eda5-4fd7-8de6-98bbbc7e2d4a",
@@ -1410,9 +1455,9 @@
         "published": false,
         "start_time": "08/08/2026 10:00",
         "suspend_mode": "AUTO",
-        "version": 3,
-        "change_id": 63,
-        "last_updated": "2026-08-07T13:10:58.676253+00:00",
+        "version": 4,
+        "change_id": 116,
+        "last_updated": "2026-08-08T13:17:52.328020+00:00",
         "markets": [
             {
                 "id": "4be3305a-b804-425c-8f81-18983cf85b29",
@@ -1428,7 +1473,7 @@
                 "selections": []
             }
         ],
-        "active": true
+        "active": false
     },
     {
         "id": "5fbe93d1-9b18-4028-b99e-f59b6faa988e",
@@ -1441,9 +1486,9 @@
         "published": false,
         "start_time": "08/08/2026 10:30",
         "suspend_mode": "AUTO",
-        "version": 6,
-        "change_id": 47,
-        "last_updated": "2026-08-07T10:30:43.730011+00:00",
+        "version": 7,
+        "change_id": 117,
+        "last_updated": "2026-08-08T13:17:52.348047+00:00",
         "markets": [
             {
                 "id": "e9891a92-9d2b-4288-9ff9-5b0058f2fbaa",
@@ -1544,7 +1589,7 @@
                 ]
             }
         ],
-        "active": true
+        "active": false
     },
     {
         "id": "dac6bc6f-0ea5-4ea9-ba0f-5f1c10ae6a66",
@@ -1557,9 +1602,9 @@
         "published": false,
         "start_time": "08/08/2026 11:00",
         "suspend_mode": "AUTO",
-        "version": 7,
-        "change_id": 54,
-        "last_updated": "2026-08-07T10:47:07.927258+00:00",
+        "version": 8,
+        "change_id": 118,
+        "last_updated": "2026-08-08T13:17:52.370149+00:00",
         "markets": [
             {
                 "id": "017dd5b8-89cb-43fa-adf4-fa16febd53cd",
@@ -1671,7 +1716,7 @@
                 ]
             }
         ],
-        "active": true
+        "active": false
     },
     {
         "id": "1517c9f0-6037-419e-852f-6a4758dd31f1",
@@ -1679,16 +1724,73 @@
         "class": "Test",
         "type": "Test",
         "event_name": "Test5",
-        "status": "draft",
+        "status": "Settled",
         "displayed": true,
-        "published": false,
-        "archived": false,
+        "published": true,
+        "archived": true,
         "start_time": "08/08/2026 10:15",
         "suspend_mode": "AUTO",
-        "version": 8,
-        "change_id": 65,
-        "last_updated": "2026-08-07T20:49:02.359427+00:00",
-        "markets": [],
-        "active": true
+        "version": 17,
+        "change_id": 138,
+        "last_updated": "2026-08-08T13:32:07.310311+00:00",
+        "markets": [
+            {
+                "id": "26486cc9-3266-45a1-b3e2-26ccffee5922",
+                "name": "Outright",
+                "status": "Settled",
+                "published": true,
+                "displayed": true,
+                "limits": {
+                    "max_win_per_customer": 500,
+                    "max_liability": 5000
+                },
+                "notes": "",
+                "selections": [
+                    {
+                        "id": "76860d74-808c-4eaa-9caa-2be1db81ea37",
+                        "name": "Test1",
+                        "price": [
+                            3,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-08 14:25:38",
+                                "price": [
+                                    3,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": "Lost"
+                    },
+                    {
+                        "id": "19d7859e-c3b3-4034-9785-039fe3e5a101",
+                        "name": "Test2",
+                        "price": [
+                            5,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-08 14:25:43",
+                                "price": [
+                                    5,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": "Lost"
+                    }
+                ]
+            }
+        ],
+        "active": false
     }
 ]

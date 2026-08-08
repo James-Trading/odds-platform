@@ -92,9 +92,11 @@
         },
         "booked_events": [
             "Strictly Come Dancing 2026",
-            "Im A Celeb 2026"
+            "Im A Celeb 2026",
+            "Big Brother 2026"
         ],
-        "subscriptions": []
+        "subscriptions": [],
+        "market_access": {}
     },
     {
         "name": "Miguel",
@@ -102,13 +104,21 @@
         "email": "mmm@hotmail.co.uk",
         "status": "Active",
         "feed": {
-            "enabled": false,
+            "enabled": true,
             "connector": "None",
             "api_key": "GTM_9901e2ede49904290956eba7ad964cb1",
             "last_price_update": null,
             "last_bet_received": null
         },
         "booked_events": [],
-        "subscriptions": []
+        "subscriptions": [
+            "Test",
+            "Specials"
+        ],
+        "market_access": {
+            "Strictly Come Dancing 2026": [
+                "1st Elimination"
+            ]
+        }
     }
 ]

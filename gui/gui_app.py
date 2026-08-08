@@ -1004,13 +1004,32 @@ class OddsPlatformGUI:
 
             event_variables[event_name] = variable
 
+            event_row = ttk.Frame(events_frame)
+            event_row.pack(
+                fill="x",
+                pady=3,
+            )
+
             ttk.Checkbutton(
-                events_frame,
+                event_row,
                 text=event_name,
                 variable=variable,
             ).pack(
+                side="left",
                 anchor="w",
-                pady=3,
+            )
+
+            ttk.Button(
+                event_row,
+                text="Markets...",
+                command=lambda selected_event=event: (
+                    self.manage_client_market_access_popup(
+                        client,
+                        selected_event,
+                    )
+                ),
+            ).pack(
+                side="right",
             )
 
         def save_event_bookings():
@@ -1065,6 +1084,150 @@ class OddsPlatformGUI:
             button_frame,
             text="Save Bookings",
             command=save_event_bookings,
+        ).pack(
+            side="right",
+        )
+
+    def manage_client_market_access_popup(self, client, event):
+        event_name = event.get(
+            "event_name",
+            "Unnamed Event",
+        )
+
+        popup = tk.Toplevel(self.root)
+        popup.title(
+            f"Market Access - {event_name}"
+        )
+        popup.geometry("480x500")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        main_frame = ttk.Frame(
+            popup,
+            padding=15,
+        )
+        main_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        ttk.Label(
+            main_frame,
+            text=f"Market Access - {event_name}",
+            font=("Arial", 14, "bold"),
+        ).pack(
+            anchor="w",
+            pady=(0, 10),
+        )
+
+        ttk.Label(
+            main_frame,
+            text=(
+                "Select the markets this client should receive."
+            ),
+        ).pack(
+            anchor="w",
+            pady=(0, 12),
+        )
+
+        market_access = client.setdefault(
+            "market_access",
+            {},
+        )
+
+        existing_access = market_access.get(
+            event_name,
+        )
+
+        market_variables = {}
+
+        markets_frame = ttk.Frame(main_frame)
+        markets_frame.pack(
+            fill="both",
+            expand=True,
+        )
+
+        for market in event.get("markets", []):
+            market_name = market.get(
+                "name",
+                "Unnamed Market",
+            )
+
+            # If this event has no restriction yet,
+            # default every market to selected.
+            if existing_access is None:
+                selected = True
+            else:
+                selected = (
+                    market_name in existing_access
+                )
+
+            variable = tk.BooleanVar(
+                value=selected
+            )
+
+            market_variables[market_name] = variable
+
+            ttk.Checkbutton(
+                markets_frame,
+                text=market_name,
+                variable=variable,
+            ).pack(
+                anchor="w",
+                pady=4,
+            )
+
+        def save_market_access():
+            selected_markets = [
+                market_name
+                for market_name, variable
+                in market_variables.items()
+                if variable.get()
+            ]
+
+            all_market_names = list(
+                market_variables.keys()
+            )
+
+            if set(selected_markets) == set(all_market_names):
+                # All selected means no restriction is needed.
+                market_access.pop(
+                    event_name,
+                    None,
+                )
+            else:
+                market_access[event_name] = (
+                    selected_markets
+                )
+
+            save_clients(self.clients)
+
+            messagebox.showinfo(
+                "Market Access",
+                "Market access saved.",
+                parent=popup,
+            )
+
+            popup.destroy()
+
+        button_frame = ttk.Frame(main_frame)
+        button_frame.pack(
+            fill="x",
+            pady=(15, 0),
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Save",
+            command=save_market_access,
+        ).pack(
+            side="left",
+        )
+
+        ttk.Button(
+            button_frame,
+            text="Cancel",
+            command=popup.destroy,
         ).pack(
             side="right",
         )
