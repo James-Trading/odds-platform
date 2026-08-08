@@ -1144,6 +1144,8 @@ class OddsPlatformGUI:
             "Unnamed Event",
         )
 
+        event_id = event.get("id")
+
         popup = tk.Toplevel(self.root)
         popup.title(
             f"Market Access - {event_name}"
@@ -1185,9 +1187,12 @@ class OddsPlatformGUI:
             {},
         )
 
-        existing_access = market_access.get(
-            event_name,
-        )
+        # Prefer UUID-based access.
+        # Fall back to old name-based access for existing clients.
+        existing_access = market_access.get(event_id)
+
+        if existing_access is None:
+            existing_access = market_access.get(event_name)
 
         market_variables = {}
 
@@ -1203,20 +1208,24 @@ class OddsPlatformGUI:
                 "Unnamed Market",
             )
 
-            # If this event has no restriction yet,
-            # default every market to selected.
+            market_id = market.get("id")
+
+            # No restriction = every market selected.
             if existing_access is None:
                 selected = True
             else:
+                # UUID is the new system.
+                # Name check keeps old saved permissions working.
                 selected = (
-                    market_name in existing_access
+                    market_id in existing_access
+                    or market_name in existing_access
                 )
 
             variable = tk.BooleanVar(
                 value=selected
             )
 
-            market_variables[market_name] = variable
+            market_variables[market_id] = variable
 
             ttk.Checkbutton(
                 markets_frame,
@@ -1228,26 +1237,32 @@ class OddsPlatformGUI:
             )
 
         def save_market_access():
-            selected_markets = [
-                market_name
-                for market_name, variable
+            selected_market_ids = [
+                market_id
+                for market_id, variable
                 in market_variables.items()
                 if variable.get()
             ]
 
-            all_market_names = list(
+            all_market_ids = list(
                 market_variables.keys()
             )
 
-            if set(selected_markets) == set(all_market_names):
-                # All selected means no restriction is needed.
+            # Remove any old name-based record.
+            market_access.pop(
+                event_name,
+                None,
+            )
+
+            if set(selected_market_ids) == set(all_market_ids):
+                # All markets selected = unrestricted.
                 market_access.pop(
-                    event_name,
+                    event_id,
                     None,
                 )
             else:
-                market_access[event_name] = (
-                    selected_markets
+                market_access[event_id] = (
+                    selected_market_ids
                 )
 
             save_clients(self.clients)

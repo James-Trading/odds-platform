@@ -162,22 +162,32 @@ def get_client_feed(platform, client):
 
         market_access = client.get("market_access", {})
 
-        allowed_markets = market_access.get(
-            event.get("name", ""),
-        )
+        event_id = event.get("id")
+        event_name = event.get("name", "")
+
+        # Prefer UUID-based permissions.
+        # Fall back to old name-based permissions for legacy clients.
+        allowed_markets = market_access.get(event_id)
+
+        if allowed_markets is None:
+            allowed_markets = market_access.get(event_name)
 
         if allowed_markets is not None:
-            allowed_names = {
-                str(market_name).strip().lower()
-                for market_name in allowed_markets
+            allowed_market_refs = {
+                str(market_ref).strip().lower()
+                for market_ref in allowed_markets
             }
 
             event["markets"] = [
                 market
                 for market in event.get("markets", [])
-                if str(
-                    market.get("name", "")
-                ).strip().lower() in allowed_names
+                if (
+                    str(market.get("id", "")).strip().lower()
+                    in allowed_market_refs
+                    or
+                    str(market.get("name", "")).strip().lower()
+                    in allowed_market_refs
+                )
             ]
 
             # Don't send an empty event if this client
