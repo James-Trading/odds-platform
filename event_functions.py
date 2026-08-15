@@ -1,7 +1,10 @@
 import uuid
 from datetime import datetime, timezone
 
-from state.change_sequence import next_change_id
+from state.change_sequence import (
+    next_change_id,
+    log_event_change,
+)
 
 def create_event(category, event_class, event_type, event_name):
     return {
@@ -69,9 +72,15 @@ def add_selection(market, selection_name, price):
 
     return selection
 
-def touch_event(event):
+def touch_event(event, change_type="event_update", details=None):
     event["version"] = event.get("version", 0) + 1
     event["change_id"] = next_change_id()
     event["last_updated"] = datetime.now(
         timezone.utc
     ).isoformat()
+
+    log_event_change(
+        event,
+        change_type=change_type,
+        details=details,
+    )

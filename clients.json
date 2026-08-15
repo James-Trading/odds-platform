@@ -7,7 +7,10 @@
         "booked_events": [
             "Strictly Come Dancing 2026",
             "Im a Celeb 2026"
-        ]
+        ],
+        "feed": {
+            "enabled": true
+        }
     },
     {
         "name": "William",
@@ -106,7 +109,7 @@
         "feed": {
             "enabled": true,
             "connector": "None",
-            "api_key": "GTM_9901e2ede49904290956eba7ad964cb1",
+            "api_key": "GTM_5bf639ed9ced7f150220427c1c32686e",
             "last_price_update": null,
             "last_bet_received": null
         },

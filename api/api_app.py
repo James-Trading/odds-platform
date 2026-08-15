@@ -149,6 +149,17 @@ async def live_feed(websocket: WebSocket):
 
     try:
         while True:
+            current_client = get_client_from_api_key(api_key)
+
+            if current_client is None:
+                await websocket.close(
+                    code=1008,
+                    reason="Client access revoked.",
+                )
+                return
+
+            client = current_client
+
             platform = load_platform()
             events = get_client_feed(platform, client)
 

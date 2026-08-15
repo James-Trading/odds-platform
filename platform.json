@@ -845,7 +845,7 @@
                         "id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
                         "name": "Dani Dyer",
                         "price": [
-                            100,
+                            25,
                             1
                         ],
                         "pending_price": null,
@@ -854,6 +854,61 @@
                                 "created": "2026-08-07 12:46:59",
                                 "price": [
                                     100,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-15 22:41:04",
+                                "old_price": [
+                                    100,
+                                    1
+                                ],
+                                "new_price": [
+                                    66,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-15 22:42:50",
+                                "old_price": [
+                                    66,
+                                    1
+                                ],
+                                "new_price": [
+                                    50,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-15 23:22:28",
+                                "old_price": [
+                                    50,
+                                    1
+                                ],
+                                "new_price": [
+                                    40,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-15 23:38:12",
+                                "old_price": [
+                                    40,
+                                    1
+                                ],
+                                "new_price": [
+                                    33,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-15 23:38:55",
+                                "old_price": [
+                                    33,
+                                    1
+                                ],
+                                "new_price": [
+                                    25,
                                     1
                                 ]
                             }
@@ -865,9 +920,9 @@
                 ]
             }
         ],
-        "version": 26,
-        "change_id": 147,
-        "last_updated": "2026-08-08T21:31:56.558526+00:00",
+        "version": 31,
+        "change_id": 152,
+        "last_updated": "2026-08-15T22:38:55.139528+00:00",
         "trader_notes": "Top price Dani Dyer until further notice",
         "active": true
     },

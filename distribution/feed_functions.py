@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 def format_fractional_price(price):
     if (
         isinstance(price, (list, tuple))
@@ -27,6 +29,29 @@ def get_selection_status(selection, market):
 
     return "Active"
 
+def format_api_datetime(value):
+    if not value:
+        return None
+
+    # Already ISO 8601
+    try:
+        parsed = datetime.fromisoformat(value)
+        if parsed.tzinfo is None:
+            parsed = parsed.astimezone()
+        return parsed.astimezone(timezone.utc).isoformat()
+    except ValueError:
+        pass
+
+    # Existing GTM event format: DD/MM/YYYY HH:MM
+    try:
+        parsed = datetime.strptime(
+            value,
+            "%d/%m/%Y %H:%M",
+        )
+        parsed = parsed.astimezone()
+        return parsed.astimezone(timezone.utc).isoformat()
+    except ValueError:
+        return value
 
 def get_published_events(platform):
     customer_events = []
@@ -47,9 +72,11 @@ def get_published_events(platform):
             "category": event.get("category"),
             "class": event.get("class"),
             "type": event.get("type"),
-            "start_time": event.get("start_time"),
+            "start_time": format_api_datetime(event.get("start_time")),
             "status": event.get("status"),
             "version": event.get("version", 0),
+            "change_id": event.get("change_id"),
+            "last_updated": event.get("last_updated"),
             "markets": [],
         }
 

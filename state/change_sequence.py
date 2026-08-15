@@ -43,3 +43,54 @@ def next_change_id():
             )
 
         return next_value
+
+CHANGE_LOG_FILE = Path("change_log.json")
+
+
+def log_event_change(
+    event,
+    change_type="event_update",
+    details=None,
+):
+
+    changes = []
+
+    if CHANGE_LOG_FILE.exists():
+        try:
+            with CHANGE_LOG_FILE.open(
+                "r",
+                encoding="utf-8",
+            ) as file:
+                changes = json.load(file)
+
+            if not isinstance(changes, list):
+                changes = []
+
+        except (
+            json.JSONDecodeError,
+            TypeError,
+            ValueError,
+        ):
+            changes = []
+
+    changes.append(
+        {
+            "change_id": event.get("change_id"),
+            "event_id": event.get("id"),
+            "event_name": event.get("event_name"),
+            "version": event.get("version"),
+            "changed_at": event.get("last_updated"),
+            "change_type": change_type,
+            "details": details or {},
+        }
+    )
+
+    with CHANGE_LOG_FILE.open(
+        "w",
+        encoding="utf-8",
+    ) as file:
+        json.dump(
+            changes,
+            file,
+            indent=4,
+        )

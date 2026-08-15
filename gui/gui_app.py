@@ -50,6 +50,8 @@ from config import API_BASE_URL
 
 import requests
 
+import secrets
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -639,6 +641,17 @@ class OddsPlatformGUI:
             padx=(8, 0),
         )
 
+        ttk.Button(
+            button_frame,
+            text="Regenerate API Key",
+            command=lambda: self.regenerate_client_api_key(
+                client
+            ),
+        ).pack(
+            side="left",
+            padx=(8, 0),
+        )
+
         feed_button_text = (
             "Disable Feed"
             if feed.get("enabled", False)
@@ -845,6 +858,32 @@ class OddsPlatformGUI:
 
         self.show_client_details(
             client
+        )
+
+    def regenerate_client_api_key(self, client):
+        if not messagebox.askyesno(
+            "Regenerate API Key",
+            (
+                "Regenerate this client's API key?\n\n"
+                "The existing key will stop working immediately."
+            ),
+            parent=self.root,
+        ):
+            return
+
+        feed = client.setdefault("feed", {})
+
+        new_api_key = f"GTM_{secrets.token_hex(16)}"
+        feed["api_key"] = new_api_key
+
+        save_clients(self.clients)
+
+        self.show_client_details(client)
+
+        messagebox.showinfo(
+            "API Key Regenerated",
+            "A new API key has been generated.",
+            parent=self.root,
         )
 
     def edit_client_popup(self, client):
@@ -3990,6 +4029,8 @@ class OddsPlatformGUI:
     def save_pending_prices(self, event, market):
         changes_saved = False
 
+        price_changes = []
+
         for selection_index, selection in enumerate(
             market.get("selections", [])
         ):
@@ -4000,10 +4041,23 @@ class OddsPlatformGUI:
 
             new_price = self.pending_prices[pending_key]
 
+            old_price = selection.get("price")
+
             set_price(
                 selection,
                 new_price[0],
                 new_price[1],
+            )
+
+            price_changes.append(
+                {
+                    "market_id": market.get("id"),
+                    "market_name": market.get("name"),
+                    "selection_id": selection.get("id"),
+                    "selection_name": selection.get("name"),
+                    "old_price": old_price,
+                    "new_price": selection.get("price"),
+                }
             )
 
             del self.pending_prices[pending_key]
@@ -4018,7 +4072,15 @@ class OddsPlatformGUI:
                 reverse=True,
             )
 
-            touch_event(event)
+            touch_event(
+                event,
+                change_type="price_change",
+                details={
+                    "market_id": market.get("id"),
+                    "market_name": market.get("name"),
+                    "changes": price_changes,
+                },
+            )
             save_platform(self.platform)
 
         self.show_market_screen(event, market)
