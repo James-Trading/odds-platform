@@ -40,5 +40,91 @@
                 }
             ]
         }
+    },
+    {
+        "change_id": 153,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 32,
+        "changed_at": "2026-08-15T22:47:16.201814+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 154,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 33,
+        "changed_at": "2026-08-15T22:47:38.201426+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": false,
+            "new_active": true
+        }
+    },
+    {
+        "change_id": 155,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 34,
+        "changed_at": "2026-08-15T22:59:25.121482+00:00",
+        "change_type": "settlement",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "changes": [
+                {
+                    "selection_id": "90e3affe-e725-4085-86b4-c5dc8f64fbf1",
+                    "selection_name": "Jaime Winstone",
+                    "old_result": "",
+                    "new_result": "Lost"
+                }
+            ],
+            "event_archived": false
+        }
+    },
+    {
+        "change_id": 156,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 35,
+        "changed_at": "2026-08-15T23:00:35.319700+00:00",
+        "change_type": "settlement",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "changes": [
+                {
+                    "selection_id": "a0d73830-ba98-42be-8689-b4294a9fbd2a",
+                    "selection_name": "Cach Mercer",
+                    "old_result": "",
+                    "new_result": "Lost"
+                },
+                {
+                    "selection_id": "14141797-14c2-43f7-82d0-c288ba00f986",
+                    "selection_name": "Delta Goodrem",
+                    "old_result": "",
+                    "new_result": "Void"
+                },
+                {
+                    "selection_id": "3abd901a-6227-4b07-9656-1da0acd3fd7b",
+                    "selection_name": "Sarah Storey",
+                    "old_result": "",
+                    "new_result": "Void"
+                }
+            ],
+            "event_archived": false
+        }
     }
 ]

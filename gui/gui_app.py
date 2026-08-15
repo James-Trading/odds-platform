@@ -3696,6 +3696,11 @@ class OddsPlatformGUI:
 
             print("Saving settlement:", pending_results)
 
+            old_results = {
+                selection.get("id"): selection.get("result", "")
+                for selection in market.get("selections", [])
+            }
+
             settle_market_results(
                 self.platform,
                 [],
@@ -3703,6 +3708,21 @@ class OddsPlatformGUI:
                 market,
                 pending_results,
             )
+
+            result_changes = []
+
+            for selection in market.get("selections", []):
+                selection_id = selection.get("id")
+                old_result = old_results.get(selection_id, "")
+                new_result = selection.get("result", "")
+
+                if old_result != new_result:
+                    result_changes.append({
+                        "selection_id": selection_id,
+                        "selection_name": selection.get("name"),
+                        "old_result": old_result,
+                        "new_result": new_result,
+                    })
 
             all_markets_settled = all(
                 all(
@@ -3714,8 +3734,17 @@ class OddsPlatformGUI:
 
             if all_markets_settled:
                 event["archived"] = True
-                touch_event(event)
-                save_platform(self.platform)
+            touch_event(
+                event,
+                change_type="settlement",
+                details={
+                    "market_id": market.get("id"),
+                    "market_name": market.get("name"),
+                    "changes": result_changes,
+                    "event_archived": event.get("archived", False),
+                },
+            )
+            save_platform(self.platform)
 
 
             print(
@@ -4226,6 +4255,8 @@ class OddsPlatformGUI:
         market_name = market.get("name", "")
         selection_name = selection.get("name", "")
 
+        old_active = selection.get("active", True)
+
         try:
             if selection.get("active", True):
                 suspend_platform_selection(
@@ -4253,7 +4284,18 @@ class OddsPlatformGUI:
                     f"{event_name} / {market_name}"
                 )
 
-            touch_event(event)
+            touch_event(
+                event,
+                change_type="selection_suspension",
+                details={
+                    "market_id": market.get("id"),
+                    "market_name": market.get("name"),
+                    "selection_id": selection.get("id"),
+                    "selection_name": selection.get("name"),
+                    "old_active": old_active,
+                    "new_active": selection.get("active", True),
+                },
+            )
             save_platform(self.platform)
 
         except (TypeError, KeyError):

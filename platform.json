@@ -388,7 +388,7 @@
             {
                 "id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
                 "name": "Outright",
-                "status": "Settled",
+                "status": "Trading",
                 "published": true,
                 "displayed": true,
                 "limits": {
@@ -612,7 +612,7 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Lost"
                     },
                     {
                         "id": "14141797-14c2-43f7-82d0-c288ba00f986",
@@ -633,7 +633,7 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Void"
                     },
                     {
                         "id": "3abd901a-6227-4b07-9656-1da0acd3fd7b",
@@ -654,7 +654,7 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Void"
                     },
                     {
                         "id": "90e3affe-e725-4085-86b4-c5dc8f64fbf1",
@@ -675,7 +675,7 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Lost"
                     },
                     {
                         "id": "716ec708-c9a4-49a4-96b8-bfd28678d207",
@@ -696,7 +696,7 @@
                         ],
                         "active": true,
                         "displayed": true,
-                        "result": ""
+                        "result": "Lost"
                     },
                     {
                         "id": "711bfb53-2016-4c10-a3df-6b43c155f614",
@@ -920,9 +920,9 @@
                 ]
             }
         ],
-        "version": 31,
-        "change_id": 152,
-        "last_updated": "2026-08-15T22:38:55.139528+00:00",
+        "version": 35,
+        "change_id": 156,
+        "last_updated": "2026-08-15T23:00:35.319700+00:00",
         "trader_notes": "Top price Dani Dyer until further notice",
         "active": true
     },
