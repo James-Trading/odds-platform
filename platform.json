@@ -401,8 +401,8 @@
                         "id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
                         "name": "Dani Dyer",
                         "price": [
-                            3,
-                            1
+                            10,
+                            3
                         ],
                         "pending_price": null,
                         "price_history": [
@@ -565,6 +565,17 @@
                                 "new_price": [
                                     3,
                                     1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-16 11:27:38",
+                                "old_price": [
+                                    3,
+                                    1
+                                ],
+                                "new_price": [
+                                    10,
+                                    3
                                 ]
                             }
                         ],
@@ -920,9 +931,9 @@
                 ]
             }
         ],
-        "version": 39,
-        "change_id": 161,
-        "last_updated": "2026-08-16T10:03:17.999580+00:00",
+        "version": 40,
+        "change_id": 162,
+        "last_updated": "2026-08-16T10:27:38.053199+00:00",
         "trader_notes": "Top price Dani Dyer until further notice",
         "active": true
     },

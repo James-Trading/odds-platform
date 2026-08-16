@@ -91,3 +91,8 @@
 [2026-08-15 23:59:26] Miguel received feed update (1 events)
 [2026-08-16 00:00:35] Miguel received feed update (1 events)
 [2026-08-16 11:02:41] Miguel disconnected from live feed
+[2026-08-16 11:26:43] Miguel requested changes since 0 - 11 changes returned
+[2026-08-16 11:27:49] Miguel requested changes since 161 - 1 changes returned
+[2026-08-16 11:28:25] Miguel requested changes since 0 - 12 changes returned
+[2026-08-16 11:29:16] Miguel requested changes since 162 - 0 changes returned
+[2026-08-16 11:29:48] Miguel requested changes since 161 - 1 changes returned

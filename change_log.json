@@ -206,5 +206,33 @@
             "old_displayed": false,
             "new_displayed": true
         }
+    },
+    {
+        "change_id": 162,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 40,
+        "changed_at": "2026-08-16T10:27:38.053199+00:00",
+        "change_type": "price_change",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "changes": [
+                {
+                    "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+                    "market_name": "Outright",
+                    "selection_id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
+                    "selection_name": "Dani Dyer",
+                    "old_price": [
+                        3,
+                        1
+                    ],
+                    "new_price": [
+                        10,
+                        3
+                    ]
+                }
+            ]
+        }
     }
 ]

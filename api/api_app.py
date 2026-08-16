@@ -19,6 +19,8 @@ from datetime import datetime, timezone
 
 from logs.activity_logger import log_activity
 
+from state.change_sequence import load_change_log
+
 app = FastAPI(
     title="Goldliner Trading Matrix API",
     description="Customer-facing sportsbook odds feed.",
@@ -117,6 +119,63 @@ def get_client_feed_v1(
         "event_count": len(events),
         "events": events,
     }
+
+@app.get("/api/v1/changes")
+def get_client_changes(
+    since: int = 0,
+    client: dict = Depends(get_authenticated_client),
+):
+    platform = load_platform()
+
+    client_events = get_client_feed(
+        platform,
+        client,
+    )
+
+    allowed_event_ids = {
+        event.get("id")
+        for event in client_events
+        if event.get("id")
+    }
+
+    all_changes = load_change_log()
+
+    client_changes = [
+        change
+        for change in all_changes
+        if (
+            change.get("change_id", 0) > since
+            and change.get("event_id") in allowed_event_ids
+        )
+    ]
+
+    latest_change_id = max(
+        (
+            change.get("change_id", 0)
+            for change in all_changes
+        ),
+        default=since,
+    )
+
+    log_activity(
+        "API",
+        f"{client.get('name', 'Unknown client')} requested "
+        f"changes since {since} - "
+        f"{len(client_changes)} changes returned",
+    )
+
+    return {
+        "provider": "Goldliner Trading Matrix",
+        "api_version": "1.0",
+        "generated_at": datetime.now(
+            timezone.utc
+        ).isoformat(),
+        "since": since,
+        "latest_change_id": latest_change_id,
+        "change_count": len(client_changes),
+        "changes": client_changes,
+    }
+
 
 @app.websocket("/api/v1/live")
 async def live_feed(websocket: WebSocket):

@@ -94,3 +94,27 @@ def log_event_change(
             file,
             indent=4,
         )
+
+def load_change_log():
+    if not CHANGE_LOG_FILE.exists():
+        return []
+
+    try:
+        with CHANGE_LOG_FILE.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
+            changes = json.load(file)
+
+        if isinstance(changes, list):
+            return changes
+
+    except (
+        json.JSONDecodeError,
+        TypeError,
+        ValueError,
+        OSError,
+    ):
+        pass
+
+    return []
