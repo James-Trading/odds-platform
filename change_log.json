@@ -234,5 +234,322 @@
                 }
             ]
         }
+    },
+    {
+        "change_id": 163,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 41,
+        "changed_at": "2026-08-16T10:42:56.014672+00:00",
+        "change_type": "price_change",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "changes": [
+                {
+                    "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+                    "market_name": "1st Elimination",
+                    "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+                    "selection_name": "Dani Dyer",
+                    "old_price": [
+                        25,
+                        1
+                    ],
+                    "new_price": [
+                        20,
+                        1
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "change_id": 164,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 42,
+        "changed_at": "2026-08-16T10:44:36.675810+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 165,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 43,
+        "changed_at": "2026-08-16T10:44:44.783462+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": false,
+            "new_active": true
+        }
+    },
+    {
+        "change_id": 166,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 44,
+        "changed_at": "2026-08-16T10:44:48.718635+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_displayed": true,
+            "new_displayed": false
+        }
+    },
+    {
+        "change_id": 167,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 45,
+        "changed_at": "2026-08-16T10:44:56.157329+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_displayed": false,
+            "new_displayed": true
+        }
+    },
+    {
+        "change_id": 168,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 46,
+        "changed_at": "2026-08-16T10:44:59.465281+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_displayed": true,
+            "new_displayed": false
+        }
+    },
+    {
+        "change_id": 169,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 47,
+        "changed_at": "2026-08-16T10:45:03.915433+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_displayed": false,
+            "new_displayed": true
+        }
+    },
+    {
+        "change_id": 170,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 48,
+        "changed_at": "2026-08-16T10:45:30.501867+00:00",
+        "change_type": "settlement",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "changes": [
+                {
+                    "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+                    "selection_name": "Dani Dyer",
+                    "old_result": "",
+                    "new_result": "Void"
+                }
+            ],
+            "event_archived": false
+        }
+    },
+    {
+        "change_id": 171,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 49,
+        "changed_at": "2026-08-16T10:45:42.893888+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 172,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 50,
+        "changed_at": "2026-08-16T10:45:58.623329+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": false,
+            "new_active": true
+        }
+    },
+    {
+        "change_id": 173,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 51,
+        "changed_at": "2026-08-16T10:45:59.356922+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 174,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 52,
+        "changed_at": "2026-08-16T10:46:06.495974+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": false,
+            "new_active": true
+        }
+    },
+    {
+        "change_id": 175,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 53,
+        "changed_at": "2026-08-16T10:46:07.412758+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 176,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 54,
+        "changed_at": "2026-08-16T10:46:08.158105+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": false,
+            "new_active": true
+        }
+    },
+    {
+        "change_id": 177,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 55,
+        "changed_at": "2026-08-16T10:46:08.896917+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 178,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 56,
+        "changed_at": "2026-08-16T10:46:09.668780+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": false,
+            "new_active": true
+        }
+    },
+    {
+        "change_id": 179,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 57,
+        "changed_at": "2026-08-16T10:46:10.372805+00:00",
+        "change_type": "selection_suspension",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "selection_id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
+            "selection_name": "Dani Dyer",
+            "old_active": true,
+            "new_active": false
+        }
+    },
+    {
+        "change_id": 180,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 58,
+        "changed_at": "2026-08-16T10:56:19.868336+00:00",
+        "change_type": "price_change",
+        "details": {
+            "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+            "market_name": "1st Elimination",
+            "changes": [
+                {
+                    "market_id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
+                    "market_name": "1st Elimination",
+                    "selection_id": "fd6d4978-bebc-4097-949b-e457eb9b8b0b",
+                    "selection_name": "Lacey Turner",
+                    "old_price": [
+                        16,
+                        1
+                    ],
+                    "new_price": [
+                        12,
+                        1
+                    ]
+                }
+            ]
+        }
     }
 ]

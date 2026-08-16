@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Goldliner Trading Matrix - Client Feed Monitor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #081f27;
+            color: #ffffff;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            margin-top: 6px;
+            color: #b7c9ce;
+            font-size: 15px;
+        }
+
+        .connection-panel {
+            background: #0d2b35;
+            border: 1px solid #31505a;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .connection-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input {
+            flex: 1;
+            min-width: 280px;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #59747c;
+            background: #ffffff;
+            color: #111111;
+        }
+
+        button {
+            padding: 12px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .status-line {
+            margin-top: 16px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            color: #b7c9ce;
+        }
+
+        .status-item strong {
+            color: white;
+        }
+
+        #connectionStatus {
+            font-weight: bold;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #0d2b35;
+            border: 1px solid #31505a;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .card-label {
+            color: #9db2b8;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .section {
+            background: #0d2b35;
+            border: 1px solid #31505a;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+        }
+
+        .event {
+            border: 1px solid #31505a;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .event-header {
+            background: #123743;
+            padding: 14px;
+        }
+
+        .event-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .event-meta {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #b7c9ce;
+        }
+
+        .market {
+            padding: 14px;
+            border-top: 1px solid #31505a;
+        }
+
+        .market-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 9px;
+            border-bottom: 1px solid #24434c;
+        }
+
+        th {
+            color: #9db2b8;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .activity {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #24434c;
+            font-size: 14px;
+        }
+
+        .activity-time {
+            color: #9db2b8;
+            margin-right: 8px;
+        }
+
+        .empty {
+            color: #8da4aa;
+            padding: 12px 0;
+        }
+
+        .connected {
+            color: #6ee7a8;
+        }
+
+        .disconnected {
+            color: #ff8a8a;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+        <div class="brand">
+            Goldliner Trading Matrix
+        </div>
+
+        <div class="subtitle">
+            Client Feed Monitor
+        </div>
+    </div>
+
+    <div class="connection-panel">
+
+        <div class="connection-row">
+
+            <input
+                id="apiKey"
+                type="password"
+                placeholder="Enter client API key"
+            >
+
+            <button onclick="connectFeed()">
+                Connect
+            </button>
+
+            <button onclick="disconnectFeed()">
+                Disconnect
+            </button>
+
+        </div>
+
+        <div class="status-line">
+
+            <div class="status-item">
+                Connection:
+                <strong
+                    id="connectionStatus"
+                    class="disconnected"
+                >
+                    Disconnected
+                </strong>
+            </div>
+
+            <div class="status-item">
+                Client:
+                <strong id="clientName">
+                    -
+                </strong>
+            </div>
+
+            <div class="status-item">
+                Last update:
+                <strong id="lastUpdate">
+                    -
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="card">
+            <div class="card-label">
+                Events
+            </div>
+
+            <div
+                class="card-value"
+                id="eventCount"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">
+                Markets
+            </div>
+
+            <div
+                class="card-value"
+                id="marketCount"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">
+                Selections
+            </div>
+
+            <div
+                class="card-value"
+                id="selectionCount"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">
+                Latest Change ID
+            </div>
+
+            <div
+                class="card-value"
+                id="changeId"
+            >
+                -
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h2>
+            Live Feed
+        </h2>
+
+        <div id="feedArea">
+            <div class="empty">
+                Connect a client to view its live feed.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h2>
+            Recent Activity
+        </h2>
+
+        <div
+            id="activity"
+            class="activity"
+        >
+            <div class="empty">
+                Waiting for live updates...
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let socket = null;
+let lastPayload = null;
+let latestChangeId = null;
+
+
+/* -----------------------------
+   CONNECTION
+----------------------------- */
+
+function connectFeed() {
+
+    const apiKey =
+        document
+            .getElementById("apiKey")
+            .value
+            .trim();
+
+    if (!apiKey) {
+        alert("Enter a client API key first.");
+        return;
+    }
+
+    if (
+        socket &&
+        (
+            socket.readyState === WebSocket.OPEN ||
+            socket.readyState === WebSocket.CONNECTING
+        )
+    ) {
+        return;
+    }
+
+    setConnectionStatus(
+        "Connecting...",
+        false
+    );
+
+    const url =
+        "ws://127.0.0.1:8000/api/v1/live" +
+        `?api_key=${encodeURIComponent(apiKey)}`;
+
+    socket = new WebSocket(url);
+
+
+    socket.onopen = function () {
+
+        setConnectionStatus(
+            "LIVE - Connected",
+            true
+        );
+
+        addActivity(
+            "Connected to Goldliner live feed."
+        );
+    };
+
+
+    socket.onmessage = function (event) {
+
+        try {
+
+            const data =
+                JSON.parse(event.data);
+
+            handleFeedUpdate(data);
+
+        } catch (error) {
+
+            addActivity(
+                "Received unreadable feed message."
+            );
+        }
+    };
+
+
+    socket.onerror = function () {
+
+        setConnectionStatus(
+            "Connection Error",
+            false
+        );
+
+        addActivity(
+            "WebSocket connection error."
+        );
+    };
+
+
+    socket.onclose = function (event) {
+
+        setConnectionStatus(
+            "Disconnected",
+            false
+        );
+
+        let message =
+            `Connection closed. Code ${event.code}`;
+
+        if (event.reason) {
+            message += ` - ${event.reason}`;
+        }
+
+        addActivity(message);
+
+        socket = null;
+    };
+}
+
+
+function disconnectFeed() {
+
+    if (socket) {
+        socket.close();
+        socket = null;
+    }
+}
+
+
+/* -----------------------------
+   FEED PROCESSING
+----------------------------- */
+
+function handleFeedUpdate(data) {
+
+    const previousPayload =
+        lastPayload;
+
+    lastPayload =
+        data;
+
+    const events =
+        Array.isArray(data.events)
+            ? data.events
+            : [];
+
+    if (data.client) {
+
+        document
+            .getElementById("clientName")
+            .textContent =
+            typeof data.client === "string"
+                ? data.client
+                : data.client.name || "-";
+    }
+
+    const now =
+        new Date();
+
+    document
+        .getElementById("lastUpdate")
+        .textContent =
+        now.toLocaleTimeString();
+
+
+    let marketCount = 0;
+    let selectionCount = 0;
+    let highestChangeId = null;
+
+
+    events.forEach(event => {
+
+        if (
+            event.change_id !== undefined &&
+            event.change_id !== null
+        ) {
+            highestChangeId =
+                highestChangeId === null
+                    ? event.change_id
+                    : Math.max(
+                        highestChangeId,
+                        event.change_id
+                    );
+        }
+
+        const markets =
+            Array.isArray(event.markets)
+                ? event.markets
+                : [];
+
+        marketCount += markets.length;
+
+        markets.forEach(market => {
+
+            const selections =
+                Array.isArray(market.selections)
+                    ? market.selections
+                    : [];
+
+            selectionCount +=
+                selections.length;
+        });
+    });
+
+
+    document
+        .getElementById("eventCount")
+        .textContent =
+        events.length;
+
+    document
+        .getElementById("marketCount")
+        .textContent =
+        marketCount;
+
+    document
+        .getElementById("selectionCount")
+        .textContent =
+        selectionCount;
+
+
+    if (highestChangeId !== null) {
+
+        latestChangeId =
+            highestChangeId;
+
+        document
+            .getElementById("changeId")
+            .textContent =
+            highestChangeId;
+    }
+
+
+    renderFeed(events);
+
+    detectChanges(
+        previousPayload,
+        data
+    );
+}
+
+
+/* -----------------------------
+   FEED DISPLAY
+----------------------------- */
+
+function renderFeed(events) {
+
+    const feedArea =
+        document.getElementById(
+            "feedArea"
+        );
+
+    feedArea.innerHTML = "";
+
+
+    if (!events.length) {
+
+        feedArea.innerHTML =
+            '<div class="empty">' +
+            'No events currently available for this client.' +
+            '</div>';
+
+        return;
+    }
+
+
+    events.forEach(event => {
+
+        const eventBox =
+            document.createElement("div");
+
+        eventBox.className =
+            "event";
+
+
+        const eventHeader =
+            document.createElement("div");
+
+        eventHeader.className =
+            "event-header";
+
+
+        eventHeader.innerHTML = `
+            <div class="event-name">
+                ${escapeHtml(
+                    event.name || "Unnamed Event"
+                )}
+            </div>
+
+            <div class="event-meta">
+                Status:
+                ${escapeHtml(
+                    event.status || "-"
+                )}
+
+                &nbsp; | &nbsp;
+
+                Version:
+                ${escapeHtml(
+                    String(
+                        event.version ?? "-"
+                    )
+                )}
+
+                &nbsp; | &nbsp;
+
+                Change ID:
+                ${escapeHtml(
+                    String(
+                        event.change_id ?? "-"
+                    )
+                )}
+            </div>
+        `;
+
+
+        eventBox.appendChild(
+            eventHeader
+        );
+
+
+        const markets =
+            Array.isArray(event.markets)
+                ? event.markets
+                : [];
+
+
+        markets.forEach(market => {
+
+            const marketBox =
+                document.createElement("div");
+
+            marketBox.className =
+                "market";
+
+
+            const marketName =
+                document.createElement("div");
+
+            marketName.className =
+                "market-name";
+
+            marketName.textContent =
+                market.name ||
+                "Unnamed Market";
+
+
+            marketBox.appendChild(
+                marketName
+            );
+
+
+            const table =
+                document.createElement("table");
+
+
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Selection</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            `;
+
+
+            const tbody =
+                table.querySelector("tbody");
+
+
+            const selections =
+                Array.isArray(
+                    market.selections
+                )
+                    ? market.selections
+                    : [];
+
+
+            selections.forEach(
+                selection => {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+                        <td>
+                            ${escapeHtml(
+                                selection.name ||
+                                "Unnamed Selection"
+                            )}
+                        </td>
+
+                        <td>
+                            <strong>
+                                ${escapeHtml(
+                                    selection.price ||
+                                    "-"
+                                )}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                selection.status ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                selection.result ||
+                                "-"
+                            )}
+                        </td>
+                    `;
+
+
+                    tbody.appendChild(
+                        row
+                    );
+                }
+            );
+
+
+            marketBox.appendChild(
+                table
+            );
+
+            eventBox.appendChild(
+                marketBox
+            );
+        });
+
+
+        feedArea.appendChild(
+            eventBox
+        );
+    });
+}
+
+
+/* -----------------------------
+   CHANGE DETECTION
+----------------------------- */
+
+function detectChanges(
+    oldPayload,
+    newPayload
+) {
+
+    if (!oldPayload) {
+
+        addActivity(
+            "Initial client feed received."
+        );
+
+        return;
+    }
+
+
+    const oldSelections =
+        flattenSelections(
+            oldPayload
+        );
+
+    const newSelections =
+        flattenSelections(
+            newPayload
+        );
+
+
+    Object.keys(
+        newSelections
+    ).forEach(id => {
+
+        const oldSelection =
+            oldSelections[id];
+
+        const newSelection =
+            newSelections[id];
+
+
+        if (!oldSelection) {
+
+            addActivity(
+                `${newSelection.name} added to feed.`
+            );
+
+            return;
+        }
+
+
+        if (
+            oldSelection.price !==
+            newSelection.price
+        ) {
+
+            addActivity(
+                `Price change - ` +
+                `${newSelection.name}: ` +
+                `${oldSelection.price} → ` +
+                `${newSelection.price}`
+            );
+        }
+
+
+        if (
+            oldSelection.status !==
+            newSelection.status
+        ) {
+
+            addActivity(
+                `Status change - ` +
+                `${newSelection.name}: ` +
+                `${oldSelection.status} → ` +
+                `${newSelection.status}`
+            );
+        }
+
+
+        if (
+            oldSelection.result !==
+            newSelection.result
+        ) {
+
+            addActivity(
+                `Result change - ` +
+                `${newSelection.name}: ` +
+                `${oldSelection.result || "-"} → ` +
+                `${newSelection.result || "-"}`
+            );
+        }
+    });
+
+
+    Object.keys(
+        oldSelections
+    ).forEach(id => {
+
+        if (!newSelections[id]) {
+
+            addActivity(
+                `${oldSelections[id].name} removed from client feed.`
+            );
+        }
+    });
+}
+
+
+function flattenSelections(
+    payload
+) {
+
+    const result = {};
+
+    const events =
+        Array.isArray(payload.events)
+            ? payload.events
+            : [];
+
+
+    events.forEach(event => {
+
+        const markets =
+            Array.isArray(event.markets)
+                ? event.markets
+                : [];
+
+
+        markets.forEach(market => {
+
+            const selections =
+                Array.isArray(
+                    market.selections
+                )
+                    ? market.selections
+                    : [];
+
+
+            selections.forEach(
+                selection => {
+
+                    const id =
+                        selection.id ||
+                        `${event.id}-${market.id}-${selection.name}`;
+
+                    result[id] = {
+                        name:
+                            selection.name ||
+                            "Unnamed Selection",
+
+                        price:
+                            selection.price ||
+                            "-",
+
+                        status:
+                            selection.status ||
+                            "-",
+
+                        result:
+                            selection.result ||
+                            ""
+                    };
+                }
+            );
+        });
+    });
+
+
+    return result;
+}
+
+
+/* -----------------------------
+   ACTIVITY PANEL
+----------------------------- */
+
+function addActivity(message) {
+
+    const activity =
+        document.getElementById(
+            "activity"
+        );
+
+
+    if (
+        activity.querySelector(
+            ".empty"
+        )
+    ) {
+        activity.innerHTML = "";
+    }
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+    item.className =
+        "activity-item";
+
+
+    const time =
+        new Date()
+            .toLocaleTimeString();
+
+
+    item.innerHTML = `
+        <span class="activity-time">
+            ${escapeHtml(time)}
+        </span>
+
+        ${escapeHtml(message)}
+    `;
+
+
+    activity.prepend(item);
+
+
+    while (
+        activity.children.length > 30
+    ) {
+        activity.removeChild(
+            activity.lastChild
+        );
+    }
+}
+
+
+/* -----------------------------
+   HELPERS
+----------------------------- */
+
+function setConnectionStatus(
+    message,
+    connected
+) {
+
+    const element =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    element.textContent =
+        message;
+
+    element.className =
+        connected
+            ? "connected"
+            : "disconnected";
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+</script>
+
+</body>
+</html>

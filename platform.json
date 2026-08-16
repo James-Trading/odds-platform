@@ -843,7 +843,7 @@
             {
                 "id": "a929bd7c-0205-497b-a2b8-5db84c1366d7",
                 "name": "1st Elimination",
-                "status": "Trading",
+                "status": "Settled",
                 "published": true,
                 "displayed": true,
                 "limits": {
@@ -853,10 +853,42 @@
                 "notes": "",
                 "selections": [
                     {
+                        "id": "fd6d4978-bebc-4097-949b-e457eb9b8b0b",
+                        "name": "Lacey Turner",
+                        "price": [
+                            12,
+                            1
+                        ],
+                        "pending_price": null,
+                        "price_history": [
+                            {
+                                "created": "2026-08-16 11:54:02",
+                                "price": [
+                                    16,
+                                    1
+                                ]
+                            },
+                            {
+                                "time": "2026-08-16 11:56:19",
+                                "old_price": [
+                                    16,
+                                    1
+                                ],
+                                "new_price": [
+                                    12,
+                                    1
+                                ]
+                            }
+                        ],
+                        "active": true,
+                        "displayed": true,
+                        "result": ""
+                    },
+                    {
                         "id": "0bcca302-5dca-4893-9027-da0bee7f4ec4",
                         "name": "Dani Dyer",
                         "price": [
-                            25,
+                            20,
                             1
                         ],
                         "pending_price": null,
@@ -922,18 +954,29 @@
                                     25,
                                     1
                                 ]
+                            },
+                            {
+                                "time": "2026-08-16 11:42:55",
+                                "old_price": [
+                                    25,
+                                    1
+                                ],
+                                "new_price": [
+                                    20,
+                                    1
+                                ]
                             }
                         ],
-                        "active": true,
+                        "active": false,
                         "displayed": true,
-                        "result": ""
+                        "result": "Void"
                     }
                 ]
             }
         ],
-        "version": 40,
-        "change_id": 162,
-        "last_updated": "2026-08-16T10:27:38.053199+00:00",
+        "version": 58,
+        "change_id": 180,
+        "last_updated": "2026-08-16T10:56:19.868336+00:00",
         "trader_notes": "Top price Dani Dyer until further notice",
         "active": true
     },
