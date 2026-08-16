@@ -2789,7 +2789,8 @@ class OddsPlatformGUI:
             "probability",
             "shorten",
             "lengthen",
-            "status"
+            "status",
+            "display",
         )
 
         selection_table = ttk.Treeview(
@@ -2807,7 +2808,7 @@ class OddsPlatformGUI:
         selection_table.heading("shorten", text="▼")
         selection_table.heading("lengthen", text="▲")
         selection_table.heading("status", text="Status")
-
+        selection_table.heading("display", text="Display")
         selection_table.column(
             "selection",
             width=420,
@@ -2957,6 +2958,12 @@ class OddsPlatformGUI:
             else:
                 row_tag = ""
 
+            display_text = (
+                "Displayed"
+                if selection.get("displayed", True)
+                else "Non Display"
+            )
+
             selection_table.insert(
                 "",
                 "end",
@@ -2968,6 +2975,7 @@ class OddsPlatformGUI:
                     "▼",
                     "▲",
                     status_text,
+                    display_text,
                 ),
                 tags=(row_tag,) if row_tag else (),
             )
@@ -4162,7 +4170,7 @@ class OddsPlatformGUI:
         # #3 = down/shorten
         # #4 = up/lengthen
         # #5 = status toggle
-        if column_id not in ("#4", "#5", "#6"):
+        if column_id not in ("#4", "#5", "#6", "#7"):
             return
 
         try:
@@ -4171,6 +4179,14 @@ class OddsPlatformGUI:
 
             if column_id == "#6":
                 self.toggle_selection_suspension(
+                    event,
+                    market,
+                    selection,
+                )
+                return
+
+            if column_id == "#7":
+                self.toggle_selection_display(
                     event,
                     market,
                     selection,
@@ -4306,6 +4322,37 @@ class OddsPlatformGUI:
             return
 
         self.show_market_screen(event, market)
+
+    def toggle_selection_display(
+        self,
+        event,
+        market,
+        selection,
+    ):
+        old_displayed = selection.get("displayed", True)
+        new_displayed = not old_displayed
+
+        selection["displayed"] = new_displayed
+
+        touch_event(
+            event,
+            change_type="selection_display",
+            details={
+                "market_id": market.get("id"),
+                "market_name": market.get("name"),
+                "selection_id": selection.get("id"),
+                "selection_name": selection.get("name"),
+                "old_displayed": old_displayed,
+                "new_displayed": new_displayed,
+            },
+        )
+
+        save_platform(self.platform)
+
+        self.show_market_screen(
+            event,
+            market,
+        )
 
     def save_trader_notes(self, event, market):
         notes = self.trader_notes_text.get(

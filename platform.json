@@ -920,9 +920,9 @@
                 ]
             }
         ],
-        "version": 35,
-        "change_id": 156,
-        "last_updated": "2026-08-15T23:00:35.319700+00:00",
+        "version": 39,
+        "change_id": 161,
+        "last_updated": "2026-08-16T10:03:17.999580+00:00",
         "trader_notes": "Top price Dani Dyer until further notice",
         "active": true
     },
@@ -968,7 +968,7 @@
                             }
                         ],
                         "active": true,
-                        "displayed": false,
+                        "displayed": true,
                         "result": ""
                     },
                     {
@@ -1359,9 +1359,9 @@
                 ]
             }
         ],
-        "version": 41,
-        "change_id": 130,
-        "last_updated": "2026-08-08T13:24:57.225283+00:00",
+        "version": 42,
+        "change_id": 159,
+        "last_updated": "2026-08-16T10:02:53.497364+00:00",
         "active": true
     },
     {

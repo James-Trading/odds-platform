@@ -126,5 +126,85 @@
             ],
             "event_archived": false
         }
+    },
+    {
+        "change_id": 157,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 36,
+        "changed_at": "2026-08-16T10:02:40.808990+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "selection_id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
+            "selection_name": "Dani Dyer",
+            "old_displayed": true,
+            "new_displayed": false
+        }
+    },
+    {
+        "change_id": 158,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 37,
+        "changed_at": "2026-08-16T10:02:41.930224+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "selection_id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
+            "selection_name": "Dani Dyer",
+            "old_displayed": false,
+            "new_displayed": true
+        }
+    },
+    {
+        "change_id": 159,
+        "event_id": "a74bc5aa-8731-4029-83ab-4fe2ff3bf2a6",
+        "event_name": "Big Brother 2026",
+        "version": 42,
+        "changed_at": "2026-08-16T10:02:53.497364+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "f761c9a3-bcc7-4b97-b39b-ad872f68f1cc",
+            "market_name": "Outright",
+            "selection_id": "932a7c2b-d3fe-46fc-9a71-302eabdaed85",
+            "selection_name": "James",
+            "old_displayed": false,
+            "new_displayed": true
+        }
+    },
+    {
+        "change_id": 160,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 38,
+        "changed_at": "2026-08-16T10:03:12.316743+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "selection_id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
+            "selection_name": "Dani Dyer",
+            "old_displayed": true,
+            "new_displayed": false
+        }
+    },
+    {
+        "change_id": 161,
+        "event_id": "329eb38e-66eb-46ee-a6cc-422a64606b11",
+        "event_name": "Strictly Come Dancing 2026",
+        "version": 39,
+        "changed_at": "2026-08-16T10:03:17.999580+00:00",
+        "change_type": "selection_display",
+        "details": {
+            "market_id": "bcdf5352-dd0a-4fde-808a-cb9f84a67a50",
+            "market_name": "Outright",
+            "selection_id": "449c534f-ac67-4ad4-b62b-42cbe04d77ac",
+            "selection_name": "Dani Dyer",
+            "old_displayed": false,
+            "new_displayed": true
+        }
     }
 ]
