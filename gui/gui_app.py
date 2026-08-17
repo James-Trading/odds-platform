@@ -140,6 +140,63 @@ def save_remote_selection_state(
     response.raise_for_status()
     return response.json()
 
+ADMIN_EVENT_STATE_URL = "https://api.goldliner.co.uk/internal/admin/event-state"
+
+
+def save_remote_event_state(event_id, active):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_EVENT_STATE_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "active": active,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
+ADMIN_EVENT_DETAILS_URL = "https://api.goldliner.co.uk/internal/admin/event-details"
+
+
+def save_remote_event_details(
+    event_id,
+    event_name,
+    start_time,
+    status,
+    suspend_mode,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_EVENT_DETAILS_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "event_name": event_name,
+            "start_time": start_time,
+            "status": status,
+            "suspend_mode": suspend_mode,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -3274,6 +3331,14 @@ class OddsPlatformGUI:
             event["status"] = selected_status
             event["suspend_mode"] = suspend_mode_var.get()
 
+            save_remote_event_details(
+                event.get("id"),
+                event.get("event_name"),
+                event.get("start_time"),
+                event.get("status"),
+                event.get("suspend_mode"),
+            )
+
             if selected_status == "Suspended":
                 event["active"] = False
             elif selected_status in ("Trading", "Draft"):
@@ -4582,6 +4647,12 @@ class OddsPlatformGUI:
 
             if now >= start_time:
                 event["active"] = False
+
+                save_remote_event_state(
+                    event.get("id"),
+                    False,
+                )
+
                 touch_event(event)
                 save_platform(self.platform)
 

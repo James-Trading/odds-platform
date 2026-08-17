@@ -547,3 +547,72 @@ def admin_event_state(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminEventDetailsRequest(BaseModel):
+    event_id: str
+    event_name: str
+    start_time: str
+    status: str
+    suspend_mode: str
+
+
+@app.post("/internal/admin/event-details")
+def admin_event_details(
+    request: AdminEventDetailsRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    old_details = {
+        "event_name": event.get("event_name"),
+        "start_time": event.get("start_time"),
+        "status": event.get("status"),
+        "suspend_mode": event.get("suspend_mode"),
+    }
+
+    event["event_name"] = request.event_name
+    event["start_time"] = request.start_time
+    event["status"] = request.status
+    event["suspend_mode"] = request.suspend_mode
+
+    touch_event(
+        event,
+        change_type="event_details_change",
+        details={
+            "old": old_details,
+            "new": {
+                "event_name": event.get("event_name"),
+                "start_time": event.get("start_time"),
+                "status": event.get("status"),
+                "suspend_mode": event.get("suspend_mode"),
+            },
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "event_id": event.get("id"),
+        "event_name": event.get("event_name"),
+        "start_time": event.get("start_time"),
+        "event_status": event.get("status"),
+        "suspend_mode": event.get("suspend_mode"),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }
