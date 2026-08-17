@@ -1662,6 +1662,18 @@ class OddsPlatformGUI:
             command=lambda: self.toggle_event_publish(event)
         ).pack(anchor="w", pady=(0, 20))
 
+        suspend_button_text = (
+            "Unsuspend Event"
+            if event.get("active", True) is False
+            else "Suspend Event"
+        )
+
+        ttk.Button(
+            self.content,
+            text=suspend_button_text,
+            command=lambda: self.toggle_event_suspension(event),
+        ).pack(anchor="w", pady=(0, 20))
+
         ttk.Label(
             self.content,
             text="Markets",
@@ -1887,6 +1899,42 @@ class OddsPlatformGUI:
             event,
             market,
         )
+
+    def toggle_event_suspension(self, event):
+        new_active = not event.get("active", True)
+
+        try:
+            save_remote_event_state(
+                event.get("id"),
+                new_active,
+            )
+
+            event["active"] = new_active
+
+            touch_event(
+                event,
+                change_type="event_state_change",
+                details={
+                    "new_active": new_active,
+                },
+            )
+
+            save_platform(self.platform)
+
+            add_audit_log(
+                f"{event.get('event_name', 'Unnamed Event')} "
+                f"{'unsuspended' if new_active else 'suspended'}"
+            )
+
+        except Exception as exc:
+            messagebox.showerror(
+                "Event Suspension Failed",
+                f"The event status could not be updated.\n\n{exc}",
+            )
+            return
+
+        self.show_event_screen(event)
+
 
     def show_back_office(self):
         self.clear_content()
@@ -3264,26 +3312,22 @@ class OddsPlatformGUI:
             pady=8,
         )
 
-        status_var = tk.StringVar(
-            value=event.get("status", "draft").title()
-        )
+        if event.get("active", True) is False:
+            display_status = "Suspended"
+        elif str(event.get("status", "")).lower() == "settled":
+            display_status = "Settled"
+        elif str(event.get("status", "")).lower() == "draft":
+            display_status = "Draft"
+        else:
+            display_status = "Trading"
 
-        status_box = ttk.Combobox(
+        ttk.Label(
             form_frame,
-            textvariable=status_var,
-            values=[
-                "Draft",
-                "Trading",
-                "Suspended",
-                "Settled",
-            ],
-            state="readonly",
-            width=33,
-        )
-        status_box.grid(
+            text=display_status,
+        ).grid(
             row=3,
             column=1,
-            sticky="ew",
+            sticky="w",
             padx=(15, 0),
             pady=8,
         )
@@ -3355,9 +3399,7 @@ class OddsPlatformGUI:
                 if parsed_start_time
                 else ""
             )
-            selected_status = status_var.get()
-
-            event["status"] = selected_status
+            
             event["suspend_mode"] = suspend_mode_var.get()
 
             save_remote_event_details(
@@ -3366,16 +3408,6 @@ class OddsPlatformGUI:
                 event.get("start_time"),
                 event.get("status"),
                 event.get("suspend_mode"),
-            )
-
-            if selected_status == "Suspended":
-                event["active"] = False
-            elif selected_status in ("Trading", "Draft"):
-                event["active"] = True
-
-            save_remote_event_state(
-                event.get("id"),
-                event.get("active", True),
             )
 
             touch_event(event)
