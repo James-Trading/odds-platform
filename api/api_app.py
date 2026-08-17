@@ -496,3 +496,54 @@ def admin_selection_state(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminEventStateRequest(BaseModel):
+    event_id: str
+    active: bool
+
+
+@app.post("/internal/admin/event-state")
+def admin_event_state(
+    request: AdminEventStateRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    old_active = event.get("active", True)
+
+    event["active"] = request.active
+
+    touch_event(
+        event,
+        change_type="event_state_change",
+        details={
+            "old_active": old_active,
+            "new_active": event.get("active", True),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "event_id": event.get("id"),
+        "event_name": event.get("event_name"),
+        "active": event.get("active", True),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }
