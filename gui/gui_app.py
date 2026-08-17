@@ -197,6 +197,35 @@ def save_remote_event_details(
     response.raise_for_status()
     return response.json()
 
+ADMIN_MARKET_STATE_URL = "https://api.goldliner.co.uk/internal/admin/market-state"
+
+
+def save_remote_market_state(
+    event_id,
+    market_id,
+    status,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_MARKET_STATE_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "market_id": market_id,
+            "status": status,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -3344,6 +3373,11 @@ class OddsPlatformGUI:
             elif selected_status in ("Trading", "Draft"):
                 event["active"] = True
 
+            save_remote_event_state(
+                event.get("id"),
+                event.get("active", True),
+            )
+
             touch_event(event)
             save_platform(self.platform)
 
@@ -4585,6 +4619,12 @@ class OddsPlatformGUI:
                 add_audit_log(
                     f"{market_name} suspended in {event_name}"
                 )
+
+            save_remote_market_state(
+                event.get("id"),
+                market.get("id"),
+                market.get("status", "ACTIVE"),
+            )
 
             save_platform(self.platform)
 

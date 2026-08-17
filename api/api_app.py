@@ -616,3 +616,72 @@ def admin_event_details(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminMarketStateRequest(BaseModel):
+    event_id: str
+    market_id: str
+    status: str
+
+
+@app.post("/internal/admin/market-state")
+def admin_market_state(
+    request: AdminMarketStateRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            market
+            for market in event.get("markets", [])
+            if market.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    old_status = market.get("status", "ACTIVE")
+    market["status"] = request.status
+
+    touch_event(
+        event,
+        change_type="market_state_change",
+        details={
+            "market_id": market.get("id"),
+            "market_name": market.get("name"),
+            "old_status": old_status,
+            "new_status": market.get("status"),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "market_name": market.get("name"),
+        "market_status": market.get("status"),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }
