@@ -7,6 +7,8 @@ from fastapi import (
     status,
 )
 
+from pydantic import BaseModel, Field
+
 import asyncio
 
 import os
@@ -15,7 +17,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from client_save_load import load_clients
 from distribution.feed_functions import get_client_feed
-from save_load import load_platform
+from save_load import load_platform, save_platform
+
+from price_engine.price_ladder import set_price
+from event_functions import touch_event
 
 from datetime import datetime, timezone
 
@@ -300,9 +305,103 @@ def get_authenticated_admin(
 
     return True
 
+class AdminPriceChangeRequest(BaseModel):
+    event_id: str
+    market_id: str
+    selection_id: str
+    price_top: int = Field(gt=0)
+    price_bottom: int = Field(gt=0)
+
 
 @app.get("/internal/admin/platform")
 def get_admin_platform(
     _: bool = Depends(get_authenticated_admin),
 ):
     return load_platform()
+
+@app.post("/internal/admin/price")
+def admin_change_price(
+    request: AdminPriceChangeRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            market
+            for market in event.get("markets", [])
+            if market.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    selection = next(
+        (
+            selection
+            for selection in market.get("selections", [])
+            if selection.get("id") == request.selection_id
+        ),
+        None,
+    )
+
+    if selection is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Selection not found.",
+        )
+
+    old_price = selection.get("price")
+
+    set_price(
+        selection,
+        request.price_top,
+        request.price_bottom,
+    )
+
+    touch_event(
+        event,
+        change_type="price_change",
+        details={
+            "market_id": market.get("id"),
+            "market_name": market.get("name"),
+            "selection_id": selection.get("id"),
+            "selection_name": selection.get("name"),
+            "old_price": old_price,
+            "new_price": selection.get("price"),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "selection_id": selection.get("id"),
+        "selection_name": selection.get("name"),
+        "old_price": old_price,
+        "new_price": selection.get("price"),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }

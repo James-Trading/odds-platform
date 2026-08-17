@@ -48,9 +48,31 @@ from datetime import datetime, timezone, timedelta
 
 from config import API_BASE_URL
 
+import os
+
 import requests
 
 import secrets
+
+ADMIN_PLATFORM_URL = "https://api.goldliner.co.uk/internal/admin/platform"
+
+
+def load_remote_platform():
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.get(
+        ADMIN_PLATFORM_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
 
 class OddsPlatformGUI:
 
@@ -5696,7 +5718,7 @@ class OddsPlatformGUI:
 
 if __name__ == "__main__":
 
-    platform = load_platform()
+    platform = load_remote_platform()
     clients = load_clients()
 
     root = tk.Tk()
