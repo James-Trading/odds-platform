@@ -4437,6 +4437,13 @@ class OddsPlatformGUI:
 
         selection["displayed"] = new_displayed
 
+        save_remote_selection_state(
+            event.get("id"),
+            market.get("id"),
+            selection.get("id"),
+            displayed=new_displayed,
+        )
+
         touch_event(
             event,
             change_type="selection_display",
