@@ -74,6 +74,72 @@ def load_remote_platform():
     response.raise_for_status()
     return response.json()
 
+ADMIN_PRICE_URL = "https://api.goldliner.co.uk/internal/admin/price"
+
+
+def save_remote_price(event_id, market_id, selection_id, price_top, price_bottom):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_PRICE_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "market_id": market_id,
+            "selection_id": selection_id,
+            "price_top": price_top,
+            "price_bottom": price_bottom,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
+ADMIN_SELECTION_STATE_URL = "https://api.goldliner.co.uk/internal/admin/selection-state"
+
+
+def save_remote_selection_state(
+    event_id,
+    market_id,
+    selection_id,
+    active=None,
+    displayed=None,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    payload = {
+        "event_id": event_id,
+        "market_id": market_id,
+        "selection_id": selection_id,
+    }
+
+    if active is not None:
+        payload["active"] = active
+
+    if displayed is not None:
+        payload["displayed"] = displayed
+
+    response = requests.post(
+        ADMIN_SELECTION_STATE_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json=payload,
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -4102,6 +4168,14 @@ class OddsPlatformGUI:
 
             old_price = selection.get("price")
 
+            save_remote_price(
+                event.get("id"),
+                market.get("id"),
+                selection.get("id"),
+                new_price[0],
+                new_price[1],
+            )
+
             set_price(
                 selection,
                 new_price[0],
@@ -4321,6 +4395,13 @@ class OddsPlatformGUI:
                     f"{selection_name} unsuspended in "
                     f"{event_name} / {market_name}"
                 )
+
+            save_remote_selection_state(
+                event.get("id"),
+                market.get("id"),
+                selection.get("id"),
+                active=selection.get("active", True),
+            )
 
             touch_event(
                 event,

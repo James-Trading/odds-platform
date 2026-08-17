@@ -405,3 +405,94 @@ def admin_change_price(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminSelectionStateRequest(BaseModel):
+    event_id: str
+    market_id: str
+    selection_id: str
+    active: bool | None = None
+    displayed: bool | None = None
+
+@app.post("/internal/admin/selection-state")
+def admin_selection_state(
+    request: AdminSelectionStateRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (e for e in platform if e.get("id") == request.event_id),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            m
+            for m in event.get("markets", [])
+            if m.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    selection = next(
+        (
+            s
+            for s in market.get("selections", [])
+            if s.get("id") == request.selection_id
+        ),
+        None,
+    )
+
+    if selection is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Selection not found.",
+        )
+
+    old_active = selection.get("active", True)
+    old_displayed = selection.get("displayed", True)
+
+    if request.active is not None:
+        selection["active"] = request.active
+
+    if request.displayed is not None:
+        selection["displayed"] = request.displayed
+
+    touch_event(
+        event,
+        change_type="selection_state_change",
+        details={
+            "market_id": market.get("id"),
+            "market_name": market.get("name"),
+            "selection_id": selection.get("id"),
+            "selection_name": selection.get("name"),
+            "old_active": old_active,
+            "new_active": selection.get("active", True),
+            "old_displayed": old_displayed,
+            "new_displayed": selection.get("displayed", True),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "selection_id": selection.get("id"),
+        "selection_name": selection.get("name"),
+        "active": selection.get("active", True),
+        "displayed": selection.get("displayed", True),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }
