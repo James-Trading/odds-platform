@@ -685,3 +685,52 @@ def admin_market_state(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminEventPublishRequest(BaseModel):
+    event_id: str
+    published: bool
+
+
+@app.post("/internal/admin/event-publish")
+def admin_event_publish(
+    request: AdminEventPublishRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    old_published = event.get("published", False)
+    event["published"] = request.published
+
+    touch_event(
+        event,
+        change_type="event_publish_change",
+        details={
+            "old_published": old_published,
+            "new_published": event.get("published", False),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "event_id": event.get("id"),
+        "published": event.get("published", False),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }

@@ -226,6 +226,33 @@ def save_remote_market_state(
     response.raise_for_status()
     return response.json()
 
+ADMIN_EVENT_PUBLISH_URL = "https://api.goldliner.co.uk/internal/admin/event-publish"
+
+
+def save_remote_event_publish(
+    event_id,
+    published,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_EVENT_PUBLISH_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "published": published,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -1875,10 +1902,24 @@ class OddsPlatformGUI:
         refresh_market_list()
 
     def toggle_event_publish(self, event):
+        new_published = not event.get("published", False)
 
-        event["published"] = not event.get("published", False)
+        try:
+            save_remote_event_publish(
+                event.get("id"),
+                new_published,
+            )
 
-        save_platform(self.platform)
+            event["published"] = new_published
+            touch_event(event)
+            save_platform(self.platform)
+
+        except Exception as exc:
+            messagebox.showerror(
+                "Publish Update Failed",
+                f"The event publish state could not be updated.\n\n{exc}",
+            )
+            return
 
         self.show_event_screen(event)
 
@@ -1887,18 +1928,33 @@ class OddsPlatformGUI:
         event,
         market,
     ):
-        event["published"] = not event.get(
+        new_published = not event.get(
             "published",
             False,
         )
 
-        touch_event(event)
-        save_platform(self.platform)
+        try:
+            save_remote_event_publish(
+                event.get("id"),
+                new_published,
+            )
+
+            event["published"] = new_published
+            touch_event(event)
+            save_platform(self.platform)
+
+        except Exception as exc:
+            messagebox.showerror(
+                "Publish Update Failed",
+                f"The event publish state could not be updated.\n\n{exc}",
+            )
+            return
 
         self.show_market_screen(
             event,
             market,
         )
+
 
     def toggle_event_suspension(self, event):
         new_active = not event.get("active", True)
