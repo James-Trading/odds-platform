@@ -9,6 +9,8 @@ from fastapi import (
 
 import asyncio
 
+import os
+
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from client_save_load import load_clients
@@ -276,3 +278,31 @@ def get_active_connections():
         ),
         "clients": active_websocket_clients,
     }
+
+ADMIN_API_KEY = os.getenv("GTM_ADMIN_API_KEY")
+
+
+def get_authenticated_admin(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+):
+    if not ADMIN_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Admin API key is not configured.",
+        )
+
+    if credentials.credentials != ADMIN_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid admin API key.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return True
+
+
+@app.get("/internal/admin/platform")
+def get_admin_platform(
+    _: bool = Depends(get_authenticated_admin),
+):
+    return load_platform()
