@@ -5885,13 +5885,6 @@ class OddsPlatformGUI:
             event = existing_event
 
         else:
-            event = create_event(
-                preview["category"],
-                preview["class"],
-                preview["type"],
-                preview["event"],
-            )
-
             event_date = preview.get("date")
             event_time = preview.get("time")
 
@@ -5901,12 +5894,23 @@ class OddsPlatformGUI:
             if hasattr(event_time, "strftime"):
                 event_time = event_time.strftime("%H:%M")
 
-            event["start_time"] = f"{event_date} {event_time}"
-            event["status"] = "Draft"
-            event["published"] = False
-            event["displayed"] = False
+            start_time = f"{event_date} {event_time}"
 
-            self.platform.append(event)
+            payload = {
+                "event_name": preview["event"],
+                "category": preview["category"],
+                "event_class": preview["class"],
+                "event_type": preview["type"],
+                "start_time": start_time,
+                "suspend_mode": "AUTO",
+            }
+
+            response = save_remote_event(payload)
+
+            event = response.get("event")
+
+            self.platform = load_remote_platform()
+
             new_event_created = True
 
 
@@ -5945,14 +5949,14 @@ class OddsPlatformGUI:
             return
 
 
-        market = create_market(
-            event,
+        market_response = save_remote_market(
+            event.get("id"),
             preview["market"],
         )
 
-        market["status"] = "Suspended"
-        market["published"] = False
-        market["displayed"] = False
+        market = market_response.get("market")
+
+        self.platform = load_remote_platform()
 
         for runner in preview["selections"]:
             price_text = str(runner["price"]).strip()
@@ -5972,22 +5976,25 @@ class OddsPlatformGUI:
                 )
                 return
 
-            selection = add_selection(
-                market,
+            selection_response = save_remote_selection(
+                event.get("id"),
+                market.get("id"),
                 runner["name"],
-                parsed_price,
+                parsed_price[0],
+                parsed_price[1],
             )
 
-            selection["active"] = False
-            selection["displayed"] = False
+            selection = selection_response.get("selection")
 
+            save_remote_selection_state(
+                event.get("id"),
+                market.get("id"),
+                selection.get("id"),
+                active=False,
+                displayed=False,
+            )
 
-        # Existing events need a new version/change ID because
-        # we have added a new market to them.
-        if not new_event_created:
-            touch_event(event)
-
-        save_platform(self.platform)
+        self.platform = load_remote_platform()
 
         messagebox.showinfo(
             "Import Complete",
