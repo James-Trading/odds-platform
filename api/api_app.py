@@ -1,4 +1,5 @@
 from fastapi import (
+    Body,
     Depends, 
     FastAPI, 
     HTTPException, 
@@ -1072,7 +1073,7 @@ def admin_get_clients(
 
 @app.post("/internal/admin/clients")
 def admin_save_clients(
-    clients: list,
+    clients: list = Body(...),
     _: bool = Depends(get_authenticated_admin),
 ):
     save_clients(clients)
