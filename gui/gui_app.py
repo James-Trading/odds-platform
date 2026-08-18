@@ -101,6 +101,38 @@ def save_remote_price(event_id, market_id, selection_id, price_top, price_bottom
     response.raise_for_status()
     return response.json()
 
+def save_remote_selection(
+    event_id,
+    market_id,
+    selection_name,
+    price_top,
+    price_bottom,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_SELECTION_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "market_id": market_id,
+            "selection_name": selection_name,
+            "price_top": price_top,
+            "price_bottom": price_bottom,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
+ADMIN_SELECTION_URL = "https://api.goldliner.co.uk/internal/admin/selection"
+
 ADMIN_SELECTION_STATE_URL = "https://api.goldliner.co.uk/internal/admin/selection-state"
 
 
@@ -3737,6 +3769,14 @@ class OddsPlatformGUI:
                 ],
             )
 
+            save_remote_selection(
+                event.get("id"),
+                market.get("id"),
+                selection_name,
+                numerator,
+                denominator,
+            )
+
             market["selections"].sort(
                 key=lambda selection: probability(
                     selection["price"][0],
@@ -3745,6 +3785,7 @@ class OddsPlatformGUI:
                 reverse=True,
             )
 
+            touch_event(event)
             save_platform(self.platform)
 
             name_entry.delete(0, "end")

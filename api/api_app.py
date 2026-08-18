@@ -20,7 +20,7 @@ from distribution.feed_functions import get_client_feed
 from save_load import load_platform, save_platform
 
 from price_engine.price_ladder import set_price
-from event_functions import touch_event
+from event_functions import touch_event, add_selection
 
 from datetime import datetime, timezone
 
@@ -314,6 +314,13 @@ class AdminPriceChangeRequest(BaseModel):
     price_top: int = Field(gt=0)
     price_bottom: int = Field(gt=0)
 
+class AdminAddSelectionRequest(BaseModel):
+    event_id: str
+    market_id: str
+    selection_name: str
+    price_top: int = Field(gt=0)
+    price_bottom: int = Field(gt=0)
+
 
 @app.get("/internal/admin/platform")
 def get_admin_platform(
@@ -414,6 +421,71 @@ class AdminSelectionStateRequest(BaseModel):
     selection_id: str
     active: bool | None = None
     displayed: bool | None = None
+
+@app.post("/internal/admin/selection")
+def admin_add_selection(
+    request: AdminAddSelectionRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            market
+            for market in event.get("markets", [])
+            if market.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    selection = add_selection(
+        market,
+        request.selection_name,
+        [
+            request.price_top,
+            request.price_bottom,
+        ],
+    )
+
+    touch_event(
+        event,
+        change_type="selection_added",
+        details={
+            "market_id": market.get("id"),
+            "selection_id": selection.get("id"),
+            "selection_name": selection.get("name"),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "ok": True,
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "selection": selection,
+    }
 
 @app.post("/internal/admin/selection-state")
 def admin_selection_state(
