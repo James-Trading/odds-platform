@@ -20,7 +20,7 @@ from distribution.feed_functions import get_client_feed
 from save_load import load_platform, save_platform
 
 from price_engine.price_ladder import set_price
-from event_functions import touch_event, add_selection, create_market
+from event_functions import touch_event, add_selection, create_market, create_event
 
 from datetime import datetime, timezone
 
@@ -619,6 +619,42 @@ def admin_selection_state(
         "change_id": event.get("change_id"),
     }
 
+@app.post("/internal/admin/event")
+def admin_add_event(
+    request: AdminAddEventRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = create_event(
+        request.category,
+        request.event_class,
+        request.event_type,
+        request.event_name,
+    )
+
+    event["start_time"] = request.start_time
+    event["suspend_mode"] = request.suspend_mode
+    event["active"] = True
+
+    platform.append(event)
+
+    touch_event(
+        event,
+        change_type="event_created",
+        details={
+            "event_name": event.get("event_name"),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "ok": True,
+        "event_id": event.get("id"),
+        "event": event,
+    }
+
 class AdminEventStateRequest(BaseModel):
     event_id: str
     active: bool
@@ -963,3 +999,11 @@ def admin_settlement(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminAddEventRequest(BaseModel):
+    category: str
+    event_class: str
+    event_type: str
+    event_name: str
+    start_time: str = ""
+    suspend_mode: str = "AUTO"

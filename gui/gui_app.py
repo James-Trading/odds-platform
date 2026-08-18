@@ -137,6 +137,26 @@ ADMIN_SELECTION_STATE_URL = "https://api.goldliner.co.uk/internal/admin/selectio
 
 ADMIN_MARKET_URL = "https://api.goldliner.co.uk/internal/admin/market"
 
+ADMIN_EVENT_URL = "https://api.goldliner.co.uk/internal/admin/event"
+
+def save_remote_event(payload):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_EVENT_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json=payload,
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 def save_remote_market(
     event_id,
     market_name,
@@ -5306,20 +5326,20 @@ class OddsPlatformGUI:
                     )
                     return
 
-            event = create_event(
-                category,
-                event_class,
-                event_type,
-                event_name,
-            )
+            payload = {
+                "event_name": event_name,
+                "category": category,
+                "event_class": event_class,
+                "event_type": event_type,
+                "start_time": start_time,
+                "suspend_mode": suspend_mode_var.get(),
+            }
 
-            event["start_time"] = start_time
-            event["suspend_mode"] = suspend_mode_var.get()
-            event["active"] = True
+            response = save_remote_event(payload)
 
-            self.platform.append(event)
+            event = response.get("event")
 
-            save_platform(self.platform)
+            self.platform = load_remote_platform()
 
             popup.destroy()
 
@@ -5433,7 +5453,7 @@ class OddsPlatformGUI:
 
             self.platform = load_remote_platform()
 
-            event = next(
+            refreshed_event = next(
                 (
                     item
                     for item in self.platform
@@ -5445,7 +5465,7 @@ class OddsPlatformGUI:
             market = next(
                 (
                     item
-                    for item in event.get("markets", [])
+                    for item in refreshed_event.get("markets", [])
                     if item.get("id") == market.get("id")
                 ),
                 market,
@@ -5462,7 +5482,7 @@ class OddsPlatformGUI:
 
             if add_selections:
                 self.create_selection_popup(
-                    event,
+                    refreshed_event,
                     market,
                 )
             else:
