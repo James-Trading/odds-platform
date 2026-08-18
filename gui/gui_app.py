@@ -135,6 +135,31 @@ ADMIN_SELECTION_URL = "https://api.goldliner.co.uk/internal/admin/selection"
 
 ADMIN_SELECTION_STATE_URL = "https://api.goldliner.co.uk/internal/admin/selection-state"
 
+ADMIN_MARKET_URL = "https://api.goldliner.co.uk/internal/admin/market"
+
+def save_remote_market(
+    event_id,
+    market_name,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_MARKET_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "market_name": market_name,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
 
 def save_remote_selection_state(
     event_id,
@@ -5399,13 +5424,33 @@ class OddsPlatformGUI:
                 )
                 return
 
-            market = create_market(
-                event,
+            response = save_remote_market(
+                event.get("id"),
                 market_name,
             )
 
-            touch_event(event)
-            save_platform(self.platform)
+            market = response.get("market")
+
+            self.platform = load_remote_platform()
+
+            event = next(
+                (
+                    item
+                    for item in self.platform
+                    if item.get("id") == event.get("id")
+                ),
+                event,
+            )
+
+            market = next(
+                (
+                    item
+                    for item in event.get("markets", [])
+                    if item.get("id") == market.get("id")
+                ),
+                market,
+            )
+
 
             popup.destroy()
 

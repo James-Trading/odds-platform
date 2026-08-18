@@ -20,7 +20,7 @@ from distribution.feed_functions import get_client_feed
 from save_load import load_platform, save_platform
 
 from price_engine.price_ladder import set_price
-from event_functions import touch_event, add_selection
+from event_functions import touch_event, add_selection, create_market
 
 from datetime import datetime, timezone
 
@@ -321,6 +321,9 @@ class AdminAddSelectionRequest(BaseModel):
     price_top: int = Field(gt=0)
     price_bottom: int = Field(gt=0)
 
+class AdminAddMarketRequest(BaseModel):
+    event_id: str
+    market_name: str
 
 @app.get("/internal/admin/platform")
 def get_admin_platform(
@@ -421,6 +424,51 @@ class AdminSelectionStateRequest(BaseModel):
     selection_id: str
     active: bool | None = None
     displayed: bool | None = None
+
+@app.post("/internal/admin/market")
+def admin_add_market(
+    request: AdminAddMarketRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = create_market(
+        event,
+        request.market_name,
+    )
+
+    touch_event(
+        event,
+        change_type="market_created",
+        details={
+            "market_id": market.get("id"),
+            "market_name": market.get("name"),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "ok": True,
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "market": market,
+    }
 
 @app.post("/internal/admin/selection")
 def admin_add_selection(
