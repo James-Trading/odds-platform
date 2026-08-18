@@ -28,6 +28,8 @@ from logs.activity_logger import log_activity
 
 from state.change_sequence import load_change_log
 
+from bets.settlement_functions import settle_market_results
+
 app = FastAPI(
     title="Goldliner Trading Matrix API",
     description="Customer-facing sportsbook odds feed.",
@@ -731,6 +733,113 @@ def admin_event_publish(
         "status": "updated",
         "event_id": event.get("id"),
         "published": event.get("published", False),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }
+
+class AdminSettlementRequest(BaseModel):
+    event_id: str
+    market_id: str
+    results: dict[str, str]
+
+
+@app.post("/internal/admin/settlement")
+def admin_settlement(
+    request: AdminSettlementRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            market
+            for market in event.get("markets", [])
+            if market.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    old_results = {
+        selection.get("id"): selection.get("result", "")
+        for selection in market.get("selections", [])
+    }
+
+    settle_market_results(
+        platform,
+        [],
+        event,
+        market,
+        request.results,
+    )
+
+    result_changes = []
+
+    for selection in market.get("selections", []):
+        selection_id = selection.get("id")
+        old_result = old_results.get(selection_id, "")
+        new_result = selection.get("result", "")
+
+        if old_result != new_result:
+            result_changes.append(
+                {
+                    "selection_id": selection_id,
+                    "selection_name": selection.get("name"),
+                    "old_result": old_result,
+                    "new_result": new_result,
+                }
+            )
+
+    all_markets_settled = all(
+        all(
+            selection.get("result", "")
+            for selection in market_item.get("selections", [])
+        )
+        for market_item in event.get("markets", [])
+    )
+
+    if all_markets_settled:
+        event["archived"] = True
+
+    touch_event(
+        event,
+        change_type="settlement",
+        details={
+            "market_id": market.get("id"),
+            "market_name": market.get("name"),
+            "changes": result_changes,
+            "event_archived": event.get("archived", False),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "status": "updated",
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "changes": result_changes,
+        "event_archived": event.get("archived", False),
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }

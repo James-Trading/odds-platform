@@ -253,6 +253,35 @@ def save_remote_event_publish(
     response.raise_for_status()
     return response.json()
 
+ADMIN_SETTLEMENT_URL = "https://api.goldliner.co.uk/internal/admin/settlement"
+
+
+def save_remote_settlement(
+    event_id,
+    market_id,
+    results,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_SETTLEMENT_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "market_id": market_id,
+            "results": results,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 class OddsPlatformGUI:
 
     def __init__(self, root, platform, clients):
@@ -3983,6 +4012,12 @@ class OddsPlatformGUI:
                 selection.get("id"): selection.get("result", "")
                 for selection in market.get("selections", [])
             }
+
+            save_remote_settlement(
+                event.get("id"),
+                market.get("id"),
+                pending_results,
+            )
 
             settle_market_results(
                 self.platform,
