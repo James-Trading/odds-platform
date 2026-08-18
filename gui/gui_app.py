@@ -3237,7 +3237,14 @@ class OddsPlatformGUI:
 
         # Add the real selections from the backend
         for selection_index, selection in enumerate(
-            market.get("selections", [])
+            sorted(
+                market.get("selections", []),
+                key=lambda selection: probability(
+                    selection["price"][0],
+                    selection["price"][1],
+                ),
+                reverse=True,
+            )
         ):
             pending_key = (id(market), selection_index)
 
