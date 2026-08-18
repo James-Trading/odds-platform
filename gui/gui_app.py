@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog, simpledialog
 
 from save_load import save_platform, load_platform
-from client_save_load import load_clients, save_clients
+from remote_client_save_load import load_clients, save_clients
 
 from price_engine.price_ladder import (
     PRICE_LADDER,

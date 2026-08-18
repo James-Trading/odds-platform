@@ -15,7 +15,7 @@ import os
 
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from client_save_load import load_clients
+from client_save_load import load_clients, save_clients
 from distribution.feed_functions import get_client_feed
 from save_load import load_platform, save_platform
 
@@ -1062,4 +1062,22 @@ def admin_market_publish(
         "published": market.get("published"),
         "version": event.get("version"),
         "change_id": event.get("change_id"),
+    }
+
+@app.get("/internal/admin/clients")
+def admin_get_clients(
+    _: bool = Depends(get_authenticated_admin),
+):
+    return load_clients()
+
+@app.post("/internal/admin/clients")
+def admin_save_clients(
+    clients: list,
+    _: bool = Depends(get_authenticated_admin),
+):
+    save_clients(clients)
+
+    return {
+        "ok": True,
+        "client_count": len(clients),
     }
