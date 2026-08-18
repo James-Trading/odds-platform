@@ -139,6 +139,34 @@ ADMIN_MARKET_URL = "https://api.goldliner.co.uk/internal/admin/market"
 
 ADMIN_EVENT_URL = "https://api.goldliner.co.uk/internal/admin/event"
 
+ADMIN_MARKET_PUBLISH_URL = "https://api.goldliner.co.uk/internal/admin/market-publish"
+
+def save_remote_market_publish(
+    event_id,
+    market_id,
+    published,
+):
+    admin_key = os.getenv("GTM_ADMIN_API_KEY")
+
+    if not admin_key:
+        raise RuntimeError("GTM_ADMIN_API_KEY is not set")
+
+    response = requests.post(
+        ADMIN_MARKET_PUBLISH_URL,
+        headers={
+            "Authorization": f"Bearer {admin_key}"
+        },
+        json={
+            "event_id": event_id,
+            "market_id": market_id,
+            "published": published,
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+    return response.json()
+
 def save_remote_event(payload):
     admin_key = os.getenv("GTM_ADMIN_API_KEY")
 
@@ -4550,17 +4578,40 @@ class OddsPlatformGUI:
         event,
         market,
     ):
-        market["published"] = not market.get(
+        new_published_state = not market.get(
             "published",
             False,
         )
 
-        touch_event(event)
-        save_platform(self.platform)
+        save_remote_market_publish(
+            event.get("id"),
+            market.get("id"),
+            new_published_state,
+        )
+
+        self.platform = load_remote_platform()
+
+        refreshed_event = next(
+            (
+                item
+                for item in self.platform
+                if item.get("id") == event.get("id")
+            ),
+            event,
+        )
+
+        refreshed_market = next(
+            (
+                item
+                for item in refreshed_event.get("markets", [])
+                if item.get("id") == market.get("id")
+            ),
+            market,
+        )
 
         self.show_market_screen(
-            event,
-            market,
+            refreshed_event,
+            refreshed_market,
         )
 
     def handle_price_tick_click(

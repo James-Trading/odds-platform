@@ -1007,3 +1007,59 @@ def admin_settlement(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
+
+class AdminMarketPublishRequest(BaseModel):
+    event_id: str
+    market_id: str
+    published: bool
+
+@app.post("/internal/admin/market-publish")
+def admin_market_publish(
+    request: AdminMarketPublishRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            market
+            for market in event.get("markets", [])
+            if market.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    market["published"] = request.published
+
+    touch_event(event)
+    save_platform(platform)
+
+    return {
+        "ok": True,
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "published": market.get("published"),
+        "version": event.get("version"),
+        "change_id": event.get("change_id"),
+    }
