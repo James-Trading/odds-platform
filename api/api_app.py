@@ -619,6 +619,14 @@ def admin_selection_state(
         "change_id": event.get("change_id"),
     }
 
+class AdminAddEventRequest(BaseModel):
+    category: str
+    event_class: str
+    event_type: str
+    event_name: str
+    start_time: str = ""
+    suspend_mode: str = "AUTO"
+
 @app.post("/internal/admin/event")
 def admin_add_event(
     request: AdminAddEventRequest,
@@ -999,11 +1007,3 @@ def admin_settlement(
         "version": event.get("version"),
         "change_id": event.get("change_id"),
     }
-
-class AdminAddEventRequest(BaseModel):
-    category: str
-    event_class: str
-    event_type: str
-    event_name: str
-    start_time: str = ""
-    suspend_mode: str = "AUTO"
