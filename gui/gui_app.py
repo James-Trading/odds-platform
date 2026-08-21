@@ -1377,7 +1377,7 @@ class OddsPlatformGUI:
         popup.title(
             f"Manage Events - {client.get('name', 'Client')}"
         )
-        popup.geometry("520x480")
+        popup.geometry("520x620")
         popup.transient(self.root)
         popup.grab_set()
 
@@ -2876,6 +2876,8 @@ class OddsPlatformGUI:
         load_feed_history()
 
     def show_market_screen(self, event, market):
+        self.current_market_event_id = event.get("id")
+        self.current_market_id = market.get("id")
         self.clear_content()
 
         # Back button
@@ -2934,6 +2936,10 @@ class OddsPlatformGUI:
             else "Suspended"
         )
 
+        self.event_status_var = tk.StringVar(
+            value=f"Status: {event_status}"
+        )
+
         category = event.get("category") or "Not set"
         suspend_mode = event.get("suspend_mode", "AUTO")
 
@@ -2962,7 +2968,7 @@ class OddsPlatformGUI:
 
         ttk.Label(
             event_info_frame,
-            text=f"Status: {event_status}",
+            textvariable=self.event_status_var,
         ).grid(
             row=0,
             column=1,
@@ -3416,6 +3422,63 @@ class OddsPlatformGUI:
                 market,
             ),
         )
+
+        def refresh_market_state():
+            # Stop refreshing if this market screen has been closed/replaced.
+            if not action_frame.winfo_exists():
+                return
+
+            try:
+                latest_platform = load_remote_platform()
+
+                latest_event = next(
+                    (
+                        item
+                        for item in latest_platform
+                        if item.get("id") == self.current_market_event_id
+                    ),
+                    None,
+                )
+
+                if latest_event is None:
+                    return
+
+                latest_market = next(
+                    (
+                        item
+                        for item in latest_event.get("markets", [])
+                        if item.get("id") == self.current_market_id
+                    ),
+                    None,
+                )
+
+                if latest_market is None:
+                    return
+
+                latest_status = (
+                    latest_event.get("status", "draft").title()
+                    if latest_event.get("active", True)
+                    else "Suspended"
+                )
+
+                event.clear()
+                event.update(latest_event)
+
+                market.clear()
+                market.update(latest_market)
+
+                self.event_status_var.set(
+                    f"Status: {latest_status}"
+                )
+
+                self.platform = latest_platform
+
+            except Exception as exc:
+                print(f"Market refresh failed: {exc}")
+
+            self.root.after(2000, refresh_market_state)
+        
+        self.root.after(2000, refresh_market_state)
 
     def edit_event_details(self, event, market):
         popup = tk.Toplevel(self.root)
