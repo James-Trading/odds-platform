@@ -123,5 +123,20 @@
                 "a929bd7c-0205-497b-a2b8-5db84c1366d7"
             ]
         }
+    },
+    {
+        "name": "Tommy Dob",
+        "contact": "Tom",
+        "email": "Tomd",
+        "status": "Active",
+        "feed": {
+            "enabled": true,
+            "connector": "None",
+            "api_key": "GTM_77dd25de57b5b322f68ed6013e5d8282",
+            "last_price_update": null,
+            "last_bet_received": null
+        },
+        "booked_events": [],
+        "subscriptions": []
     }
 ]

@@ -580,23 +580,23 @@ class OddsPlatformGUI:
             pady=(0, 10)
         )
 
-        self.add_event_row(
-            recent_frame,
-            "Strictly Come Dancing 2026",
-            "Active"
-        )
+        recent_events = sorted(
+            self.platform,
+            key=lambda event: event.get("last_updated", ""),
+            reverse=True
+        )[:5]
 
-        self.add_event_row(
-            recent_frame,
-            "Love Island 2026",
-            "Active"
-        )
+        for event in recent_events:
+            if event.get("active", True):
+                status = event.get("status", "Draft").title()
+            else:
+                status = "Suspended"
 
-        self.add_event_row(
-            recent_frame,
-            "Eurovision 2027",
-            "Draft"
-        )
+            self.add_event_row(
+                recent_frame,
+                event,
+                status
+            )
 
         # Favourites
         favourites_frame = ttk.LabelFrame(
@@ -609,18 +609,6 @@ class OddsPlatformGUI:
             fill="both",
             expand=True,
             pady=(10, 0)
-        )
-
-        self.add_event_row(
-            favourites_frame,
-            "General Election",
-            "Active"
-        )
-
-        self.add_event_row(
-            favourites_frame,
-            "Celebrity Big Brother",
-            "Suspended"
         )
 
         # Activity panel
@@ -1686,15 +1674,75 @@ class OddsPlatformGUI:
             font=("Arial", 24, "bold")
         ).pack(side="left")
 
+        # Search label
+        search_label = ttk.Label(
+            top_bar,
+            text="Search:"
+        )
+
+        # Search box
         self.trading_search_entry = ttk.Entry(
             top_bar,
             width=35,
             font=("Arial", 12)
         )
 
+        # Category label
+        category_label = ttk.Label(
+            top_bar,
+            text="Category:"
+        )
+
+        categories = sorted({
+            event.get("category", "Uncategorised")
+            for event in self.platform
+            if not event.get("archived", False)
+        })
+
+        category_values = ["All Categories"] + categories
+
+        current_category = (
+            self.trading_category_var.get()
+            if hasattr(self, "trading_category_var")
+            else "All Categories"
+        )
+
+        self.trading_category_var = tk.StringVar(
+            value=current_category
+        )
+
+        self.trading_category_combo = ttk.Combobox(
+            top_bar,
+            textvariable=self.trading_category_var,
+            values=category_values,
+            state="readonly",
+            width=20
+        )
+
+        # IMPORTANT: pack right-side widgets in reverse visual order
         self.trading_search_entry.pack(
             side="right",
-            padx=(10, 0),
+            padx=(10, 0)
+        )
+
+        search_label.pack(
+            side="right",
+            padx=(20, 0)
+        )
+
+        self.trading_category_combo.pack(
+            side="right",
+            padx=(10, 0)
+        )
+
+        category_label.pack(
+            side="right",
+            padx=(20, 0)
+        )
+        
+        self.trading_category_combo.bind(
+            "<<ComboboxSelected>>",
+            lambda event: self.filter_trading_events()
         )
 
         self.trading_search_entry.bind(
@@ -1769,19 +1817,36 @@ class OddsPlatformGUI:
             .lower()
         )
 
-        if not search_term:
-            self.show_trading()
-            return
+        selected_category = self.trading_category_var.get()
 
-        matching_events = [
-            event
-            for event in self.platform
-            if search_term
-            in event.get(
+        matching_events = []
+
+        for event in self.platform:
+            if event.get("archived", False):
+                continue
+
+            event_name = event.get(
                 "event_name",
-                "",
+                ""
             ).lower()
-        ]
+
+            event_category = event.get(
+                "category",
+                "Uncategorised"
+            )
+
+            matches_search = (
+                not search_term
+                or search_term in event_name
+            )
+
+            matches_category = (
+                selected_category == "All Categories"
+                or event_category == selected_category
+            )
+
+            if matches_search and matches_category:
+                matching_events.append(event)
 
         self.show_trading(
             filtered_events=matching_events
@@ -5188,15 +5253,16 @@ class OddsPlatformGUI:
             font=("Arial", 24, "bold")
         ).pack()
 
-    def add_event_row(self, parent, event_name, status):
+    def add_event_row(self, parent, event, status):
+        event_name = event.get("event_name", "Unnamed Event")
 
         row = ttk.Frame(parent)
-        row.pack(fill="x", pady=6)
+        row.pack(fill="x", pady=4)
 
         ttk.Button(
             row,
             text=event_name,
-            command=lambda name=event_name: self.open_event_placeholder(name)
+            command=lambda e=event: self.show_event_screen(e)
         ).pack(
             side="left",
             fill="x",
