@@ -190,6 +190,15 @@ def get_client_feed(platform, client):
         is_booked = event_name in booked_events
         is_subscribed = event_category in subscriptions
 
+        print(
+            "FEED CHECK:",
+            event_name,
+            "format=", event.get("event_format"),
+            "booked=", is_booked,
+            "subscribed=", is_subscribed,
+            "markets=", len(event.get("markets", [])),
+        )
+
         if not is_booked and not is_subscribed:
             continue
 
@@ -227,6 +236,13 @@ def get_client_feed(platform, client):
             # has no permitted markets left.
             if not event["markets"]:
                 continue
+
+        print(
+            "SENDING TO CLIENT:",
+            client.get("name"),
+            event.get("name"),
+            "markets=", len(event.get("markets", [])),
+        )
 
         client_events.append(event)
     
