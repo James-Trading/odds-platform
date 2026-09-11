@@ -72,6 +72,7 @@ def get_published_events(platform):
             "category": event.get("category"),
             "class": event.get("class"),
             "type": event.get("type"),
+            "event_format": event.get("event_format", "OUTRIGHT"),
             "start_time": format_api_datetime(event.get("start_time")),
             "status": event.get("status"),
             "version": event.get("version", 0),
