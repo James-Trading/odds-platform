@@ -1852,7 +1852,36 @@ class OddsPlatformGUI:
             filtered_events=matching_events
         )
 
+    def show_match_event_screen(self, event):
+        self.clear_content()
+
+        ttk.Button(
+            self.content,
+            text="← Back to Trading",
+            command=self.show_trading
+        ).pack(anchor="w", pady=(0, 15))
+
+        ttk.Label(
+            self.content,
+            text=event.get("event_name", "Unnamed Match"),
+            font=("Arial", 24, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            self.content,
+            text="MATCH EVENT",
+            font=("Arial", 12, "bold")
+        ).pack(anchor="w", pady=(5, 20))
+
+        ttk.Label(
+            self.content,
+            text="Match trading screen coming next..."
+        ).pack(anchor="w")
+
     def show_event_screen(self, event):
+
+        if event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+            return self.show_match_event_screen(event)
 
         self.clear_content()
 
@@ -5477,6 +5506,32 @@ class OddsPlatformGUI:
             pady=8,
         )
 
+        event_format_var = tk.StringVar(value="OUTRIGHT")
+
+        ttk.Label(
+            form,
+            text="Event format",
+        ).grid(
+            row=7,
+            column=0,
+            sticky="w",
+            pady=8,
+        )
+
+        ttk.Combobox(
+            form,
+            textvariable=event_format_var,
+            values=["OUTRIGHT", "MATCH"],
+            state="readonly",
+            width=32,
+        ).grid(
+            row=7,
+            column=1,
+            sticky="ew",
+            padx=(15, 0),
+            pady=8,
+        )
+
         def save_new_event():
             event_name = name_var.get().strip()
             category = category_var.get().strip()
@@ -5513,6 +5568,7 @@ class OddsPlatformGUI:
                 "event_type": event_type,
                 "start_time": start_time,
                 "suspend_mode": suspend_mode_var.get(),
+                "event_format": event_format_var.get(),
             }
 
             response = save_remote_event(payload)

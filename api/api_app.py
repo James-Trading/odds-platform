@@ -627,6 +627,7 @@ class AdminAddEventRequest(BaseModel):
     event_name: str
     start_time: str = ""
     suspend_mode: str = "AUTO"
+    event_format: str = "OUTRIGHT"
 
 @app.post("/internal/admin/event")
 def admin_add_event(
@@ -644,6 +645,7 @@ def admin_add_event(
 
     event["start_time"] = request.start_time
     event["suspend_mode"] = request.suspend_mode
+    event["event_format"] = request.event_format
     event["active"] = True
 
     platform.append(event)
