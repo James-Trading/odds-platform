@@ -178,7 +178,9 @@ def get_client_feed(platform, client):
     client_events = []
 
     for event in published_events:
-        event_name = str(event.get("name", "")).strip().lower()
+        event_name = str(
+            event.get("event_name", event.get("name", ""))
+        ).strip().lower()
         event_category = str(event.get("category", "")).strip().lower()
 
         is_booked = event_name in booked_events
@@ -190,7 +192,7 @@ def get_client_feed(platform, client):
         market_access = client.get("market_access", {})
 
         event_id = event.get("id")
-        event_name = event.get("name", "")
+        event_name = event.get("event_name", event.get("name", ""))
 
         # Prefer UUID-based permissions.
         # Fall back to old name-based permissions for legacy clients.
