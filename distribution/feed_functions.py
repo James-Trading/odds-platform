@@ -85,8 +85,12 @@ def get_published_events(platform):
             if not market.get("displayed", True):
                 continue
             
-            # Unpublished markets must not leave the platform.
-            if not market.get("published", False):
+            # OUTRIGHT events still require individual market publishing.
+            # MATCH events are published as a complete fixture.
+            if (
+                event.get("event_format", "OUTRIGHT").upper() != "MATCH"
+                and not market.get("published", False)
+            ):
                 continue
 
             customer_market = {
