@@ -59,6 +59,9 @@ def get_published_events(platform):
     for event in platform:
         if event.get("archived", False):
             continue
+
+        if not event.get("active", True):
+            continue
             
         if not event.get("published", False):
             continue
@@ -157,7 +160,7 @@ def get_published_events(platform):
         if customer_event["markets"]:
             customer_events.append(customer_event)
 
-        return customer_events
+    return customer_events
 
 def get_client_feed(platform, client):
     if client.get("status", "").lower() != "active":
