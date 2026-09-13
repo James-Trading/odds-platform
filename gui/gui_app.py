@@ -1855,28 +1855,413 @@ class OddsPlatformGUI:
     def show_match_event_screen(self, event):
         self.clear_content()
 
+        scroll_container = ttk.Frame(self.content)
+        scroll_container.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(
+            scroll_container,
+            highlightthickness=0,
+        )
+
+        scrollbar = ttk.Scrollbar(
+            scroll_container,
+            orient="vertical",
+            command=canvas.yview,
+        )
+
+        scroll_frame = ttk.Frame(canvas)
+
+        scroll_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            ),
+        )
+
+        canvas_window = canvas.create_window(
+            (0, 0),
+            window=scroll_frame,
+            anchor="nw",
+        )
+
+        def resize_scroll_frame(event):
+            canvas.itemconfigure(
+                canvas_window,
+                width=event.width,
+            )
+
+        canvas.bind(
+            "<Configure>",
+            resize_scroll_frame,
+        )
+
+        canvas.configure(
+            yscrollcommand=scrollbar.set,
+        )
+
+        canvas.pack(
+            side="left",
+            fill="both",
+            expand=True,
+        )
+
+        scrollbar.pack(
+            side="right",
+            fill="y",
+        )
+
+        # Back button
         ttk.Button(
-            self.content,
+            scroll_frame,
             text="← Back to Trading",
-            command=self.show_trading
+            command=self.show_trading,
         ).pack(anchor="w", pady=(0, 15))
 
+        # Event title
         ttk.Label(
-            self.content,
+            scroll_frame,
             text=event.get("event_name", "Unnamed Match"),
-            font=("Arial", 24, "bold")
+            font=("Arial", 24, "bold"),
         ).pack(anchor="w")
 
         ttk.Label(
-            self.content,
+            scroll_frame,
             text="MATCH EVENT",
-            font=("Arial", 12, "bold")
-        ).pack(anchor="w", pady=(5, 20))
+            font=("Arial", 12, "bold"),
+        ).pack(anchor="w", pady=(5, 5))
+
+        # Event information
+        start_time = event.get("start_time", "")
+        event_status = "Active" if event.get("active", True) else "Suspended"
 
         ttk.Label(
+            scroll_frame,
+            text=f"Start: {start_time}    Status: {event_status}",
+            font=("Arial", 11),
+        ).pack(anchor="w", pady=(0, 20))
+
+        match_controls = ttk.Frame(scroll_frame)
+        match_controls.pack(anchor="w", pady=(0, 15))
+
+
+        def activate_match():
+            try:
+                event["active"] = True
+                event["status"] = "Trading"
+
+                save_remote_event_state(
+                    event.get("id"),
+                    True,
+                )
+
+                save_remote_event_details(
+                    event.get("id"),
+                    event.get("event_name"),
+                    event.get("start_time"),
+                    event.get("status"),
+                    event.get("suspend_mode", "AUTO"),
+                )
+
+                self.platform = load_remote_platform()
+                
+                updated_event = next(
+                    (
+                        e
+                        for e in self.platform
+                        if e.get("id") == event.get("id")
+                    ),
+                    event,
+                )
+
+                self.show_match_event_screen(updated_event)
+
+            except Exception as exc:
+                messagebox.showerror(
+                    "Activate Match Failed",
+                    str(exc),
+                )
+
+
+        def suspend_match():
+            try:
+                event["active"] = False
+                event["status"] = "Suspended"
+
+                save_remote_event_state(
+                    event.get("id"),
+                    False,
+                )
+
+                save_remote_event_details(
+                    event.get("id"),
+                    event.get("event_name"),
+                    event.get("start_time"),
+                    event.get("status"),
+                    event.get("suspend_mode", "AUTO"),
+                )
+
+                self.platform = load_remote_platform()
+                
+                updated_event = next(
+                    (
+                        e
+                        for e in self.platform
+                        if e.get("id") == event.get("id")
+                    ),
+                    event,
+                )
+
+                self.show_match_event_screen(updated_event)
+
+            except Exception as exc:
+                messagebox.showerror(
+                    "Suspend Match Failed",
+                    str(exc),
+                )
+
+
+        if event.get("active", False):
+            ttk.Button(
+                match_controls,
+                text="Suspend Match",
+                command=suspend_match,
+            ).pack(side="left", padx=(0, 8))
+
+        else:
+            ttk.Button(
+                match_controls,
+                text="Activate Match",
+                command=activate_match,
+            ).pack(side="left", padx=(0, 8))
+
+        match_actions = ttk.Frame(scroll_frame)
+        match_actions.pack(anchor="w", pady=(0, 15))
+
+        ttk.Button(
             self.content,
-            text="Match trading screen coming next..."
-        ).pack(anchor="w")
+            text="Edit Match Details",
+            command=lambda: self.edit_event_details(event),
+        ).pack(anchor="w", pady=(5, 10))
+
+        publish_button_text = (
+            "Unpublish Event"
+            if event.get("published", False)
+            else "Publish Event"
+        )
+
+        ttk.Button(
+            match_actions,
+            text=publish_button_text,
+            command=lambda: self.toggle_event_publish(event),
+        ).pack(side="left", padx=(0, 8))
+
+        ttk.Button(
+            match_actions,
+            text="+ Add Market",
+            command=lambda: self.create_market_popup(event),
+        ).pack(side="left", padx=(0, 8))
+
+        ttk.Button(
+            match_actions,
+            text="Manage Markets",
+            command=lambda: self.manage_markets_popup(event),
+        ).pack(side="left")
+
+        markets = event.get("markets", [])
+
+        if not markets:
+            ttk.Label(
+                scroll_frame,
+                text="No markets have been added to this match yet.",
+                font=("Arial", 11),
+            ).pack(anchor="w")
+
+            return
+
+        # Display every market on this match screen
+        for market in markets:
+
+            market_frame = ttk.LabelFrame(
+                scroll_frame,
+                text=market.get("name", "Unnamed Market"),
+                padding=12,
+            )
+
+            market_frame.pack(
+                fill="x",
+                anchor="w",
+                pady=(0, 12),
+            )
+
+            market_status = str(
+                market.get("status", "ACTIVE")
+            ).upper()
+
+            ttk.Label(
+                market_frame,
+                text=f"Status: {market_status}",
+                font=("Arial", 9),
+            ).pack(anchor="w", pady=(0, 8))
+
+            selections = market.get("selections", [])
+
+            actions = ttk.Frame(market_frame)
+            actions.pack(anchor="w", pady=(8, 0))
+
+            ttk.Button(
+                actions,
+                text="Manage Selections",
+                command=lambda selected_market=market: self.show_manage_selections_popup(
+                    event,
+                    selected_market,
+                ),
+            ).pack(side="left")
+
+            if not selections:
+                ttk.Label(
+                    market_frame,
+                    text="No selections",
+                ).pack(anchor="w")
+
+                continue
+
+            # Selection table
+            columns = (
+                "selection",
+                "price",
+                "probability",
+                "status",
+            )
+
+            table = ttk.Treeview(
+                market_frame,
+                columns=columns,
+                show="headings",
+                height=min(len(selections), 6),
+            )
+
+            table.heading(
+                "selection",
+                text="Selection",
+            )
+            table.heading(
+                "price",
+                text="Price",
+            )
+            table.heading(
+                "probability",
+                text="Probability",
+            )
+            table.heading(
+                "status",
+                text="Status",
+            )
+
+            table.column(
+                "selection",
+                width=260,
+                anchor="w",
+            )
+            table.column(
+                "price",
+                width=100,
+                anchor="center",
+            )
+            table.column(
+                "probability",
+                width=110,
+                anchor="center",
+            )
+            table.column(
+                "status",
+                width=110,
+                anchor="center",
+            )
+
+            for selection_index, selection in enumerate(selections):
+
+                # Use pending GTM price if there is one
+                pending_key = (
+                    id(market),
+                    selection_index,
+                )
+
+                price = self.pending_prices.get(
+                    pending_key,
+                    selection.get("price", [0, 1]),
+                )
+
+                # Fractional price display
+                if (
+                    isinstance(price, (list, tuple))
+                    and len(price) == 2
+                ):
+                    price_text = f"{price[0]}/{price[1]}"
+
+                    try:
+                        probability_value = probability(
+                            price[0],
+                            price[1],
+                        )
+                        probability_text = (
+                            f"{probability_value:.2f}%"
+                        )
+                    except Exception:
+                        probability_text = "-"
+
+                else:
+                    price_text = str(price)
+                    probability_text = "-"
+
+                selection_active = selection.get(
+                    "active",
+                    True,
+                )
+
+                result = selection.get(
+                    "result",
+                    "",
+                )
+
+                if result == "Won":
+                    status_text = "Won"
+
+                elif result == "Lost":
+                    status_text = "Lost"
+
+                elif result == "Void":
+                    status_text = "Void"
+
+                elif market_status == "SUSPENDED":
+                    status_text = "Suspended"
+
+                elif not selection_active:
+                    status_text = "Suspended"
+
+                elif pending_key in self.pending_prices:
+                    status_text = "Pending"
+
+                else:
+                    status_text = "Active"
+
+                table.insert(
+                    "",
+                    "end",
+                    values=(
+                        selection.get(
+                            "name",
+                            "Unnamed Selection",
+                        ),
+                        price_text,
+                        probability_text,
+                        status_text,
+                    ),
+                )
+
+            table.pack(
+                fill="x",
+                expand=True,
+            )
 
     def show_event_screen(self, event):
 
@@ -1918,9 +2303,9 @@ class OddsPlatformGUI:
         ).pack(anchor="w", pady=(0, 20))
 
         suspend_button_text = (
-            "Unsuspend Event"
-            if event.get("active", True) is False
-            else "Suspend Event"
+            "Suspend Event"
+            if event.get("active", False)
+            else "Activate Event"
         )
 
         ttk.Button(
@@ -2185,7 +2570,12 @@ class OddsPlatformGUI:
 
 
     def toggle_event_suspension(self, event):
-        new_active = not event.get("active", True)
+        new_active = not event.get("active", False)
+
+        if new_active:
+            new_status = "Trading"
+        else:
+            new_status = "Suspended"
 
         try:
             save_remote_event_state(
@@ -2193,8 +2583,16 @@ class OddsPlatformGUI:
                 new_active,
             )
 
-            event["active"] = new_active
+            save_remote_event_details(
+                event.get("id"),
+                event.get("event_name"),
+                event.get("start_time"),
+                new_status,
+                event.get("suspend_mode", "AUTO"),
+            )
 
+            event["active"] = new_active
+            event["status"] = new_status
             touch_event(
                 event,
                 change_type="event_state_change",
@@ -3043,12 +3441,6 @@ class OddsPlatformGUI:
             else "Unpublished"
         )
 
-        publish_button_text = (
-            "Unpublish Event"
-            if event.get("published", False)
-            else "Publish Event"
-        )
-
         ttk.Label(
             event_info_frame,
             text=f"Category: {category}",
@@ -3122,17 +3514,18 @@ class OddsPlatformGUI:
             side="left",
         )
 
-        ttk.Button(
-            event_button_frame,
-            text=publish_button_text,
-            command=lambda: self.toggle_event_publish_from_market(
-                event,
-                market,
-            ),
-        ).pack(
-            side="left",
-            padx=(8, 0),
-        )
+        if not event.get("published", False):
+            ttk.Button(
+                event_button_frame,
+                text="Publish Event",
+                command=lambda: self.toggle_event_publish_from_market(
+                    event,
+                    market,
+                ),
+            ).pack(
+                side="left",
+                padx=(8, 0),
+            )
 
         # -------------------------
         # Trader notes panel
@@ -3574,7 +3967,7 @@ class OddsPlatformGUI:
         
         self.root.after(2000, refresh_market_state)
 
-    def edit_event_details(self, event, market):
+    def edit_event_details(self, event, market=None):
         popup = tk.Toplevel(self.root)
         popup.title("Edit Event Details")
         popup.geometry("480x350")
@@ -3768,7 +4161,11 @@ class OddsPlatformGUI:
             save_platform(self.platform)
 
             popup.destroy()
-            self.show_market_screen(event, market)
+
+            if event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+                self.show_match_event_screen(event)
+            else:
+                self.show_market_screen(event, market)
 
         button_frame = ttk.Frame(form_frame)
         button_frame.grid(
@@ -4006,13 +4403,24 @@ class OddsPlatformGUI:
                 ],
             )
 
-            save_remote_selection(
+            print(
+                "SAVING SELECTION:",
                 event.get("id"),
                 market.get("id"),
                 selection_name,
                 numerator,
                 denominator,
             )
+
+            response = save_remote_selection(
+                event.get("id"),
+                market.get("id"),
+                selection_name,
+                numerator,
+                denominator,
+            )
+
+            print("SELECTION SAVE RESPONSE:", response)
 
             market["selections"].sort(
                 key=lambda selection: probability(
@@ -5021,45 +5429,43 @@ class OddsPlatformGUI:
             == "SUSPENDED"
         )
 
+        new_status = "ACTIVE" if market_is_suspended else "SUSPENDED"
+
         try:
-            if market_is_suspended:
-                unsuspend_platform_market(
-                    self.platform,
-                    event_name,
-                    market_name,
-                )
-
-                add_audit_log(
-                    f"{market_name} unsuspended in {event_name}"
-                )
-
-            else:
-                suspend_platform_market(
-                    self.platform,
-                    event_name,
-                    market_name,
-                )
-
-                add_audit_log(
-                    f"{market_name} suspended in {event_name}"
-                )
-
             save_remote_market_state(
                 event.get("id"),
                 market.get("id"),
-                market.get("status", "ACTIVE"),
+                new_status,
             )
 
-            save_platform(self.platform)
-
-        except (TypeError, KeyError):
+        except Exception as exc:
             messagebox.showerror(
                 "Market suspension failed",
-                "The market status could not be updated.",
+                str(exc),
             )
             return
 
-        self.show_market_screen(event, market)
+        self.platform = load_remote_platform()
+
+        updated_event = next(
+            (
+                e
+                for e in self.platform
+                if e.get("id") == event.get("id")
+            ),
+            event,
+        )
+
+        updated_market = next(
+            (
+                m
+                for m in updated_event.get("markets", [])
+                if m.get("id") == market.get("id")
+            ),
+            market,
+        )
+
+        self.show_market_screen(updated_event, updated_market)
 
     def suspend_event_for_schedule(self, event):
         if event.get("active", True) is False:
