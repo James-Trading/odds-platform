@@ -2049,6 +2049,18 @@ class OddsPlatformGUI:
                 command=activate_match,
             ).pack(side="left", padx=(0, 8))
 
+        ttk.Button(
+            match_controls,
+            text="Save Changes",
+            command=lambda: self.save_match_pending_prices(event),
+        ).pack(side="left", padx=(0, 8))
+
+        ttk.Button(
+            match_controls,
+            text="Discard Changes",
+            command=lambda: self.discard_match_pending_prices(event),
+        ).pack(side="left", padx=(0, 8))
+
         match_actions = ttk.Frame(scroll_frame)
         match_actions.pack(anchor="w", pady=(0, 15))
 
@@ -2199,7 +2211,10 @@ class OddsPlatformGUI:
                 "selection",
                 "price",
                 "probability",
+                "shorten",
+                "lengthen",
                 "status",
+                "display",
             )
 
             table = ttk.Treeview(
@@ -2221,10 +2236,16 @@ class OddsPlatformGUI:
                 "probability",
                 text="Probability",
             )
+            table.heading("shorten", text="▼")
+
+            table.heading("lengthen", text="▲")
+
             table.heading(
                 "status",
                 text="Status",
             )
+
+            table.heading("display", text="Display")
 
             table.column(
                 "selection",
@@ -2241,11 +2262,17 @@ class OddsPlatformGUI:
                 width=110,
                 anchor="center",
             )
+            table.column("shorten", width=55, anchor="center")
+
+            table.column("lengthen", width=55, anchor="center")
+
             table.column(
                 "status",
                 width=110,
                 anchor="center",
             )
+
+            table.column("display", width=80, anchor="center")
 
             for selection_index, selection in enumerate(selections):
 
@@ -2316,6 +2343,7 @@ class OddsPlatformGUI:
                 table.insert(
                     "",
                     "end",
+                    iid=str(selection_index),
                     values=(
                         selection.get(
                             "name",
@@ -2323,13 +2351,28 @@ class OddsPlatformGUI:
                         ),
                         price_text,
                         probability_text,
+                        "▼",
+                        "▲",
                         status_text,
+                        "Display" if selection.get("displayed", True) else "Hidden",
                     ),
                 )
 
             table.pack(
                 fill="x",
                 expand=True,
+            )
+
+            table.bind(
+                "<Button-1>",
+                lambda event_click,
+                selection_table=table,
+                selected_market=market: self.handle_price_tick_click(
+                    event_click,
+                    selection_table,
+                    event,
+                    selected_market,
+                ),
             )
 
     def show_event_screen(self, event):
@@ -5262,6 +5305,58 @@ class OddsPlatformGUI:
 
         self.show_market_screen(event, market)
 
+    def save_match_pending_prices(self, event):
+        for market in event.get("markets", []):
+            for selection_index, selection in enumerate(
+                market.get("selections", [])
+            ):
+                pending_key = (id(market), selection_index)
+
+                if pending_key not in self.pending_prices:
+                    continue
+
+                new_price = self.pending_prices[pending_key]
+
+                save_remote_price(
+                    event.get("id"),
+                    market.get("id"),
+                    selection.get("id"),
+                    new_price[0],
+                    new_price[1],
+                )
+
+                set_price(
+                    selection,
+                    new_price[0],
+                    new_price[1],
+                )
+
+                del self.pending_prices[pending_key]
+
+        self.platform = load_remote_platform()
+
+        updated_event = next(
+            (
+                e for e in self.platform
+                if e.get("id") == event.get("id")
+            ),
+            event,
+        )
+
+        self.show_match_event_screen(updated_event)
+
+    def discard_match_pending_prices(self, event):
+        for market in event.get("markets", []):
+            for selection_index, _selection in enumerate(
+                market.get("selections", [])
+            ):
+                pending_key = (id(market), selection_index)
+
+                if pending_key in self.pending_prices:
+                    del self.pending_prices[pending_key]
+
+        self.show_match_event_screen(event)
+
     def toggle_market_publish(
         self,
         event,
@@ -5479,7 +5574,10 @@ class OddsPlatformGUI:
             )
             return
 
-        self.show_market_screen(event, market)
+        if event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+            self.show_match_event_screen(event)
+        else:
+            self.show_market_screen(event, market)
 
     def toggle_selection_display(
         self,
@@ -5514,10 +5612,10 @@ class OddsPlatformGUI:
 
         save_platform(self.platform)
 
-        self.show_market_screen(
-            event,
-            market,
-        )
+        if event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+            self.show_match_event_screen(event)
+        else:
+            self.show_market_screen(event, market)
 
     def save_trader_notes(self, event, market):
         notes = self.trader_notes_text.get(
