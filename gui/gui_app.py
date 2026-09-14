@@ -2145,6 +2145,47 @@ class OddsPlatformGUI:
                 ),
             ).pack(side="left")
 
+            market_is_suspended = (
+                str(market.get("status", "ACTIVE")).upper()
+                == "SUSPENDED"
+            )
+
+            suspend_button_text = (
+                "Unsuspend Market"
+                if market_is_suspended
+                else "Suspend Market"
+            )
+
+            ttk.Button(
+                actions,
+                text=suspend_button_text,
+                command=lambda selected_market=market: self.toggle_market_suspension(
+                    event,
+                    selected_market,
+                ),
+            ).pack(
+                side="left",
+                padx=(8, 0),
+            )
+
+            display_button_text = (
+                "Non-display Market"
+                if market.get("displayed", True)
+                else "Display Market"
+            )
+
+            ttk.Button(
+                actions,
+                text=display_button_text,
+                command=lambda selected_market=market: self.toggle_market_display(
+                    event,
+                    selected_market,
+                ),
+            ).pack(
+                side="left",
+                padx=(8, 0),
+            )
+
             if not selections:
                 ttk.Label(
                     market_frame,
@@ -5548,7 +5589,13 @@ class OddsPlatformGUI:
             market,
         )
 
-        self.show_market_screen(updated_event, updated_market)
+        if updated_event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+            self.show_match_event_screen(updated_event)
+        else:
+            self.show_market_screen(
+                updated_event,
+                updated_market,
+            )
 
     def toggle_market_display(
         self,
@@ -5590,10 +5637,13 @@ class OddsPlatformGUI:
             market,
         )
 
-        self.show_market_screen(
-            updated_event,
-            updated_market,
-        )
+        if updated_event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+            self.show_match_event_screen(updated_event)
+        else:
+            self.show_market_screen(
+                updated_event,
+                updated_market,
+            )
 
     def suspend_event_for_schedule(self, event):
         if event.get("active", True) is False:

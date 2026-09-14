@@ -59,9 +59,6 @@ def get_published_events(platform):
     for event in platform:
         if event.get("archived", False):
             continue
-
-        if not event.get("active", True):
-            continue
             
         if not event.get("published", False):
             continue
