@@ -795,7 +795,7 @@ def admin_event_details(
 class AdminMarketStateRequest(BaseModel):
     event_id: str
     market_id: str
-    status: str
+    status: str | None = None
     displayed: bool | None = None
 
 
@@ -854,7 +854,7 @@ def admin_market_state(
             "old_status": old_status,
             "new_status": market.get("status"),
             "old_displayed": old_displayed,
-            "new_displayed": market.get("displayed"),
+            "new_displayed": market.get("displayed", True),
         },
     )
 
