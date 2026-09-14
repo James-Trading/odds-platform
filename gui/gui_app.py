@@ -314,23 +314,32 @@ ADMIN_MARKET_STATE_URL = "https://api.goldliner.co.uk/internal/admin/market-stat
 def save_remote_market_state(
     event_id,
     market_id,
-    status,
+    status=None,
+    displayed=None
 ):
     admin_key = os.getenv("GTM_ADMIN_API_KEY")
 
     if not admin_key:
         raise RuntimeError("GTM_ADMIN_API_KEY is not set")
 
+    payload = {
+        "event_id": event_id,
+        "market_id": market_id,
+    }
+
+    if status is not None:
+        payload["status"] = status
+
+    if displayed is not None:
+        payload["displayed"] = displayed
+
     response = requests.post(
         ADMIN_MARKET_STATE_URL,
         headers={
             "Authorization": f"Bearer {admin_key}"
         },
-        json={
-            "event_id": event_id,
-            "market_id": market_id,
-            "status": status,
-        },
+        json=payload,
+        
         timeout=10,
     )
 
@@ -3687,6 +3696,24 @@ class OddsPlatformGUI:
             ),
         ).pack(side="left", padx=(20, 0))
 
+        display_button_text = (
+            "Non-display Market"
+            if market.get("displayed", True)
+            else "Display Market"
+        )
+
+        ttk.Button(
+            action_frame,
+            text=display_button_text,
+            command=lambda: self.toggle_market_display(
+                event,
+                market,
+            ),
+        ).pack(
+            side="left",
+            padx=(5, 0),
+        )
+
         price_history_button = ttk.Button(
             action_frame,
             text="Price History",
@@ -5522,6 +5549,51 @@ class OddsPlatformGUI:
         )
 
         self.show_market_screen(updated_event, updated_market)
+
+    def toggle_market_display(
+        self,
+        event,
+        market,
+    ):
+        new_displayed = not market.get("displayed", True)
+
+        try:
+            save_remote_market_state(
+                event.get("id"),
+                market.get("id"),
+                displayed=new_displayed,
+            )
+        except Exception as exc:
+            messagebox.showerror(
+                "Market display update failed",
+                str(exc),
+            )
+            return
+
+        self.platform = load_remote_platform()
+
+        updated_event = next(
+            (
+                e
+                for e in self.platform
+                if e.get("id") == event.get("id")
+            ),
+            event,
+        )
+
+        updated_market = next(
+            (
+                m
+                for m in updated_event.get("markets", [])
+                if m.get("id") == market.get("id")
+            ),
+            market,
+        )
+
+        self.show_market_screen(
+            updated_event,
+            updated_market,
+        )
 
     def suspend_event_for_schedule(self, event):
         if event.get("active", True) is False:

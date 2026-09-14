@@ -796,6 +796,7 @@ class AdminMarketStateRequest(BaseModel):
     event_id: str
     market_id: str
     status: str
+    displayed: bool | None = None
 
 
 @app.post("/internal/admin/market-state")
@@ -836,7 +837,13 @@ def admin_market_state(
         )
 
     old_status = market.get("status", "ACTIVE")
-    market["status"] = request.status
+    old_displayed = market.get("displayed", True)
+
+    if request.status is not None:
+        market["status"] = request.status
+
+    if request.displayed is not None:
+        market["displayed"] = request.displayed
 
     touch_event(
         event,
@@ -846,6 +853,8 @@ def admin_market_state(
             "market_name": market.get("name"),
             "old_status": old_status,
             "new_status": market.get("status"),
+            "old_displayed": old_displayed,
+            "new_displayed": market.get("displayed"),
         },
     )
 
