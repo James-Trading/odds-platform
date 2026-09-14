@@ -278,24 +278,30 @@ def save_remote_event_details(
     start_time,
     status,
     suspend_mode,
+    displayed=None,
 ):
     admin_key = os.getenv("GTM_ADMIN_API_KEY")
 
     if not admin_key:
         raise RuntimeError("GTM_ADMIN_API_KEY is not set")
 
+    payload = {
+        "event_id": event_id,
+        "event_name": event_name,
+        "start_time": start_time,
+        "status": status,
+        "suspend_mode": suspend_mode,
+    }
+
+    if displayed is not None:
+        payload["displayed"] = displayed
+
     response = requests.post(
         ADMIN_EVENT_DETAILS_URL,
         headers={
             "Authorization": f"Bearer {admin_key}"
         },
-        json={
-            "event_id": event_id,
-            "event_name": event_name,
-            "start_time": start_time,
-            "status": status,
-            "suspend_mode": suspend_mode,
-        },
+        json=payload,
         timeout=10,
     )
 
@@ -2043,17 +2049,30 @@ class OddsPlatformGUI:
             command=lambda: self.edit_event_details(event),
         ).pack(anchor="w", pady=(5, 10))
 
-        publish_button_text = (
-            "Unpublish Event"
-            if event.get("published", False)
-            else "Publish Event"
+        if not event.get("published", False):
+            ttk.Button(
+                match_actions,
+                text="Publish Event",
+                command=lambda: self.toggle_event_publish(event),
+            ).pack(
+                side="left",
+                padx=(0, 8),
+            )
+
+        display_button_text = (
+            "Non-display Event"
+            if event.get("displayed", True)
+            else "Display Event"
         )
 
         ttk.Button(
             match_actions,
-            text=publish_button_text,
-            command=lambda: self.toggle_event_publish(event),
-        ).pack(side="left", padx=(0, 8))
+            text=display_button_text,
+            command=lambda: self.toggle_event_display(event),
+        ).pack(
+            side="left",
+            padx=(0, 8),
+        )
 
         ttk.Button(
             match_actions,
@@ -2290,17 +2309,24 @@ class OddsPlatformGUI:
             font=("Arial", 11)
         ).pack(anchor="w", pady=(0, 15))
 
-        button_text = (
-            "Unpublish Event"
-            if event.get("published")
-            else "Publish Event"
+        if not event.get("published", False):
+            ttk.Button(
+                self.content,
+                text="Publish Event",
+                command=lambda: self.toggle_event_publish(event),
+            ).pack(anchor="w", pady=(0, 20))
+
+        display_button_text = (
+            "Non-display Event"
+            if event.get("displayed", True)
+            else "Display Event"
         )
 
         ttk.Button(
             self.content,
-            text=button_text,
-            command=lambda: self.toggle_event_publish(event)
-        ).pack(anchor="w", pady=(0, 20))
+            text=display_button_text,
+            command=lambda: self.toggle_event_display(event),
+        ).pack(anchor="w", pady=(0, 10))
 
         suspend_button_text = (
             "Suspend Event"
@@ -2616,6 +2642,41 @@ class OddsPlatformGUI:
             return
 
         self.show_event_screen(event)
+
+    def toggle_event_display(self, event):
+        new_displayed = not event.get("displayed", True)
+
+        try:
+            save_remote_event_details(
+                event.get("id"),
+                event.get("event_name", ""),
+                event.get("start_time", ""),
+                event.get("status", "Draft"),
+                event.get("suspend_mode", "AUTO"),
+                displayed=new_displayed,
+            )
+        except (TypeError, KeyError):
+            messagebox.showerror(
+                "Display update failed",
+                "The event display state could not be updated.",
+            )
+            return
+
+        self.platform = load_remote_platform()
+
+        updated_event = next(
+            (
+                item
+                for item in self.platform
+                if item.get("id") == event.get("id")
+            ),
+            event,
+        )
+
+        if updated_event.get("event_format", "OUTRIGHT").upper() == "MATCH":
+            self.show_match_event_screen(updated_event)
+        else:
+            self.show_event_screen(updated_event)
 
 
     def show_back_office(self):
@@ -3667,23 +3728,18 @@ class OddsPlatformGUI:
             padx=(8, 0),
         )
 
-        market_publish_button_text = (
-            "Unpublish Market"
-            if market.get("published", False)
-            else "Publish Market"
-        )
-
-        ttk.Button(
-            action_frame,
-            text=market_publish_button_text,
-            command=lambda: self.toggle_market_publish(
-                event,
-                market,
-            ),
-        ).pack(
-            side="left",
-            padx=(5, 0),
-        )
+        if not market.get("published", False):
+            ttk.Button(
+                action_frame,
+                text="Publish Market",
+                command=lambda: self.toggle_market_publish(
+                    event,
+                    market,
+                ),
+            ).pack(
+                side="left",
+                padx=(5, 0),
+            )
 
         table_frame = ttk.Frame(self.content)
         table_frame.pack(fill="both", expand=True)

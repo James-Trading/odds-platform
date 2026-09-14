@@ -723,6 +723,7 @@ class AdminEventDetailsRequest(BaseModel):
     start_time: str
     status: str
     suspend_mode: str
+    displayed: bool | None = None
 
 
 @app.post("/internal/admin/event-details")
@@ -752,12 +753,16 @@ def admin_event_details(
         "start_time": event.get("start_time"),
         "status": event.get("status"),
         "suspend_mode": event.get("suspend_mode"),
+        "displayed": event.get("displayed", True),
     }
 
     event["event_name"] = request.event_name
     event["start_time"] = request.start_time
     event["status"] = request.status
     event["suspend_mode"] = request.suspend_mode
+
+    if request.displayed is not None:
+        event["displayed"] = request.displayed
 
     touch_event(
         event,
@@ -769,6 +774,7 @@ def admin_event_details(
                 "start_time": event.get("start_time"),
                 "status": event.get("status"),
                 "suspend_mode": event.get("suspend_mode"),
+                "displayed": event.get("displayed", True),
             },
         },
     )
