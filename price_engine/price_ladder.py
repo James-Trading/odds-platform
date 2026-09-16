@@ -92,6 +92,14 @@ PRICE_LADDER = [
     [5000, 1],
 ]
 
+def nearest_ladder_price(decimal_price):
+    return min(
+        PRICE_LADDER,
+        key=lambda price: abs(
+            (1 + price[0] / price[1]) - decimal_price
+        ),
+    )
+
 def shorten_one_tick(selection):
     pass
 

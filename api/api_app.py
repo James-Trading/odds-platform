@@ -20,7 +20,7 @@ from client_save_load import load_clients, save_clients
 from distribution.feed_functions import get_client_feed
 from save_load import load_platform, save_platform
 
-from price_engine.price_ladder import set_price
+from price_engine.price_ladder import set_price, nearest_ladder_price
 from event_functions import touch_event, add_selection, create_market, create_event
 
 from datetime import datetime, timezone
@@ -312,8 +312,9 @@ class AdminPriceChangeRequest(BaseModel):
     event_id: str
     market_id: str
     selection_id: str
-    price_top: int = Field(gt=0)
-    price_bottom: int = Field(gt=0)
+    price_top: int | None = Field(default=None, gt=0)
+    price_bottom: int | None = Field(default=None, gt=0)
+    decimal_price: float | None = Field(default=None, gt=1)
 
 class AdminAddSelectionRequest(BaseModel):
     event_id: str
@@ -386,10 +387,24 @@ def admin_change_price(
 
     old_price = selection.get("price")
 
+    if request.decimal_price is not None:
+        price_top, price_bottom = nearest_ladder_price(
+            request.decimal_price
+        )
+    else:
+        if request.price_top is None or request.price_bottom is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Provide decimal_price or price_top/price_bottom",
+            )
+
+        price_top = request.price_top
+        price_bottom = request.price_bottom
+
     set_price(
         selection,
-        request.price_top,
-        request.price_bottom,
+        price_top,
+        price_bottom,
     )
 
     touch_event(
