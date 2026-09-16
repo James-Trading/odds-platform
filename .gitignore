@@ -1,1 +1,8 @@
 __pycache__/
+
+# GTM runtime data - never deploy via Git
+platform.json
+clients.json
+change_log.json
+change_sequence.json
+logs/activity_log.txt
