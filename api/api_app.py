@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 
 from logs.activity_logger import log_activity
 
-from state.change_sequence import load_change_log
+from state.change_sequence import load_change_log, sequence_lock
 
 from bets.settlement_functions import settle_market_results
 
@@ -320,8 +320,9 @@ class AdminAddSelectionRequest(BaseModel):
     event_id: str
     market_id: str
     selection_name: str
-    price_top: int = Field(gt=0)
-    price_bottom: int = Field(gt=0)
+    price_top: int | None = Field(default=None, gt=0)
+    price_bottom: int | None = Field(default=None, gt=0)
+    decimal_price: float | None = Field(default=None, gt=1)
 
 class AdminAddMarketRequest(BaseModel):
     event_id: str
@@ -338,101 +339,103 @@ def admin_change_price(
     request: AdminPriceChangeRequest,
     _: bool = Depends(get_authenticated_admin),
 ):
-    platform = load_platform()
 
-    event = next(
-        (
-            event
-            for event in platform
-            if event.get("id") == request.event_id
-        ),
-        None,
-    )
+    with sequence_lock:
+        platform = load_platform()
 
-    if event is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Event not found.",
+        event = next(
+            (
+                event
+                for event in platform
+                if event.get("id") == request.event_id
+            ),
+            None,
         )
 
-    market = next(
-        (
-            market
-            for market in event.get("markets", [])
-            if market.get("id") == request.market_id
-        ),
-        None,
-    )
-
-    if market is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Market not found.",
-        )
-
-    selection = next(
-        (
-            selection
-            for selection in market.get("selections", [])
-            if selection.get("id") == request.selection_id
-        ),
-        None,
-    )
-
-    if selection is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Selection not found.",
-        )
-
-    old_price = selection.get("price")
-
-    if request.decimal_price is not None:
-        price_top, price_bottom = nearest_ladder_price(
-            request.decimal_price
-        )
-    else:
-        if request.price_top is None or request.price_bottom is None:
+        if event is None:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Provide decimal_price or price_top/price_bottom",
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Event not found.",
             )
 
-        price_top = request.price_top
-        price_bottom = request.price_bottom
+        market = next(
+            (
+                market
+                for market in event.get("markets", [])
+                if market.get("id") == request.market_id
+            ),
+            None,
+        )
 
-    set_price(
-        selection,
-        price_top,
-        price_bottom,
-    )
+        if market is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Market not found.",
+            )
 
-    touch_event(
-        event,
-        change_type="price_change",
-        details={
+        selection = next(
+            (
+                selection
+                for selection in market.get("selections", [])
+                if selection.get("id") == request.selection_id
+            ),
+            None,
+        )
+
+        if selection is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Selection not found.",
+            )
+
+        old_price = selection.get("price")
+
+        if request.decimal_price is not None:
+            price_top, price_bottom = nearest_ladder_price(
+                request.decimal_price
+            )
+        else:
+            if request.price_top is None or request.price_bottom is None:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Provide decimal_price or price_top/price_bottom",
+                )
+
+            price_top = request.price_top
+            price_bottom = request.price_bottom
+
+        set_price(
+            selection,
+            price_top,
+            price_bottom,
+        )
+
+        touch_event(
+            event,
+            change_type="price_change",
+            details={
+                "market_id": market.get("id"),
+                "market_name": market.get("name"),
+                "selection_id": selection.get("id"),
+                "selection_name": selection.get("name"),
+                "old_price": old_price,
+                "new_price": selection.get("price"),
+            },
+        )
+
+        save_platform(platform)
+
+        return {
+            "status": "updated",
+            "event_id": event.get("id"),
             "market_id": market.get("id"),
-            "market_name": market.get("name"),
             "selection_id": selection.get("id"),
             "selection_name": selection.get("name"),
             "old_price": old_price,
             "new_price": selection.get("price"),
-        },
-    )
-
-    save_platform(platform)
-
-    return {
-        "status": "updated",
-        "event_id": event.get("id"),
-        "market_id": market.get("id"),
-        "selection_id": selection.get("id"),
-        "selection_name": selection.get("name"),
-        "old_price": old_price,
-        "new_price": selection.get("price"),
-        "version": event.get("version"),
-        "change_id": event.get("change_id"),
-    }
+            "version": event.get("version"),
+            "change_id": event.get("change_id"),
+        }
 
 class AdminSelectionStateRequest(BaseModel):
     event_id: str
@@ -523,12 +526,26 @@ def admin_add_selection(
             detail="Market not found.",
         )
 
+    if request.decimal_price is not None:
+        price_top, price_bottom = nearest_ladder_price(
+            request.decimal_price
+        )
+    else:
+        if request.price_top is None or request.price_bottom is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Provide decimal_price or price_top/price_bottom",
+            )
+
+        price_top = request.price_top
+        price_bottom = request.price_bottom
+
     selection = add_selection(
         market,
         request.selection_name,
         [
-            request.price_top,
-            request.price_bottom,
+            price_top,
+            price_bottom,
         ],
     )
 
