@@ -1,10 +1,10 @@
 import json
 from pathlib import Path
-from threading import Lock
+from threading import RLock
 
 
 SEQUENCE_FILE = Path("change_sequence.json")
-sequence_lock = Lock()
+sequence_lock = RLock()
 
 
 def next_change_id():
