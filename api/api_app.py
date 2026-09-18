@@ -444,6 +444,12 @@ class AdminSelectionStateRequest(BaseModel):
     active: bool | None = None
     displayed: bool | None = None
 
+class AdminSelectionDetailsRequest(BaseModel):
+    event_id: str
+    market_id: str
+    selection_id: str
+    selection_name: str
+
 @app.post("/internal/admin/market")
 def admin_add_market(
     request: AdminAddMarketRequest,
@@ -566,6 +572,80 @@ def admin_add_selection(
         "event_id": event.get("id"),
         "market_id": market.get("id"),
         "selection": selection,
+    }
+
+@app.post("/internal/admin/selection-details")
+def admin_selection_details(
+    request: AdminSelectionDetailsRequest,
+    _: bool = Depends(get_authenticated_admin),
+):
+    platform = load_platform()
+
+    event = next(
+        (
+            event
+            for event in platform
+            if event.get("id") == request.event_id
+        ),
+        None,
+    )
+
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found.",
+        )
+
+    market = next(
+        (
+            market
+            for market in event.get("markets", [])
+            if market.get("id") == request.market_id
+        ),
+        None,
+    )
+
+    if market is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Market not found.",
+        )
+
+    selection = next(
+        (
+            selection
+            for selection in market.get("selections", [])
+            if selection.get("id") == request.selection_id
+        ),
+        None,
+    )
+
+    if selection is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Selection not found.",
+        )
+
+    selection["name"] = request.selection_name
+
+    touch_event(
+        event,
+        change_type="selection_details_updated",
+        details={
+            "market_id": market.get("id"),
+            "selection_id": selection.get("id"),
+            "selection_name": selection.get("name"),
+        },
+    )
+
+    save_platform(platform)
+
+    return {
+        "ok": True,
+        "event_id": event.get("id"),
+        "market_id": market.get("id"),
+        "selection_id": selection.get("id"),
+        "selection_name": selection.get("name"),
     }
 
 @app.post("/internal/admin/selection-state")
