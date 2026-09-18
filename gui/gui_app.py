@@ -54,6 +54,8 @@ import requests
 
 import secrets
 
+import copy
+
 ADMIN_PLATFORM_URL = "https://api.goldliner.co.uk/internal/admin/platform"
 
 
@@ -1868,6 +1870,44 @@ class OddsPlatformGUI:
         )
 
     def show_match_event_screen(self, event):
+        self.current_match_event_id = event.get("id")
+        self.match_screen_open = True
+        self.match_event_snapshot = copy.deepcopy(event)
+
+        if not getattr(self, "match_refresh_running", False):
+            self.match_refresh_running = True
+
+            def refresh_live_match():
+                if not getattr(self, "match_screen_open", False):
+                    self.match_refresh_running = False
+                    return
+
+                try:
+                    latest_platform = load_remote_platform()
+
+                    latest_event = next(
+                        (
+                            item
+                            for item in latest_platform
+                            if item.get("id") == self.current_match_event_id
+                        ),
+                        None,
+                    )
+
+                    if latest_event is not None:
+                        if latest_event != self.match_event_snapshot:
+                            self.platform = latest_platform
+                            self.match_refresh_running = False
+                            self.show_match_event_screen(latest_event)
+                            return
+
+                except Exception as exc:
+                    print(f"Live MATCH refresh failed: {exc}")
+
+                self.root.after(1000, refresh_live_match)
+
+            self.root.after(1000, refresh_live_match)
+
         self.clear_content()
 
         scroll_container = ttk.Frame(self.content)
@@ -1929,7 +1969,10 @@ class OddsPlatformGUI:
         ttk.Button(
             scroll_frame,
             text="← Back to Trading",
-            command=self.show_trading,
+            command=lambda: (
+                setattr(self, "match_screen_open", False),
+                self.show_trading(),
+            ),
         ).pack(anchor="w", pady=(0, 15))
 
         # Event title
